@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  --color-glass-100: rgba(255, 255, 255, 0.1);
+  --color-glass-200: rgba(255, 255, 255, 0.2);
+  --color-glass-300: rgba(255, 255, 255, 0.3);
+  --color-dark-bg: #0a0a0a;
+  --color-dark-card: #171717;
+  --color-dark-text: #ededed;
+  --color-dark-muted: #a1a1aa;
+}
+
+/* Custom base styles */
+body {
+  @apply antialiased bg-dark-bg text-dark-text;
+}
