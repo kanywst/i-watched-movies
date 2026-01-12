@@ -41,14 +41,21 @@ Follow these steps to host your own movie log.
 
 1. **Clone or Use Template**
 2. **Install Dependencies**:
+
    ```bash
    npm install
    ```
+
 3. **Customize Name**:
-   Update the `USER_NAME` constant in `src/App.tsx`.
-   ```tsx
-   const USER_NAME = "Your Name"; 
+   Update the `USER_NAME` constant in `src/config.ts`.
+
+   ```typescript
+   export const CONFIG = {
+     USER_NAME: "YourGitHubUsername", // This updates the title, header, and favicon automatically!
+     // ...
+   };
    ```
+
 4. **Push to GitHub**:
    Pushing to the `main` branch triggers the GitHub Action to build and deploy.
 5. **Enable GitHub Pages**:

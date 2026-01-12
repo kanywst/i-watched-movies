@@ -1,19 +1,27 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import moviesData from './data/movies.json';
 import { Movie } from './types';
 import { MovieCard } from './components/MovieCard';
 import { FilterBar } from './components/FilterBar';
 import { MovieDetailModal } from './components/MovieDetailModal';
 import { Film } from 'lucide-react';
-
-// You might want to get this from a config or env
-const USER_NAME = "kanywst";
+import { CONFIG } from './config';
 
 const App: React.FC = () => {
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('watch_date_desc');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+
+  // Update Metadata (Favicon & Title)
+  useEffect(() => {
+    document.title = `The Movies ${CONFIG.USER_NAME} Watched`;
+    const link = document.querySelector("link[rel*='icon']") as HTMLLinkElement || document.createElement('link');
+    link.type = 'image/png';
+    link.rel = 'icon';
+    link.href = `https://github.com/${CONFIG.USER_NAME}.png`;
+    document.getElementsByTagName('head')[0].appendChild(link);
+  }, []);
 
   // Derived state
   const movies = moviesData as Movie[];
@@ -84,7 +92,7 @@ const App: React.FC = () => {
           <h1 className="text-4xl md:text-6xl font-bold text-stone-100 tracking-tight leading-tight">
             The Movies <br className="hidden md:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-yellow-500 drop-shadow-sm">
-              {USER_NAME}
+              {CONFIG.USER_NAME}
             </span> 
             <span className="ml-3 text-stone-500">Watched</span>
           </h1>
@@ -125,17 +133,17 @@ const App: React.FC = () => {
           <p className="text-lg">No movies found matching your criteria.</p>
         </div>
       )}
-      
+
       {/* Footer */}
       <footer className="mt-32 py-12 border-t border-white/5 flex justify-between items-center text-stone-500 text-sm">
-        <p>© {new Date().getFullYear()} Movie Log.</p>
+        <p>© {new Date().getFullYear()} The Movies {CONFIG.USER_NAME} Watched</p>
         <p className="opacity-50">Minimalist Cinema Tracker</p>
       </footer>
 
       {/* Detail Modal */}
-      <MovieDetailModal 
-        movie={selectedMovie} 
-        onClose={() => setSelectedMovie(null)} 
+      <MovieDetailModal
+        movie={selectedMovie}
+        onClose={() => setSelectedMovie(null)}
       />
     </div>
   );
