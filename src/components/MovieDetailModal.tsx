@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Calendar, Star, Quote, AlignLeft } from 'lucide-react';
+import { X, Calendar, Star, Quote } from 'lucide-react';
 import { Movie } from '../types';
 import { format } from 'date-fns';
 
@@ -32,30 +32,30 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({ movie, onClo
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 md:p-8"
+            className="fixed inset-0 bg-stone-950/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 md:p-8"
           >
             {/* Modal Content */}
             <motion.div
               layoutId={`movie-card-${movie.id}`}
-              className="bg-dark-card w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl border border-white/10 shadow-2xl relative flex flex-col md:flex-row overflow-hidden"
+              className="bg-stone-900 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-xl border border-white/5 shadow-2xl relative flex flex-col md:flex-row overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 z-50 p-2 rounded-full bg-black/50 hover:bg-white/20 text-white transition-colors backdrop-blur-md"
+                className="absolute top-4 right-4 z-50 p-2 rounded-full bg-black/20 hover:bg-black/40 text-white transition-colors backdrop-blur-md border border-white/10"
               >
                 <X className="w-5 h-5" />
               </button>
 
               {/* Image Section (Top on mobile, Left on desktop) */}
-              <div className="w-full md:w-2/5 h-64 md:h-auto relative shrink-0">
+              <div className="w-full md:w-2/5 h-64 md:h-auto relative shrink-0 bg-stone-950">
                 <div className="absolute inset-0 overflow-hidden">
                    {/* Blur Background for fill */}
                   <img
                     src={movie.cover_image}
                     alt=""
-                    className="w-full h-full object-cover blur-2xl scale-110 opacity-60"
+                    className="w-full h-full object-cover blur-3xl scale-125 opacity-40 grayscale-[0.3]"
                   />
                 </div>
                 <img
@@ -63,11 +63,11 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({ movie, onClo
                   alt={movie.title}
                   className="relative z-10 w-full h-full object-contain md:object-cover p-4 md:p-0"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-dark-card via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-dark-card opacity-90 md:opacity-100" />
+                <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-stone-900 opacity-90 md:opacity-100" />
               </div>
 
               {/* Info Section */}
-              <div className="flex-1 p-6 md:p-10 flex flex-col gap-6 bg-dark-card relative">
+              <div className="flex-1 p-8 md:p-12 flex flex-col gap-8 bg-stone-900 relative">
                 
                 {/* Header Info */}
                 <div>
@@ -75,59 +75,52 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({ movie, onClo
                     {movie.tags.map((tag) => (
                       <span 
                         key={tag} 
-                        className="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-md bg-purple-500/10 text-purple-300 border border-purple-500/20"
+                        className="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full bg-stone-800 text-stone-300 border border-stone-700/50"
                       >
                         {tag}
                       </span>
                     ))}
                   </div>
                   
-                  <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight mb-2">
+                  <h2 className="text-3xl md:text-4xl font-bold text-stone-100 leading-tight mb-3">
                     {movie.title}
                   </h2>
 
-                  <div className="flex items-center gap-4 text-sm text-dark-muted mb-6">
+                  <div className="flex items-center gap-6 text-sm text-stone-500">
                     <div className="flex items-center gap-1.5">
                       <Calendar className="w-4 h-4" />
-                      <span>Watched: {movie.watch_date ? format(new Date(movie.watch_date), 'MMM d, yyyy') : 'N/A'}</span>
+                      <span>Watched: {movie.watch_date ? format(new Date(movie.watch_date), 'MMMM d, yyyy') : 'N/A'}</span>
                     </div>
-                    <div className="flex items-center gap-1 text-yellow-400 font-medium bg-yellow-400/10 px-2 py-0.5 rounded-full border border-yellow-400/20">
-                      <Star className="w-3.5 h-3.5 fill-yellow-400" />
-                      <span>{movie.point}</span>
+                    <div className="flex items-center gap-1 text-stone-300 font-medium">
+                      <Star className="w-4 h-4 fill-stone-300" />
+                      <span>{movie.point}/10</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Content Body */}
-                <div className="space-y-6 overflow-y-auto pr-2 custom-scrollbar">
+                <div className="space-y-8 overflow-y-auto pr-2 custom-scrollbar">
                   
                   {/* Summary */}
                   {movie.summary && (
-                    <div className="bg-white/5 rounded-2xl p-5 border border-white/5">
-                      <div className="flex items-center gap-2 mb-3 text-white/90 font-semibold">
-                        <AlignLeft className="w-5 h-5 text-purple-400" />
-                        <h3>Summary</h3>
-                      </div>
-                      <p className="text-dark-muted leading-relaxed text-sm md:text-base">
-                        {movie.summary}
-                      </p>
+                    <div className="text-stone-400 leading-relaxed text-sm md:text-base border-l-2 border-stone-800 pl-4">
+                      {movie.summary}
                     </div>
                   )}
 
                   {/* Impression */}
                   {movie.impression && (
-                    <div className="relative pl-6 md:pl-8 border-l-4 border-purple-500/50 py-2">
-                      <Quote className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-8 h-8 text-purple-500/20 fill-purple-500/20" />
-                      <div className="text-lg md:text-xl font-medium text-white/90 italic leading-relaxed">
+                    <div className="relative bg-stone-800/50 p-6 rounded-lg border border-stone-800">
+                      <Quote className="absolute top-4 left-4 w-6 h-6 text-stone-600 fill-stone-600/20" />
+                      <div className="relative z-10 text-lg md:text-xl font-medium text-stone-200 italic leading-relaxed pt-2 pl-4">
                         "{movie.impression}"
                       </div>
                     </div>
                   )}
 
-                  {/* Full Content (if different/longer) */}
-                  {/* We can hide this if summary/impression covers it, or show it as 'Notes' */}
+                  {/* Full Content */}
                   {!movie.summary && !movie.impression && (
-                    <div className="prose prose-invert prose-sm max-w-none text-dark-muted">
+                    <div className="prose prose-invert prose-sm max-w-none text-stone-400">
                       {movie.content}
                     </div>
                   )}

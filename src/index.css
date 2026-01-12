@@ -1,16 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  --color-glass-100: rgba(255, 255, 255, 0.1);
-  --color-glass-200: rgba(255, 255, 255, 0.2);
-  --color-glass-300: rgba(255, 255, 255, 0.3);
-  --color-dark-bg: #0a0a0a;
-  --color-dark-card: #171717;
-  --color-dark-text: #ededed;
-  --color-dark-muted: #a1a1aa;
+  --color-dark-bg: #0c0a09; /* Stone 950 - Warm dark */
+  --color-dark-card: #1c1917; /* Stone 900 - Soft card bg */
+  --color-dark-surface: #292524; /* Stone 800 - Lighter surface */
+  --color-dark-text: #f5f5f4; /* Stone 100 - Off-white text */
+  --color-dark-muted: #a8a29e; /* Stone 400 - Warm muted text */
+  --color-accent-primary: #e7e5e4; /* Stone 200 */
+  --color-accent-subtle: #44403c; /* Stone 700 */
 }
 
 /* Custom base styles */
 body {
-  @apply antialiased bg-dark-bg text-dark-text;
+  @apply antialiased bg-dark-bg text-dark-text selection:bg-stone-700/50;
 }
+
+/* Custom Scrollbar for a cleaner look */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-dark-surface rounded-full hover:bg-dark-muted transition-colors;
+}
+

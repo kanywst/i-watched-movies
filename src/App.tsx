@@ -73,21 +73,26 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen p-6 md:p-12 max-w-7xl mx-auto">
       {/* Header */}
-      <header className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <header className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-white/5 pb-8">
         <div>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-purple-500/10 rounded-xl border border-purple-500/20">
-              <Film className="h-6 w-6 text-purple-400" />
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2 bg-white/5 rounded-lg border border-white/5 text-stone-200">
+              <Film className="h-5 w-5" />
             </div>
-            <span className="text-sm font-semibold tracking-wider text-purple-400 uppercase">Movie Log</span>
+            <span className="text-xs font-medium tracking-[0.2em] text-stone-400 uppercase">Personal Archives</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
-            The Movies <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">{USER_NAME}</span> Watched
+          <h1 className="text-4xl md:text-6xl font-bold text-stone-100 tracking-tight leading-tight">
+            The Movies <br className="hidden md:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-yellow-500 drop-shadow-sm">
+              {USER_NAME}
+            </span> 
+            <span className="ml-3 text-stone-500">Watched</span>
           </h1>
         </div>
         
-        <div className="text-dark-muted text-sm font-medium">
-          {filteredMovies.length} {filteredMovies.length === 1 ? 'Movie' : 'Movies'} Collected
+        <div className="flex flex-col items-start md:items-end gap-2">
+          <div className="text-5xl font-light text-stone-200">{filteredMovies.length}</div>
+          <div className="text-sm font-medium text-stone-500 uppercase tracking-wider">Collected Titles</div>
         </div>
       </header>
 
@@ -103,7 +108,7 @@ const App: React.FC = () => {
       />
 
       {/* Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-10">
         {filteredMovies.map((movie, index) => (
           <MovieCard 
             key={movie.id} 
@@ -116,14 +121,15 @@ const App: React.FC = () => {
       </div>
 
       {filteredMovies.length === 0 && (
-        <div className="py-20 text-center text-dark-muted">
-          <p>No movies found matching your criteria.</p>
+        <div className="py-32 text-center text-stone-500">
+          <p className="text-lg">No movies found matching your criteria.</p>
         </div>
       )}
       
       {/* Footer */}
-      <footer className="mt-20 pt-8 border-t border-white/5 text-center text-dark-muted text-sm">
-        <p>© {new Date().getFullYear()} Movie Log. Built with React & Tailwind.</p>
+      <footer className="mt-32 py-12 border-t border-white/5 flex justify-between items-center text-stone-500 text-sm">
+        <p>© {new Date().getFullYear()} Movie Log.</p>
+        <p className="opacity-50">Minimalist Cinema Tracker</p>
       </footer>
 
       {/* Detail Modal */}
