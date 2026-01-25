@@ -3,6 +3,7 @@ title: 'WAR 2'
 published: true
 tags:
   - 'Action'
+national: 'India'
 cover_image: 'https://media.eiga.com/images/movie/104957/photo/89858e2505d461eb/160.jpg'
 release_date: '2026-01-02'
 watch_date: '2026-01-18'

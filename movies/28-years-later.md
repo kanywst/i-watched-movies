@@ -3,6 +3,7 @@ title: '28 Years Later'
 published: true
 tags:
   - 'Horror'
+national: 'UK'
 cover_image: 'https://upload.wikimedia.org/wikipedia/en/3/38/28_Years_Later_film_poster.jpg'
 release_date: '2025-06-20'
 watch_date: '2025-06-22'

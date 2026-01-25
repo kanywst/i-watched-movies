@@ -3,6 +3,7 @@ title: 'The Fantastic Four: First Steps'
 published: true
 tags:
   - 'Superhero'
+national: 'USA'
 cover_image: 'https://upload.wikimedia.org/wikipedia/en/1/13/The_Fantastic_Four_First_Steps_poster.jpg'
 release_date: '2025-07-25'
 watch_date: '2025-07-25'

@@ -3,6 +3,7 @@ title: 'Yadang'
 published: true
 tags:
   - 'Crime'
+national: 'Korea'
 cover_image: 'https://upload.wikimedia.org/wikipedia/en/a/a3/Yadang_The_Snitch.jpg'
 release_date: '2025-04-16'
 watch_date: '2026-01-12'

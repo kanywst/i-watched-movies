@@ -4,6 +4,7 @@ published: true
 tags:
   - 'Sci-fi'
   - 'Action'
+national: 'USA'
 cover_image: 'https://upload.wikimedia.org/wikipedia/en/a/a5/Jurassic_World_Rebirth_poster.jpg'
 release_date: '2025-06-17'
 watch_date: '2025-06-17'

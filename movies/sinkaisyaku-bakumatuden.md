@@ -4,6 +4,7 @@ published: true
 tags:
   - 'Period'
   - 'Comedy'
+national: 'Japan'
 cover_image: 'https://media.eiga.com/images/movie/103950/photo/3f3af9bc2c673bda.jpg'
 release_date: '2025-12-19'
 watch_date: '2025-12-27'

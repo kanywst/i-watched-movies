@@ -6,6 +6,7 @@ tags:
   - 'Suspense'
   - 'Thriller'
   - 'Crime'
+national: 'Japan'
 cover_image: 'https://media.eiga.com/images/movie/103262/photo/1b9625524b4c84c8.jpg'
 release_date: '2025-10-31'
 watch_date: '2025-11-08'

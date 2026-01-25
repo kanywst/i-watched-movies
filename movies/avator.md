@@ -4,6 +4,7 @@ published: true
 tags:
   - 'Epic'
   - 'Sci-fi'
+national: 'USA'
 cover_image: 'https://upload.wikimedia.org/wikipedia/en/9/95/Avatar_Fire_and_Ash_poster.jpeg'
 release_date: '2025-12-19'
 watch_date: '2025-12-21'

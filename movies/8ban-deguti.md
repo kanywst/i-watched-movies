@@ -3,6 +3,7 @@ title: '８番出口'
 published: true
 tags:
   - 'Horror'
+national: 'Japan'
 cover_image: 'https://media.eiga.com/images/movie/103175/photo/d8651b5315541027/160.jpg'
 release_date: '2025-08-29'
 watch_date: '2025-09-07'

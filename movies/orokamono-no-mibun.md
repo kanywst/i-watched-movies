@@ -3,6 +3,7 @@ title: '愚か者の身分'
 published: true
 tags:
   - 'Crime'
+national: 'Japan'
 cover_image: 'https://media.eiga.com/images/movie/103774/photo/136efb04235ee86f/160.jpg'
 release_date: '2025-10-24'
 watch_date: '2025-11-09'

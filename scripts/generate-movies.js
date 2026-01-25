@@ -29,6 +29,7 @@ async function generate() {
       title: data.title || 'Untitled',
       published: data.published ?? true,
       tags: data.tags || [],
+      national: data.national || null,
       cover_image: data.cover_image || '',
       release_date: data.release_date ? new Date(data.release_date).toISOString() : null,
       watch_date: data.watch_date ? new Date(data.watch_date).toISOString() : null,

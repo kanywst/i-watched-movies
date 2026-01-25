@@ -130,6 +130,7 @@ const App: React.FC = () => {
             movie={movie} 
             index={index} 
             rank={getRank(movie.id)}
+            isNew={sort === 'watch_date_desc' && index < 2}
             onClick={setSelectedMovie}
           />
         ))}

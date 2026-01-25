@@ -4,6 +4,7 @@ published: true
 tags:
   - 'Action'
   - 'Fantasy'
+national: 'Germany'
 cover_image: 'https://upload.wikimedia.org/wikipedia/en/7/7f/In_the_Lost_Lands.jpg'
 release_date: '2025-02-27'
 watch_date: '2026-01-06'

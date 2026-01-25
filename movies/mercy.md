@@ -5,6 +5,7 @@ tags:
   - 'Action'
   - 'Thriller'
   - 'Sci-fi'
+national: 'USA'
 cover_image: 'https://upload.wikimedia.org/wikipedia/en/4/43/Mercy_2026_poster.jpeg'
 release_date: '2026-01-23'
 watch_date: '2026-01-25'
