@@ -5,7 +5,7 @@ tags:
   - 'Sci-fi'
   - 'Action'
 national: 'USA'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/4/49/The_Running_Man__poster.jpg?20251126232857'
+cover_image: 'https://upload.wikimedia.org/wikipedia/en/4/49/The_Running_Man_2025_poster.jpg'
 release_date: '2025-11-14'
 watch_date: '2026-02-01'
 point: 7.9
