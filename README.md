@@ -1,19 +1,10 @@
-# 🎬 The Movie Log
+# I Watched Movies
 
-A sophisticated movie tracking SPA (Single Page Application) built with the modern 2025-2026 tech stack (React + Vite + Tailwind CSS v4).
+A sophisticated movie tracking SPA (Single Page Application) built with React + Vite + Tailwind CSS v4.
 
 Simply write your movie logs in Markdown and push to GitHub. A beautiful, personalized movie log site will be automatically built and deployed.
 
-## ✨ Features
-
-- 🏆 **Auto Ranking**: Automatically calculates Top 3 based on your scores (points) and awards Gold, Silver, and Bronze badges.
-- 🖼️ **Smart Image Adapter**: Whether it's a portrait poster or a landscape scene, the smart background blur technology ensures every image looks stunning.
-- 🔍 **Advanced Filtering**: Filter by tags, search by title, and instantly sort by watch date or score.
-- 📖 **Detail Modal**: Click a card to reveal a rich modal with the Summary and your Impression.
-- 🚀 **GitHub Pages Optimized**: Automatically deploys to subdirectories (like `/movie/`) via GitHub Actions upon push.
-- 🛡️ **Quality Assurance**: Integrated Linting (ESLint) and Security Audits in the CI pipeline.
-
-## 📝 How to Add a Movie
+## How to Add a Movie
 
 Create a new `.md` file in the `movies/` directory using the following template:
 
@@ -35,7 +26,7 @@ impression: 'Write your passionate review here!'
 You can also write free-form notes or a longer review here.
 ```
 
-## 🛠️ Setup Guide
+## Setup Guide
 
 Follow these steps to host your own movie log.
 
@@ -63,7 +54,7 @@ Follow these steps to host your own movie log.
    - Set **Source** to **Deploy from a branch**.
    - Set **Branch** to `gh-pages` (created automatically after the first Action run).
 
-## 💻 Local Development & Checks
+## Local Development & Checks
 
 ```bash
 # Start dev server (auto-generates movies.json)
@@ -75,7 +66,3 @@ npm run check
 # Build for production
 npm run build
 ```
-
----
-
-Built with ❤️ using React, Framer Motion, and Tailwind CSS v4.
