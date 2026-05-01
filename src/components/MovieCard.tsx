@@ -66,7 +66,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, index, rank, isNew,
       )}
 
       {/* NEW Badge - Floating Top Right */}
-      {isNew && !rankStyle && (
+      {isNew && (
         <div className="absolute -top-3 -right-3 z-40 px-2 py-1 bg-rose-500/90 backdrop-blur-md shadow-lg border border-white/10 rounded-full flex items-center gap-1">
           <Sparkles className="w-3 h-3 text-white" />
           <span className="text-[10px] font-bold text-white tracking-wider">NEW</span>
