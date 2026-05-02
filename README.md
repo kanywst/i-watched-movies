@@ -40,28 +40,28 @@ Node `>= 20.18`.
 
 ## What's where
 
-- `scripts/generate-movies.js` — walks `movies/`, writes `src/data/movies.json`, also writes `public/feed.xml` and `public/collection.jsonld`
-- `scripts/parse-movie.js` — frontmatter → `Movie` object (point coerced to number, dates to ISO)
-- `scripts/build-feeds.js` — RSS + JSON-LD builders (covered by tests)
-- `src/App.tsx` — view toggle, filter/sort/tag state mirrored to the URL
-- `src/components/MovieCard.tsx`, `MovieDetailModal.tsx` — the grid card and the detail view. Modal hand-off uses the View Transitions API (no framer-motion)
-- `src/sortMovies.ts`, `src/stats.ts`, `src/useUrlState.ts`, `src/useDocumentMetadata.ts` — small utilities, each tested
+- `scripts/generate-movies.js`: walks `movies/`, writes `src/data/movies.json`, also writes `public/feed.xml` and `public/collection.jsonld`
+- `scripts/parse-movie.js`: frontmatter to `Movie` object (point coerced to number, dates to ISO)
+- `scripts/build-feeds.js`: RSS + JSON-LD builders (covered by tests)
+- `src/App.tsx`: view toggle, filter/sort/tag state mirrored to the URL
+- `src/components/MovieCard.tsx`, `MovieDetailModal.tsx`: the grid card and the detail view. Modal hand-off uses the View Transitions API (no framer-motion)
+- `src/sortMovies.ts`, `src/stats.ts`, `src/useUrlState.ts`, `src/useDocumentMetadata.ts`: small utilities, each tested
 
 ## Forking this for your own log
 
 1. Use as template / fork
-2. `src/config.ts` — set `USER_NAME` to your GitHub handle
-3. `index.html` — replace the `og:*` / `twitter:*` URLs (currently hardcoded `kanywst`)
+2. `src/config.ts`: set `USER_NAME` to your GitHub handle
+3. `index.html`: replace the `og:*` / `twitter:*` URLs (currently hardcoded `kanywst`)
 4. Replace the contents of `movies/` with your own
-5. Push `main` → wait for CI → enable Pages from `gh-pages`
+5. Push `main`, wait for CI, enable Pages from `gh-pages`
 
 ## Stack
 
-React 19, Vite 8, Tailwind 4, TypeScript 6, Vitest 4. Animation is browser-native (View Transitions API) — no JS animation library.
+React 19, Vite 8, Tailwind 4, TypeScript 6, Vitest 4. Animation is browser-native (View Transitions API), no JS animation library.
 
 ## CI
 
-- `ci.yml` — lint + test + audit + build on every PR
-- `deploy.yml` — same checks then push `dist/` to `gh-pages` on `main`
-- `dependabot-auto-merge.yml` — auto-merges npm Dependabot PRs after CI. GitHub Actions PRs need manual merge (token can't grant `workflows` scope)
-- `scorecard.yml` — OpenSSF Scorecard, weekly
+- `ci.yml`: lint + test + audit + build on every PR
+- `deploy.yml`: same checks then push `dist/` to `gh-pages` on `main`
+- `dependabot-auto-merge.yml`: auto-merges npm Dependabot PRs after CI. GitHub Actions PRs need manual merge (token can't grant `workflows` scope)
+- `scorecard.yml`: OpenSSF Scorecard, weekly
