@@ -40,8 +40,15 @@ impression: 'Loved it'`,
     });
   });
 
-  it('returns null when published is false', () => {
-    expect(parseMovie(md(`title: 'Hidden'\npublished: false`), 'h')).toBeNull();
+  it('preserves published: false for watchlist items', () => {
+    const movie = parseMovie(md(`title: 'On Watchlist'\npublished: false`), 'wl');
+    expect(movie).not.toBeNull();
+    expect(movie.published).toBe(false);
+    expect(movie.title).toBe('On Watchlist');
+  });
+
+  it('defaults published to true when omitted', () => {
+    expect(parseMovie(md(`title: 'T'`), 'p').published).toBe(true);
   });
 
   it('defaults missing scalar fields', () => {
