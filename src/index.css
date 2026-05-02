@@ -15,6 +15,11 @@ body {
   @apply antialiased bg-dark-bg text-dark-text selection:bg-stone-700/50;
 }
 
+/* Tabular figures for stat numbers and ratings (lined up digits) */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
 /* Custom Scrollbar for a cleaner look */
 ::-webkit-scrollbar {
   width: 8px;
@@ -24,5 +29,17 @@ body {
 }
 ::-webkit-scrollbar-thumb {
   @apply bg-dark-surface rounded-full hover:bg-dark-muted transition-colors;
+}
+
+/* Honor user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 

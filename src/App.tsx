@@ -98,9 +98,7 @@ const App: React.FC = () => {
             />
             <h1 className="text-4xl md:text-6xl font-bold text-stone-100 tracking-tight leading-tight">
               The Movies <br className="hidden md:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-yellow-500 drop-shadow-sm">
-                {CONFIG.USER_NAME}
-              </span>
+              <span className="text-stone-100">{CONFIG.USER_NAME}</span>
               <span className="ml-3 text-stone-500">Watched</span>
             </h1>
           </div>
@@ -110,21 +108,21 @@ const App: React.FC = () => {
         {view === 'watched' ? (
           <div className="flex items-end gap-8">
             <div className="flex flex-col items-start md:items-end gap-1">
-              <div className="text-5xl font-light text-stone-200">{filteredMovies.length}</div>
+              <div className="text-5xl font-light text-stone-200 tabular-nums">{filteredMovies.length}</div>
               <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Collected</div>
             </div>
             <div className="flex flex-col items-start md:items-end gap-1">
-              <div className="text-3xl font-light text-stone-200">{stats.averagePoint.toFixed(1)}</div>
+              <div className="text-3xl font-light text-stone-200 tabular-nums">{stats.averagePoint.toFixed(1)}</div>
               <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Avg Score</div>
             </div>
             <div className="flex flex-col items-start md:items-end gap-1">
-              <div className="text-3xl font-light text-stone-200">{stats.thisYearCount}</div>
+              <div className="text-3xl font-light text-stone-200 tabular-nums">{stats.thisYearCount}</div>
               <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">{stats.currentYear}</div>
             </div>
           </div>
         ) : (
           <div className="flex flex-col items-start md:items-end gap-1">
-            <div className="text-5xl font-light text-stone-200">{filteredMovies.length}</div>
+            <div className="text-5xl font-light text-stone-200 tabular-nums">{filteredMovies.length}</div>
             <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">On Watchlist</div>
           </div>
         )}
