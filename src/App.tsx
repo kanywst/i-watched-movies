@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { flushSync } from 'react-dom';
 import moviesData from './data/movies.json';
 import { Movie, SortKey, View } from './types';
 import { MovieCard } from './components/MovieCard';
@@ -26,6 +27,15 @@ const URL_SPECS = {
 
 const isView = (v: string): v is View => (VIEW_VALUES as string[]).includes(v);
 const isSort = (s: string): s is SortKey => (SORT_VALUES as string[]).includes(s);
+
+const withViewTransition = (fn: () => void) => {
+  if (typeof document !== 'undefined' && 'startViewTransition' in document) {
+    (document as Document & { startViewTransition: (cb: () => void) => void })
+      .startViewTransition(() => flushSync(fn));
+  } else {
+    fn();
+  }
+};
 
 const App: React.FC = () => {
   const [urlState, setUrlState] = useUrlState(URL_SPECS);
@@ -102,8 +112,10 @@ const App: React.FC = () => {
     setUrlState({ view: next, tags: [] });
   };
 
-  const openMovie = (movie: Movie) => setUrlState({ selected: movie.id });
-  const closeMovie = () => setUrlState({ selected: '' });
+  const openMovie = (movie: Movie) =>
+    withViewTransition(() => setUrlState({ selected: movie.id }));
+  const closeMovie = () =>
+    withViewTransition(() => setUrlState({ selected: '' }));
 
   return (
     <div className="min-h-screen p-6 md:p-12 max-w-7xl mx-auto">
