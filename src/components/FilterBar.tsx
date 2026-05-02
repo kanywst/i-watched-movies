@@ -1,12 +1,14 @@
 import React from 'react';
 import { Search, SlidersHorizontal, ArrowUpDown } from 'lucide-react';
 import { clsx } from 'clsx';
+import { SORT_OPTIONS } from '../constants';
+import type { SortKey } from '../types';
 
 interface FilterBarProps {
   search: string;
   setSearch: (value: string) => void;
-  sort: string;
-  setSort: (value: string) => void;
+  sort: SortKey;
+  setSort: (value: SortKey) => void;
   selectedTags: string[];
   toggleTag: (tag: string) => void;
   allTags: string[];
@@ -41,15 +43,12 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           <ArrowUpDown className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-500 group-focus-within:text-stone-300 transition-colors" />
           <select
             value={sort}
-            onChange={(e) => setSort(e.target.value)}
+            onChange={(e) => setSort(e.target.value as SortKey)}
             className="w-full bg-transparent border-b border-stone-800 py-3 pl-10 pr-8 text-sm text-stone-200 focus:outline-none focus:border-stone-500 appearance-none cursor-pointer transition-all rounded-none"
           >
-            <option value="watch_date_desc" className="bg-dark-bg">Watch Date (Newest)</option>
-            <option value="watch_date_asc" className="bg-dark-bg">Watch Date (Oldest)</option>
-            <option value="point_desc" className="bg-dark-bg">Score (High to Low)</option>
-            <option value="point_asc" className="bg-dark-bg">Score (Low to High)</option>
-            <option value="release_date_desc" className="bg-dark-bg">Release Date (Newest)</option>
-            <option value="release_date_asc" className="bg-dark-bg">Release Date (Oldest)</option>
+            {SORT_OPTIONS.map(({ value, label }) => (
+              <option key={value} value={value} className="bg-dark-bg">{label}</option>
+            ))}
           </select>
         </div>
       </div>

@@ -4,18 +4,7 @@ import { Star, Image as ImageIcon, Trophy, Crown, Sparkles } from 'lucide-react'
 import { Movie } from '../types';
 import { format } from 'date-fns';
 import { clsx } from 'clsx';
-
-const COUNTRY_FLAGS: Record<string, string> = {
-  'Japan': '🇯🇵',
-  'USA': '🇺🇸',
-  'UK': '🇬🇧',
-  'France': '🇫🇷',
-  'Korea': '🇰🇷',
-  'China': '🇨🇳',
-  'India': '🇮🇳',
-  'Germany': '🇩🇪',
-  'Canada': '🇨🇦',
-};
+import { COUNTRY_FLAGS } from '../constants';
 
 interface MovieCardProps {
   movie: Movie;
