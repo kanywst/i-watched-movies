@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Image as ImageIcon, Trophy, Crown, Sparkles } from 'lucide-react';
 import { Movie } from '../types';
 import { format } from 'date-fns';
@@ -34,23 +33,21 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, index, rank, isNew,
 
   const rankStyle = rank ? getRankBadge(rank) : null;
   const displayFlag = movie.national ? COUNTRY_FLAGS[movie.national] : null;
+  const posterStyle: React.CSSProperties = { viewTransitionName: `poster-${movie.id}` };
 
   return (
-    <motion.div
-      layoutId={`movie-card-${movie.id}`}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
+    <div
       onClick={() => onClick(movie)}
-      className="group relative flex flex-col bg-transparent cursor-pointer"
+      className="card-enter group relative flex flex-col bg-transparent cursor-pointer"
+      style={{ '--card-index': index } as React.CSSProperties}
     >
       {/* Rank Badge - Floating */}
       {rankStyle && (
         <div className={clsx(
-          "absolute -top-3 -left-3 z-40 w-8 h-8 rounded-full flex items-center justify-center shadow-xl border border-white/10",
-          rankStyle.bg
+          'absolute -top-3 -left-3 z-40 w-8 h-8 rounded-full flex items-center justify-center shadow-xl border border-white/10',
+          rankStyle.bg,
         )}>
-          <rankStyle.icon className={clsx("w-4 h-4", rankStyle.color)} />
+          <rankStyle.icon className={clsx('w-4 h-4', rankStyle.color)} />
         </div>
       )}
 
@@ -63,22 +60,17 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, index, rank, isNew,
       )}
 
       {/* Image Container */}
-      <div className="aspect-[2/3] w-full overflow-hidden relative bg-dark-card rounded-lg shadow-sm border border-white/5 transition-all duration-500 group-hover:shadow-2xl group-hover:border-white/20">
-        
+      <div
+        style={posterStyle}
+        className="aspect-[2/3] w-full overflow-hidden relative bg-dark-card rounded-lg shadow-sm border border-white/5 transition-all duration-500 group-hover:shadow-2xl group-hover:border-white/20"
+      >
         {/* Loading Skeleton */}
-        <AnimatePresence>
-          {!isLoaded && !isError && (
-            <motion.div
-              initial={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 z-20 flex items-center justify-center bg-dark-card animate-pulse"
-            >
-              <ImageIcon className="w-8 h-8 text-stone-700" />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {!isLoaded && !isError && (
+          <div className="absolute inset-0 z-20 flex items-center justify-center bg-dark-card animate-pulse">
+            <ImageIcon className="w-8 h-8 text-stone-700" />
+          </div>
+        )}
 
-        {/* Error State */}
         {isError ? (
           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-dark-card text-stone-500 p-4 text-center">
             <ImageIcon className="w-8 h-8 mb-2 opacity-50" />
@@ -87,10 +79,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, index, rank, isNew,
         ) : (
           <>
             {/* Background Blur Layer (Visible if landscape or transparent) */}
-            <div 
-              className="absolute inset-0 overflow-hidden"
-              aria-hidden="true"
-            >
+            <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
               <img
                 src={movie.cover_image}
                 alt=""
@@ -105,11 +94,11 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, index, rank, isNew,
               onLoad={handleImageLoad}
               onError={() => setIsError(true)}
               className={clsx(
-                "relative z-10 w-full h-full transition-all duration-700 ease-out",
-                isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-95",
-                isPortrait 
-                  ? "object-cover group-hover:scale-105" 
-                  : "object-contain shadow-2xl scale-90 group-hover:scale-95"
+                'relative z-10 w-full h-full transition-all duration-700 ease-out',
+                isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95',
+                isPortrait
+                  ? 'object-cover group-hover:scale-105'
+                  : 'object-contain shadow-2xl scale-90 group-hover:scale-95',
               )}
               loading="lazy"
             />
@@ -117,7 +106,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, index, rank, isNew,
         )}
 
         {/* Rating Overlay (Always Visible) */}
-        <div className="absolute top-2 right-2 z-30 flex items-center gap-1 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-xs font-medium text-white shadow-lg border border-white/10 transition-transform duration-300 group-hover:scale-105">
+        <div className="absolute top-2 right-2 z-30 flex items-center gap-1 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-xs font-medium text-white shadow-lg border border-white/10 transition-transform duration-300 group-hover:scale-105 tabular-nums">
           <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
           <span>{movie.point}</span>
         </div>
@@ -128,30 +117,30 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, index, rank, isNew,
         <h2 className="text-base font-semibold leading-tight text-stone-200 group-hover:text-white transition-colors line-clamp-1">
           {movie.title}
         </h2>
-        
-        <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-xs text-stone-500">
-                <span>{movie.watch_date ? format(new Date(movie.watch_date), 'yyyy') : 'N/A'}</span>
-                
-                {displayFlag && (
-                  <>
-                    <span className="w-0.5 h-0.5 rounded-full bg-stone-500"></span>
-                    <span className="text-sm filter grayscale-[0.3] hover:grayscale-0 transition-all" title={movie.national}>{displayFlag}</span>
-                  </>
-                )}
 
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-xs text-stone-500">
+            <span className="tabular-nums">{movie.watch_date ? format(new Date(movie.watch_date), 'yyyy') : 'N/A'}</span>
+
+            {displayFlag && (
+              <>
                 <span className="w-0.5 h-0.5 rounded-full bg-stone-500"></span>
-                <div className="flex items-center gap-1 text-stone-400">
-                    <Star className="h-3 w-3 fill-stone-600 text-stone-600" />
-                    <span>{movie.point}</span>
-                </div>
+                <span className="text-sm filter grayscale-[0.3] hover:grayscale-0 transition-all" title={movie.national}>{displayFlag}</span>
+              </>
+            )}
+
+            <span className="w-0.5 h-0.5 rounded-full bg-stone-500"></span>
+            <div className="flex items-center gap-1 text-stone-400 tabular-nums">
+              <Star className="h-3 w-3 fill-stone-600 text-stone-600" />
+              <span>{movie.point}</span>
             </div>
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-1 mt-1 opacity-60 group-hover:opacity-100 transition-opacity">
           {movie.tags.slice(0, 3).map((tag) => (
-            <span 
-              key={tag} 
+            <span
+              key={tag}
               className="text-[10px] text-stone-500 uppercase tracking-wider"
             >
               {tag}
@@ -159,6 +148,6 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, index, rank, isNew,
           ))}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
