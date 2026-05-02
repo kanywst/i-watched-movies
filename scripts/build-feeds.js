@@ -1,4 +1,4 @@
-const SITE_URL = 'https://kanywst.github.io/i-watched-movies/';
+const SITE_URL = 'https://i-watched-movies.kanywst12.workers.dev/';
 const SITE_NAME = 'The Movies kanywst Watched';
 const SITE_DESC = 'A personal archive of movies kanywst has watched, with scores and impressions.';
 const FEED_LIMIT = 20;

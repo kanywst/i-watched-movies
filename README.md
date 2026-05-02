@@ -1,8 +1,8 @@
 # i-watched-movies
 
-My personal log of movies I've watched. Each entry is a markdown file in `movies/`. The site reads them at build time and is deployed to GitHub Pages.
+My personal log of movies I've watched. Each entry is a markdown file in `movies/`. The site reads them at build time and is deployed to Cloudflare Workers.
 
-Live: <https://kanywst.github.io/i-watched-movies/> · [RSS](https://kanywst.github.io/i-watched-movies/feed.xml)
+Live: <https://i-watched-movies.kanywst12.workers.dev/> · [RSS](https://i-watched-movies.kanywst12.workers.dev/feed.xml)
 
 ## Add a movie
 
@@ -51,17 +51,18 @@ Node `>= 20.18`.
 
 1. Use as template / fork
 2. `src/config.ts`: set `USER_NAME` to your GitHub handle
-3. `index.html`: replace the `og:*` / `twitter:*` URLs (currently hardcoded `kanywst`)
-4. Replace the contents of `movies/` with your own
-5. Push `main`, wait for CI, enable Pages from `gh-pages`
+3. `index.html`: replace the `og:*` / `twitter:*` / canonical URLs
+4. `scripts/build-feeds.js`: update `SITE_URL`
+5. `wrangler.jsonc`: rename `name` to your project
+6. Connect the repo to Cloudflare Workers, build command `npm run build`, output `dist`
 
 ## Stack
 
 React 19, Vite 8, Tailwind 4, TypeScript 6, Vitest 4. Animation is browser-native (View Transitions API), no JS animation library.
 
-## CI
+## CI / Deploy
 
 - `ci.yml`: lint + test + audit + build on every PR
-- `deploy.yml`: same checks then push `dist/` to `gh-pages` on `main`
+- Cloudflare Workers auto-deploys on push to `main` (via the GitHub integration). Build command `npm run build`, output `dist`
 - `dependabot-auto-merge.yml`: auto-merges npm Dependabot PRs after CI. GitHub Actions PRs need manual merge (token can't grant `workflows` scope)
 - `scorecard.yml`: OpenSSF Scorecard, weekly
