@@ -1,17 +1,22 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface ParamSpec<T> {
   parse: (raw: string | null) => T;
   serialize: (value: T) => string | null;
 }
 
-// Constraint uses `any` so that S preserves the literal T of each ParamSpec
-// at the call site (using `unknown` would widen and break inference).
+// `any` so S preserves the literal T of each ParamSpec at the call site
+// (using `unknown` would widen and break inference).
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Specs = Record<string, ParamSpec<any>>;
 type StateOf<S extends Specs> = {
   [K in keyof S]: S[K] extends ParamSpec<infer T> ? T : never;
 };
+
+export type HistoryMode = 'push' | 'replace';
+export interface UpdateOptions {
+  history?: HistoryMode;
+}
 
 const stringParam = (defaultValue: string): ParamSpec<string> => ({
   parse: (raw) => raw ?? defaultValue,
@@ -32,7 +37,7 @@ function readParams<S extends Specs>(specs: S): StateOf<S> {
   return out as StateOf<S>;
 }
 
-function writeParams<S extends Specs>(specs: S, values: StateOf<S>): void {
+function writeParams<S extends Specs>(specs: S, values: StateOf<S>, mode: HistoryMode): void {
   const sp = new URLSearchParams(window.location.search);
   for (const key in specs) {
     const serialized = specs[key].serialize(values[key]);
@@ -40,30 +45,48 @@ function writeParams<S extends Specs>(specs: S, values: StateOf<S>): void {
     else sp.set(key, serialized);
   }
   const qs = sp.toString();
-  const url = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
-  window.history.replaceState(null, '', url);
+  const url = (qs ? `${window.location.pathname}?${qs}` : window.location.pathname) + window.location.hash;
+  if (mode === 'push') window.history.pushState(null, '', url);
+  else window.history.replaceState(null, '', url);
 }
 
 export function useUrlState<S extends Specs>(
   specs: S,
-): [StateOf<S>, (patch: Partial<StateOf<S>>) => void] {
+): [StateOf<S>, (patch: Partial<StateOf<S>>, options?: UpdateOptions) => void] {
   const [state, setState] = useState<StateOf<S>>(() => readParams(specs));
+  const nextHistoryMode = useRef<HistoryMode>('replace');
+  const isFromPop = useRef(false);
+  const isFirstSync = useRef(true);
 
   useEffect(() => {
-    const onPop = () => setState(readParams(specs));
+    const onPop = () => {
+      isFromPop.current = true;
+      setState(readParams(specs));
+    };
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
   }, [specs]);
 
+  // Sync state -> URL after commit so the updater stays pure.
+  useEffect(() => {
+    if (isFirstSync.current) {
+      isFirstSync.current = false;
+      return;
+    }
+    if (isFromPop.current) {
+      isFromPop.current = false;
+      return;
+    }
+    writeParams(specs, state, nextHistoryMode.current);
+    nextHistoryMode.current = 'replace';
+  }, [state, specs]);
+
   const update = useCallback(
-    (patch: Partial<StateOf<S>>) => {
-      setState((prev) => {
-        const next = { ...prev, ...patch };
-        writeParams(specs, next);
-        return next;
-      });
+    (patch: Partial<StateOf<S>>, options?: UpdateOptions) => {
+      if (options?.history) nextHistoryMode.current = options.history;
+      setState((prev) => ({ ...prev, ...patch }));
     },
-    [specs],
+    [],
   );
 
   return [state, update];
