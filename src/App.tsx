@@ -1,74 +1,51 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState } from 'react';
 import moviesData from './data/movies.json';
-import { Movie } from './types';
+import { Movie, SortKey } from './types';
 import { MovieCard } from './components/MovieCard';
 import { FilterBar } from './components/FilterBar';
 import { MovieDetailModal } from './components/MovieDetailModal';
 import { Film } from 'lucide-react';
 import { CONFIG } from './config';
+import { NEW_LIMIT, RANK_LIMIT } from './constants';
+import { sortMovies } from './sortMovies';
+import { useDocumentMetadata } from './useDocumentMetadata';
 
 const App: React.FC = () => {
   const [search, setSearch] = useState('');
-  const [sort, setSort] = useState('watch_date_desc');
+  const [sort, setSort] = useState<SortKey>('watch_date_desc');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
-  // Update Metadata (Favicon & Title)
-  useEffect(() => {
-    document.title = `The Movies ${CONFIG.USER_NAME} Watched`;
-    const link = document.querySelector("link[rel*='icon']") as HTMLLinkElement || document.createElement('link');
-    link.type = 'image/png';
-    link.rel = 'icon';
-    link.href = `https://github.com/${CONFIG.USER_NAME}.png`;
-    document.getElementsByTagName('head')[0].appendChild(link);
-  }, []);
+  useDocumentMetadata(
+    `The Movies ${CONFIG.USER_NAME} Watched`,
+    `https://github.com/${CONFIG.USER_NAME}.png`,
+  );
 
-  // Derived state
   const movies = moviesData as Movie[];
-  
+
   const allTags = useMemo(() => {
     const tags = new Set<string>();
     movies.forEach(m => m.tags.forEach(t => tags.add(t)));
     return Array.from(tags).sort();
   }, [movies]);
 
-  // Calculate Ranks (based on points)
   const rankedMovieIds = useMemo(() => {
-    return [...movies]
-      .sort((a, b) => Number(b.point) - Number(a.point))
-      .slice(0, 3)
+    return sortMovies(movies, 'point_desc')
+      .slice(0, RANK_LIMIT)
       .map(m => m.id);
   }, [movies]);
 
   const filteredMovies = useMemo(() => {
-    return movies
-      .filter((movie) => {
-        const matchesSearch = movie.title.toLowerCase().includes(search.toLowerCase());
-        const matchesTags = selectedTags.length === 0 || selectedTags.every(t => movie.tags.includes(t));
-        return matchesSearch && matchesTags;
-      })
-      .sort((a, b) => {
-        switch (sort) {
-          case 'watch_date_desc':
-            return new Date(b.watch_date).getTime() - new Date(a.watch_date).getTime();
-          case 'watch_date_asc':
-            return new Date(a.watch_date).getTime() - new Date(b.watch_date).getTime();
-          case 'release_date_desc':
-            return new Date(b.release_date).getTime() - new Date(a.release_date).getTime();
-          case 'release_date_asc':
-            return new Date(a.release_date).getTime() - new Date(b.release_date).getTime();
-          case 'point_desc':
-            return Number(b.point) - Number(a.point);
-          case 'point_asc':
-            return Number(a.point) - Number(b.point);
-          default:
-            return 0;
-        }
-      });
+    const filtered = movies.filter((movie) => {
+      const matchesSearch = movie.title.toLowerCase().includes(search.toLowerCase());
+      const matchesTags = selectedTags.length === 0 || selectedTags.every(t => movie.tags.includes(t));
+      return matchesSearch && matchesTags;
+    });
+    return sortMovies(filtered, sort);
   }, [movies, search, sort, selectedTags]);
 
   const toggleTag = (tag: string) => {
-    setSelectedTags(prev => 
+    setSelectedTags(prev =>
       prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
     );
   };
@@ -130,7 +107,7 @@ const App: React.FC = () => {
             movie={movie} 
             index={index} 
             rank={getRank(movie.id)}
-            isNew={sort === 'watch_date_desc' && index < 2}
+            isNew={sort === 'watch_date_desc' && index < NEW_LIMIT}
             onClick={setSelectedMovie}
           />
         ))}
