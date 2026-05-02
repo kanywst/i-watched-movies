@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import moviesData from './data/movies.json';
 import { Movie, SortKey, View } from './types';
 import { MovieCard } from './components/MovieCard';
@@ -7,17 +7,35 @@ import { MovieDetailModal } from './components/MovieDetailModal';
 import { Film, Bookmark, Eye } from 'lucide-react';
 import { clsx } from 'clsx';
 import { CONFIG } from './config';
-import { NEW_LIMIT, RANK_LIMIT } from './constants';
+import { NEW_LIMIT, RANK_LIMIT, SORT_OPTIONS } from './constants';
 import { sortMovies } from './sortMovies';
 import { computeStats } from './stats';
 import { useDocumentMetadata } from './useDocumentMetadata';
+import { urlParams, useUrlState } from './useUrlState';
+
+const VIEW_VALUES: View[] = ['watched', 'watchlist'];
+const SORT_VALUES: SortKey[] = SORT_OPTIONS.map(o => o.value);
+
+const URL_SPECS = {
+  view: urlParams.string('watched'),
+  search: urlParams.string(''),
+  sort: urlParams.string('watch_date_desc'),
+  tags: urlParams.stringList(),
+  selected: urlParams.string(''),
+};
+
+const isView = (v: string): v is View => (VIEW_VALUES as string[]).includes(v);
+const isSort = (s: string): s is SortKey => (SORT_VALUES as string[]).includes(s);
 
 const App: React.FC = () => {
-  const [view, setView] = useState<View>('watched');
-  const [search, setSearch] = useState('');
-  const [sort, setSort] = useState<SortKey>('watch_date_desc');
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+  const [urlState, setUrlState] = useUrlState(URL_SPECS);
+  const view: View = isView(urlState.view) ? urlState.view : 'watched';
+  const sort: SortKey = isSort(urlState.sort) ? urlState.sort : 'watch_date_desc';
+  const search = urlState.search;
+  const selectedTags = urlState.tags;
+
+  const setSearch = (search: string) => setUrlState({ search });
+  const setSort = (sort: SortKey) => setUrlState({ sort });
 
   useDocumentMetadata(
     `The Movies ${CONFIG.USER_NAME} Watched`,
@@ -28,6 +46,11 @@ const App: React.FC = () => {
 
   const watchedMovies = useMemo(() => allMovies.filter(m => m.published), [allMovies]);
   const watchlistMovies = useMemo(() => allMovies.filter(m => !m.published), [allMovies]);
+
+  const selectedMovie: Movie | null = useMemo(
+    () => allMovies.find(m => m.id === urlState.selected) ?? null,
+    [allMovies, urlState.selected],
+  );
 
   const stats = useMemo(() => computeStats(watchedMovies), [watchedMovies]);
 
@@ -63,9 +86,10 @@ const App: React.FC = () => {
   }, [viewMovies, search, sort, selectedTags]);
 
   const toggleTag = (tag: string) => {
-    setSelectedTags(prev =>
-      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
-    );
+    const next = selectedTags.includes(tag)
+      ? selectedTags.filter((t: string) => t !== tag)
+      : [...selectedTags, tag];
+    setUrlState({ tags: next });
   };
 
   const getRank = (movieId: string) => {
@@ -75,9 +99,11 @@ const App: React.FC = () => {
   };
 
   const switchView = (next: View) => {
-    setView(next);
-    setSelectedTags([]);
+    setUrlState({ view: next, tags: [] });
   };
+
+  const openMovie = (movie: Movie) => setUrlState({ selected: movie.id });
+  const closeMovie = () => setUrlState({ selected: '' });
 
   return (
     <div className="min-h-screen p-6 md:p-12 max-w-7xl mx-auto">
@@ -154,7 +180,7 @@ const App: React.FC = () => {
             index={index}
             rank={getRank(movie.id)}
             isNew={view === 'watched' && sort === 'watch_date_desc' && newMovieIds.has(movie.id)}
-            onClick={setSelectedMovie}
+            onClick={openMovie}
           />
         ))}
       </div>
@@ -185,7 +211,7 @@ const App: React.FC = () => {
       {/* Detail Modal */}
       <MovieDetailModal
         movie={selectedMovie}
-        onClose={() => setSelectedMovie(null)}
+        onClose={closeMovie}
       />
     </div>
   );
