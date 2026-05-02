@@ -113,9 +113,9 @@ const App: React.FC = () => {
   };
 
   const openMovie = (movie: Movie) =>
-    withViewTransition(() => setUrlState({ selected: movie.id }));
+    withViewTransition(() => setUrlState({ selected: movie.id }, { history: 'push' }));
   const closeMovie = () =>
-    withViewTransition(() => setUrlState({ selected: '' }));
+    withViewTransition(() => setUrlState({ selected: '' }, { history: 'push' }));
 
   return (
     <div className="min-h-screen p-6 md:p-12 max-w-7xl mx-auto">
