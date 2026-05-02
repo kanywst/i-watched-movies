@@ -168,6 +168,7 @@ const App: React.FC = () => {
         setSort={setSort}
         selectedTags={selectedTags}
         toggleTag={toggleTag}
+        clearTags={() => setUrlState({ tags: [] })}
         allTags={allTags}
       />
 
