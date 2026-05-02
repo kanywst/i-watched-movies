@@ -7,7 +7,7 @@ export interface Movie {
   cover_image: string;
   release_date: string;
   watch_date: string;
-  point: number | string;
+  point: number;
   content: string;
   summary?: string;
   impression?: string;
