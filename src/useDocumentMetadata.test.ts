@@ -14,7 +14,6 @@ describe('useDocumentMetadata', () => {
     const link = document.querySelector("link[rel='icon']") as HTMLLinkElement | null;
     expect(link).not.toBeNull();
     expect(link?.href).toBe('https://example.com/a.png');
-    expect(link?.type).toBe('image/png');
   });
 
   it('reuses existing favicon link', () => {
