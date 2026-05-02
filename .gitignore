@@ -7,6 +7,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 src/data/movies.json
+public/collection.jsonld
+public/feed.xml
 
 # AI assistant scratch files
 GEMINI.md
