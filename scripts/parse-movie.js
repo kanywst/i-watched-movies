@@ -9,8 +9,6 @@ function normalizePoint(value) {
 export function parseMovie(fileContent, id) {
   const { data, content } = matter(fileContent);
 
-  if (data.published === false) return null;
-
   return {
     id,
     title: data.title || 'Untitled',
