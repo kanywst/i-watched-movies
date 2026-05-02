@@ -52,9 +52,10 @@ Node `>= 20.18`.
 1. Use as template / fork
 2. `src/config.ts`: set `USER_NAME` to your GitHub handle
 3. `index.html`: replace the `og:*` / `twitter:*` / canonical URLs
-4. `scripts/build-feeds.js`: update `SITE_URL`
+4. `scripts/build-feeds.js`: update `SITE_URL`, `SITE_NAME`, `SITE_DESC`
 5. `wrangler.jsonc`: rename `name` to your project
-6. Connect the repo to Cloudflare Workers, build command `npm run build`, output `dist`
+6. Replace the contents of `movies/` with your own
+7. Connect the repo to Cloudflare Workers, build command `npm run build`, output `dist`
 
 ## Stack
 
