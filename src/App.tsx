@@ -45,6 +45,14 @@ const App: React.FC = () => {
       .map(m => m.id);
   }, [watchedMovies]);
 
+  const newMovieIds = useMemo(() => {
+    return new Set(
+      sortMovies(watchedMovies, 'watch_date_desc')
+        .slice(0, NEW_LIMIT)
+        .map(m => m.id),
+    );
+  }, [watchedMovies]);
+
   const filteredMovies = useMemo(() => {
     const filtered = viewMovies.filter((movie) => {
       const matchesSearch = movie.title.toLowerCase().includes(search.toLowerCase());
@@ -102,7 +110,7 @@ const App: React.FC = () => {
         {view === 'watched' ? (
           <div className="flex items-end gap-8">
             <div className="flex flex-col items-start md:items-end gap-1">
-              <div className="text-5xl font-light text-stone-200">{stats.total}</div>
+              <div className="text-5xl font-light text-stone-200">{filteredMovies.length}</div>
               <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Collected</div>
             </div>
             <div className="flex flex-col items-start md:items-end gap-1">
@@ -116,7 +124,7 @@ const App: React.FC = () => {
           </div>
         ) : (
           <div className="flex flex-col items-start md:items-end gap-1">
-            <div className="text-5xl font-light text-stone-200">{watchlistMovies.length}</div>
+            <div className="text-5xl font-light text-stone-200">{filteredMovies.length}</div>
             <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">On Watchlist</div>
           </div>
         )}
@@ -147,7 +155,7 @@ const App: React.FC = () => {
             movie={movie}
             index={index}
             rank={getRank(movie.id)}
-            isNew={view === 'watched' && sort === 'watch_date_desc' && index < NEW_LIMIT}
+            isNew={view === 'watched' && sort === 'watch_date_desc' && newMovieIds.has(movie.id)}
             onClick={setSelectedMovie}
           />
         ))}
