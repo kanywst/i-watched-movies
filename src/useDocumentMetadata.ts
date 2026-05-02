@@ -10,7 +10,6 @@ export function useDocumentMetadata(title: string, faviconUrl: string): void {
       link.rel = 'icon';
       document.head.appendChild(link);
     }
-    link.type = 'image/png';
     link.href = faviconUrl;
   }, [title, faviconUrl]);
 }
