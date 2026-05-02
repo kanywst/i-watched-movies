@@ -9,13 +9,22 @@ export interface MovieStats {
 
 export function computeStats(movies: Movie[], now: Date = new Date()): MovieStats {
   const total = movies.length;
-  const sum = movies.reduce((acc, m) => acc + m.point, 0);
-  const averagePoint = total > 0 ? sum / total : 0;
   const currentYear = now.getFullYear();
-  const thisYearCount = movies.filter(m => {
-    if (!m.watch_date) return false;
-    const d = new Date(m.watch_date);
-    return Number.isFinite(d.getTime()) && d.getFullYear() === currentYear;
-  }).length;
-  return { total, averagePoint, thisYearCount, currentYear };
+  const yearPrefix = String(currentYear);
+
+  const { sum, thisYearCount } = movies.reduce(
+    (acc, m) => {
+      acc.sum += m.point;
+      if (m.watch_date?.startsWith(yearPrefix)) acc.thisYearCount += 1;
+      return acc;
+    },
+    { sum: 0, thisYearCount: 0 },
+  );
+
+  return {
+    total,
+    averagePoint: total > 0 ? sum / total : 0,
+    thisYearCount,
+    currentYear,
+  };
 }
