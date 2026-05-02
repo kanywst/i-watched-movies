@@ -1,68 +1,67 @@
-# I Watched Movies
+# i-watched-movies
 
-A sophisticated movie tracking SPA (Single Page Application) built with React + Vite + Tailwind CSS v4.
+My personal log of movies I've watched. Each entry is a markdown file in `movies/`. The site reads them at build time and is deployed to GitHub Pages.
 
-Simply write your movie logs in Markdown and push to GitHub. A beautiful, personalized movie log site will be automatically built and deployed.
+Live: <https://kanywst.github.io/i-watched-movies/> · [RSS](https://kanywst.github.io/i-watched-movies/feed.xml)
 
-## How to Add a Movie
+## Add a movie
 
-Create a new `.md` file in the `movies/` directory using the following template:
+Make a new file in `movies/`:
 
 ```markdown
 ---
-title: 'Movie Title'
-published: true
-tags:
-  - 'Sci-Fi'
-  - 'Action'
-cover_image: 'https://example.com/image.jpg' # Any aspect ratio works!
+title: 'Title'
+published: true              # false = lives on the Watchlist tab instead
+tags: ['Sci-Fi', 'Action']
+national: 'Japan'            # optional, shows a flag emoji
+cover_image: 'https://...'
 release_date: '2025-01-01'
-watch_date: '2026-01-12'
-point: 9.5
-summary: 'Write the movie summary here.'
-impression: 'Write your passionate review here!'
+watch_date: '2026-01-12'     # leave empty for unwatched watchlist items
+point: 9.5                   # 0..10
+summary: 'Plot summary.'
+impression: 'One-liner you want pulled out as a quote.'
 ---
 
-You can also write free-form notes or a longer review here.
+Free-form notes here.
 ```
 
-## Setup Guide
+Push to `main`. CI runs lint + tests + build, and `gh-pages` is updated.
 
-Follow these steps to host your own movie log.
-
-1. **Clone or Use Template**
-2. **Install Dependencies**:
-
-   ```bash
-   npm install
-   ```
-
-3. **Customize Name**:
-   Update the `USER_NAME` constant in `src/config.ts`.
-
-   ```typescript
-   export const CONFIG = {
-     USER_NAME: "YourGitHubUsername", // This updates the title, header, and favicon automatically!
-     // ...
-   };
-   ```
-
-4. **Push to GitHub**:
-   Pushing to the `main` branch triggers the GitHub Action to build and deploy.
-5. **Enable GitHub Pages**:
-   - Go to repository **Settings > Pages**.
-   - Set **Source** to **Deploy from a branch**.
-   - Set **Branch** to `gh-pages` (created automatically after the first Action run).
-
-## Local Development & Checks
+## Run it locally
 
 ```bash
-# Start dev server (auto-generates movies.json)
-npm run dev
-
-# Run full quality check (Lint + Security Audit)
-npm run check
-
-# Build for production
+npm install
+npm run dev      # starts Vite, regenerates movies.json
+npm run check    # lint + audit + test
 npm run build
 ```
+
+Node `>= 20.18`.
+
+## What's where
+
+- `scripts/generate-movies.js` — walks `movies/`, writes `src/data/movies.json`, also writes `public/feed.xml` and `public/collection.jsonld`
+- `scripts/parse-movie.js` — frontmatter → `Movie` object (point coerced to number, dates to ISO)
+- `scripts/build-feeds.js` — RSS + JSON-LD builders (covered by tests)
+- `src/App.tsx` — view toggle, filter/sort/tag state mirrored to the URL
+- `src/components/MovieCard.tsx`, `MovieDetailModal.tsx` — the grid card and the detail view. Modal hand-off uses the View Transitions API (no framer-motion)
+- `src/sortMovies.ts`, `src/stats.ts`, `src/useUrlState.ts`, `src/useDocumentMetadata.ts` — small utilities, each tested
+
+## Forking this for your own log
+
+1. Use as template / fork
+2. `src/config.ts` — set `USER_NAME` to your GitHub handle
+3. `index.html` — replace the `og:*` / `twitter:*` URLs (currently hardcoded `kanywst`)
+4. Replace the contents of `movies/` with your own
+5. Push `main` → wait for CI → enable Pages from `gh-pages`
+
+## Stack
+
+React 19, Vite 8, Tailwind 4, TypeScript 6, Vitest 4. Animation is browser-native (View Transitions API) — no JS animation library.
+
+## CI
+
+- `ci.yml` — lint + test + audit + build on every PR
+- `deploy.yml` — same checks then push `dist/` to `gh-pages` on `main`
+- `dependabot-auto-merge.yml` — auto-merges npm Dependabot PRs after CI. GitHub Actions PRs need manual merge (token can't grant `workflows` scope)
+- `scorecard.yml` — OpenSSF Scorecard, weekly
