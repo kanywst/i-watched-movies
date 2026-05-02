@@ -1,6 +1,9 @@
 import type { Movie, SortKey } from './types';
 
-const dateValue = (s: string): number => new Date(s).getTime();
+const dateValue = (s: string): number => {
+  const t = new Date(s).getTime();
+  return Number.isFinite(t) ? t : 0;
+};
 
 export function sortMovies(movies: Movie[], key: SortKey): Movie[] {
   const sorted = [...movies];
@@ -14,9 +17,9 @@ export function sortMovies(movies: Movie[], key: SortKey): Movie[] {
     case 'release_date_asc':
       return sorted.sort((a, b) => dateValue(a.release_date) - dateValue(b.release_date));
     case 'point_desc':
-      return sorted.sort((a, b) => Number(b.point) - Number(a.point));
+      return sorted.sort((a, b) => b.point - a.point);
     case 'point_asc':
-      return sorted.sort((a, b) => Number(a.point) - Number(b.point));
+      return sorted.sort((a, b) => a.point - b.point);
     default: {
       const _exhaustive: never = key;
       return _exhaustive;

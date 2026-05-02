@@ -64,8 +64,16 @@ impression: 'Loved it'`,
     expect(parseMovie(md(``), 'x').title).toBe('Untitled');
   });
 
-  it('preserves point when given as string', () => {
-    expect(parseMovie(md(`point: '7.5'`), 'p').point).toBe('7.5');
+  it('coerces point string to number', () => {
+    expect(parseMovie(md(`point: '7.5'`), 'p').point).toBe(7.5);
+  });
+
+  it('falls back to 0 for non-numeric point', () => {
+    expect(parseMovie(md(`point: 'N/A'`), 'p').point).toBe(0);
+  });
+
+  it('falls back to 0 when point missing', () => {
+    expect(parseMovie(md(`title: 'T'`), 'p').point).toBe(0);
   });
 
   it('uses id from argument, not frontmatter', () => {

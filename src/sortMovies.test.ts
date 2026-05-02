@@ -54,12 +54,11 @@ describe('sortMovies', () => {
     expect(ids(sortMovies(movies, 'point_asc'))).toEqual(['c', 'a', 'b']);
   });
 
-  it('handles point as string', () => {
-    const mixed: Movie[] = [
-      make({ id: 'x', point: '8' }),
-      make({ id: 'y', point: 6 }),
-      make({ id: 'z', point: '7.5' }),
+  it('handles invalid date string as oldest', () => {
+    const withBad: Movie[] = [
+      make({ id: 'x', watch_date: '2026-01-01' }),
+      make({ id: 'y', watch_date: 'not-a-date' }),
     ];
-    expect(ids(sortMovies(mixed, 'point_desc'))).toEqual(['x', 'z', 'y']);
+    expect(ids(sortMovies(withBad, 'watch_date_desc'))).toEqual(['x', 'y']);
   });
 });

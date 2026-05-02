@@ -1,5 +1,11 @@
 import matter from 'gray-matter';
 
+function normalizePoint(value) {
+  if (value === undefined || value === null || value === '') return 0;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : 0;
+}
+
 export function parseMovie(fileContent, id) {
   const { data, content } = matter(fileContent);
 
@@ -14,7 +20,7 @@ export function parseMovie(fileContent, id) {
     cover_image: data.cover_image || '',
     release_date: data.release_date ? new Date(data.release_date).toISOString() : null,
     watch_date: data.watch_date ? new Date(data.watch_date).toISOString() : null,
-    point: data.point || 0,
+    point: normalizePoint(data.point),
     summary: data.summary || '',
     impression: data.impression || '',
     content,
