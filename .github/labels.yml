@@ -1,0 +1,34 @@
+# Declarative label definitions. Synced by .github/workflows/sync-labels.yml.
+# Anything not listed here will be deleted on the next sync.
+
+- name: 'type: movie'
+  color: '8B5CF6'
+  description: Add a watched movie
+
+- name: 'type: watchlist'
+  color: 'A78BFA'
+  description: Add to watchlist (published=false)
+
+- name: 'status: queued'
+  color: 'FBBF24'
+  description: Waiting for the bot to pick up
+
+- name: 'status: processing'
+  color: 'F59E0B'
+  description: Bot is generating the movie file
+
+- name: 'status: pr-opened'
+  color: '3B82F6'
+  description: Bot opened a PR for this issue
+
+- name: 'status: merged'
+  color: '10B981'
+  description: PR merged, content is live
+
+- name: 'status: failed'
+  color: 'EF4444'
+  description: Bot failed; see comment for details and edit the issue to retry
+
+- name: bot
+  color: '6B7280'
+  description: Bot-driven issue or PR

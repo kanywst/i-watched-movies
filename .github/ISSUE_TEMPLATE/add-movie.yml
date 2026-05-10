@@ -1,0 +1,93 @@
+name: Add a movie
+description: Log a watched movie or add to your watchlist. The bot will open a PR.
+title: '[movie] '
+labels:
+  - 'type: movie'
+  - 'status: queued'
+  - bot
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      placeholder: e.g. 28 Years Later
+    validations:
+      required: true
+
+  - type: dropdown
+    id: list
+    attributes:
+      label: List
+      description: Where to add this entry
+      options:
+        - Watched
+        - Watchlist
+      default: 0
+    validations:
+      required: true
+
+  - type: input
+    id: watch_date
+    attributes:
+      label: Watch date
+      description: 'YYYY-MM-DD (leave blank for watchlist)'
+      placeholder: 2026-05-10
+
+  - type: input
+    id: point
+    attributes:
+      label: Point
+      description: 'Score 0-10, half-point steps (e.g. 8.5)'
+      placeholder: '8.5'
+
+  - type: input
+    id: release_date
+    attributes:
+      label: Release date
+      description: 'YYYY-MM-DD'
+      placeholder: 2025-06-20
+
+  - type: dropdown
+    id: national
+    attributes:
+      label: National
+      options:
+        - ''
+        - Japan
+        - USA
+        - UK
+        - France
+        - Korea
+        - China
+        - Other
+
+  - type: input
+    id: tags
+    attributes:
+      label: Tags
+      description: Comma-separated
+      placeholder: Horror, Sci-fi
+
+  - type: input
+    id: cover_image
+    attributes:
+      label: Cover image URL
+      placeholder: https://...
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Optional one-liner
+
+  - type: textarea
+    id: impression
+    attributes:
+      label: Impression
+      description: Optional personal take
+
+  - type: textarea
+    id: body
+    attributes:
+      label: Body
+      description: Plot or notes. Becomes the markdown body of movies/<slug>.md.

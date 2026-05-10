@@ -6,7 +6,11 @@ Live: <https://i-watched-movies.kanywst12.workers.dev/> · [RSS](https://i-watch
 
 ## Add a movie
 
-Make a new file in `movies/`:
+Two paths.
+
+**Issue form.** Open a new issue with the "Add a movie" template, fill in the fields, submit. The `movie-from-issue` workflow parses the form, writes `movies/<slug>.md`, runs lint + test + build, opens a PR and auto-merges it. The issue carries the state in labels: `status: queued` → `processing` → `pr-opened` → `merged`. If anything fails the issue flips to `status: failed` and gets a comment linking the run; edit the issue to retry.
+
+**Direct edit.** Drop a file in `movies/`:
 
 ```markdown
 ---
@@ -25,7 +29,7 @@ impression: 'One-liner you want pulled out as a quote.'
 Free-form notes here.
 ```
 
-Push to `main`. CI runs lint + tests + build, and `gh-pages` is updated.
+Push to `main` and Cloudflare redeploys.
 
 ## Run it locally
 
@@ -65,5 +69,7 @@ React 19, Vite 8, Tailwind 4, TypeScript 6, Vitest 4. Animation is browser-nativ
 
 - `ci.yml`: lint + test + audit + build on every PR
 - Cloudflare Workers auto-deploys on push to `main` (via the GitHub integration). Build command `npm run build`, output `dist`
+- `movie-from-issue.yml`: turns "Add a movie" issues into PRs and auto-merges them. Mirrors progress into `status:*` labels
+- `sync-labels.yml`: pushes `.github/labels.yml` to the repo's actual labels. Runs on changes to that file or via manual dispatch
 - `dependabot-auto-merge.yml`: auto-merges npm Dependabot PRs after CI. GitHub Actions PRs need manual merge (token can't grant `workflows` scope)
 - `scorecard.yml`: OpenSSF Scorecard, weekly
