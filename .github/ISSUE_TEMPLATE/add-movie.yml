@@ -51,8 +51,8 @@ body:
     id: national
     attributes:
       label: National
+      description: Optional
       options:
-        - ''
         - Japan
         - USA
         - UK
