@@ -31,7 +31,7 @@ body:
     attributes:
       label: Watch date
       description: 'YYYY-MM-DD (leave blank for watchlist)'
-      placeholder: 2026-05-10
+      placeholder: '2026-05-10'
 
   - type: input
     id: point
@@ -45,7 +45,7 @@ body:
     attributes:
       label: Release date
       description: 'YYYY-MM-DD'
-      placeholder: 2025-06-20
+      placeholder: '2025-06-20'
 
   - type: dropdown
     id: national
