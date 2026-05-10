@@ -7,7 +7,7 @@ labels:
   - bot
 body:
   - type: input
-    id: title
+    id: movie_title
     attributes:
       label: Title
       placeholder: e.g. 28 Years Later
@@ -87,7 +87,7 @@ body:
       description: Optional personal take
 
   - type: textarea
-    id: body
+    id: notes
     attributes:
       label: Body
       description: Plot or notes. Becomes the markdown body of movies/<slug>.md.
