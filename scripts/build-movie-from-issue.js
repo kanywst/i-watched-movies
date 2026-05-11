@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import matter from 'gray-matter';
 
 const NO_RESPONSE = '_No response_';
 
@@ -78,6 +79,54 @@ export function buildMovie(sections, { issueNumber } = {}) {
   return { movie, slug };
 }
 
+function existingDate(value) {
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? '' : value.toISOString().slice(0, 10);
+  }
+  return parseDate(value);
+}
+
+export function readExisting(filePath) {
+  const raw = fs.readFileSync(filePath, 'utf8');
+  const { data, content } = matter(raw);
+  let point = null;
+  if (typeof data.point === 'number' && Number.isFinite(data.point)) {
+    point = data.point;
+  } else if (data.point !== undefined && data.point !== null && data.point !== '') {
+    const n = Number(data.point);
+    if (Number.isFinite(n)) point = n;
+  }
+  return {
+    title: (data.title ?? '').toString().trim(),
+    published: data.published ?? true,
+    tags: Array.isArray(data.tags) ? data.tags.filter(Boolean).map(String) : [],
+    national: (data.national ?? '').toString().trim(),
+    cover_image: (data.cover_image ?? '').toString().trim(),
+    release_date: existingDate(data.release_date),
+    watch_date: existingDate(data.watch_date),
+    point,
+    summary: (data.summary ?? '').toString().trim(),
+    impression: (data.impression ?? '').toString().trim(),
+    body: (content ?? '').trim(),
+  };
+}
+
+export function mergeMovie(existing, incoming) {
+  return {
+    title: incoming.title,
+    published: incoming.published,
+    tags: incoming.tags.length ? incoming.tags : existing.tags,
+    national: incoming.national || existing.national,
+    cover_image: incoming.cover_image || existing.cover_image,
+    release_date: incoming.release_date || existing.release_date,
+    watch_date: incoming.watch_date || existing.watch_date,
+    point: incoming.point !== null ? incoming.point : existing.point,
+    summary: incoming.summary || existing.summary,
+    impression: incoming.impression || existing.impression,
+    body: incoming.body || existing.body,
+  };
+}
+
 function quote(s) {
   return `'${String(s).replace(/'/g, "''")}'`;
 }
@@ -118,20 +167,25 @@ function main() {
   if (!body) throw new Error('ISSUE_BODY env is required.');
 
   const sections = parseIssueBody(body);
-  const { movie, slug } = buildMovie(sections, { issueNumber });
+  const { movie: incoming, slug } = buildMovie(sections, { issueNumber });
   const outPath = path.join('movies', `${slug}.md`);
 
+  let finalMovie = incoming;
+  let action = 'add';
   if (fs.existsSync(outPath)) {
-    throw new Error(`movies/${slug}.md already exists. Pick a different title or delete the existing file.`);
+    const existing = readExisting(outPath);
+    finalMovie = mergeMovie(existing, incoming);
+    action = 'update';
   }
 
-  fs.writeFileSync(outPath, formatFile(movie));
+  fs.writeFileSync(outPath, formatFile(finalMovie));
 
   emit('slug', slug);
   emit('path', outPath);
-  emit('title', movie.title);
-  emit('list', movie.published ? 'Watched' : 'Watchlist');
-  emit('watchlist', movie.published ? 'false' : 'true');
+  emit('title', finalMovie.title);
+  emit('list', finalMovie.published ? 'Watched' : 'Watchlist');
+  emit('watchlist', finalMovie.published ? 'false' : 'true');
+  emit('action', action);
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

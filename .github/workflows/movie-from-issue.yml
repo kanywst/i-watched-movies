@@ -2,7 +2,7 @@ name: Movie from issue
 
 on:
   issues:
-    types: [opened, edited, labeled]
+    types: [opened, edited, labeled, reopened]
   pull_request:
     types: [closed]
 
@@ -34,6 +34,8 @@ jobs:
           gh issue edit "$ISSUE" \
             --remove-label 'status: queued' \
             --remove-label 'status: failed' \
+            --remove-label 'status: pr-opened' \
+            --remove-label 'status: merged' \
             --add-label 'status: processing' || true
 
       - uses: actions/setup-node@v6
@@ -51,36 +53,69 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: node scripts/build-movie-from-issue.js
 
+      - name: Check for changes
+        id: changes
+        env:
+          PATH_FILE: ${{ steps.build.outputs.path }}
+        run: |
+          if [ -n "$(git status --porcelain -- "$PATH_FILE")" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No changes to $PATH_FILE"
+          fi
+
+      - name: Acknowledge no-op
+        if: steps.changes.outputs.changed != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          gh issue edit "$ISSUE" --remove-label 'status: processing' || true
+          gh issue comment "$ISSUE" --body "No changes detected; the existing file already matches this issue."
+
       - name: Validate (lint + test + build)
+        if: steps.changes.outputs.changed == 'true'
         run: |
           npm run lint
           npm test
           npm run build
 
       - name: Configure git
+        if: steps.changes.outputs.changed == 'true'
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
 
       - name: Commit and push branch
+        if: steps.changes.outputs.changed == 'true'
         id: commit
         env:
           SLUG: ${{ steps.build.outputs.slug }}
           TITLE: ${{ steps.build.outputs.title }}
           PATH_FILE: ${{ steps.build.outputs.path }}
+          ACTION: ${{ steps.build.outputs.action }}
         run: |
           BRANCH="bot/movie/$SLUG"
+          if [ "$ACTION" = "update" ]; then
+            VERB="update"
+          else
+            VERB="add"
+          fi
           echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+          echo "verb=$VERB" >> "$GITHUB_OUTPUT"
           git checkout -B "$BRANCH"
           git add "$PATH_FILE"
-          git commit -m "feat(movies): add $TITLE"
+          git commit -m "feat(movies): $VERB $TITLE"
           git push --force-with-lease origin "$BRANCH"
 
       - name: Open or update PR
+        if: steps.changes.outputs.changed == 'true'
         id: pr
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: ${{ steps.commit.outputs.branch }}
+          VERB: ${{ steps.commit.outputs.verb }}
           TITLE: ${{ steps.build.outputs.title }}
           LIST: ${{ steps.build.outputs.list }}
           PATH_FILE: ${{ steps.build.outputs.path }}
@@ -101,19 +136,21 @@ jobs:
             URL=$(gh pr create \
               --base main \
               --head "$BRANCH" \
-              --title "feat(movies): add $TITLE" \
+              --title "feat(movies): $VERB $TITLE" \
               --body "$BODY" \
               --label bot)
             NUMBER=$(basename "$URL")
             gh pr merge "$NUMBER" --auto --squash
           else
             URL=$(gh pr view "$EXISTING" --json url -q .url)
-            gh pr edit "$EXISTING" --body "$BODY"
+            gh pr edit "$EXISTING" \
+              --title "feat(movies): $VERB $TITLE" \
+              --body "$BODY"
           fi
           echo "url=$URL" >> "$GITHUB_OUTPUT"
 
       - name: Mark issue as pr-opened
-        if: success()
+        if: success() && steps.changes.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE: ${{ github.event.issue.number }}
