@@ -173,6 +173,16 @@ describe('readExisting', () => {
     expect(m.body).toBe('Body text.');
   });
 
+  it('falls back to comma-split when tags is a string', () => {
+    const file = path.join(tmpDir, 'string-tags.md');
+    fs.writeFileSync(
+      file,
+      ['---', "title: 'T'", 'published: true', "tags: 'Horror, Drama'", '---', ''].join('\n'),
+    );
+    const m = readExisting(file);
+    expect(m.tags).toEqual(['Horror', 'Drama']);
+  });
+
   it('coerces unquoted YAML dates back to ISO strings', () => {
     const file = path.join(tmpDir, 'legacy.md');
     fs.writeFileSync(
