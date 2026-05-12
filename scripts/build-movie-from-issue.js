@@ -90,16 +90,14 @@ export function readExisting(filePath) {
   const raw = fs.readFileSync(filePath, 'utf8');
   const { data, content } = matter(raw);
   let point = null;
-  if (typeof data.point === 'number' && Number.isFinite(data.point)) {
-    point = data.point;
-  } else if (data.point !== undefined && data.point !== null && data.point !== '') {
+  if (data.point !== undefined && data.point !== null && data.point !== '') {
     const n = Number(data.point);
     if (Number.isFinite(n)) point = n;
   }
   return {
     title: (data.title ?? '').toString().trim(),
     published: data.published ?? true,
-    tags: Array.isArray(data.tags) ? data.tags.filter(Boolean).map(String) : [],
+    tags: Array.isArray(data.tags) ? data.tags.filter(Boolean).map(String) : parseTags(data.tags),
     national: (data.national ?? '').toString().trim(),
     cover_image: (data.cover_image ?? '').toString().trim(),
     release_date: existingDate(data.release_date),
