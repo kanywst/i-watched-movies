@@ -34,6 +34,11 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, index, rank, isNew,
 
   const rankStyle = rank ? getRankBadge(rank) : null;
   const displayFlag = movie.national ? COUNTRY_FLAGS[movie.national] : null;
+  const watchYear = (() => {
+    if (!movie.watch_date) return 'N/A';
+    const d = new Date(movie.watch_date);
+    return Number.isNaN(d.getTime()) ? 'N/A' : format(d, 'yyyy');
+  })();
   // When this card's modal is open, the modal owns the shared poster name.
   // Keeping it here too would make two live elements share one
   // view-transition-name, which aborts the transition.
@@ -135,7 +140,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, index, rank, isNew,
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs text-stone-500">
-            <span className="tabular-nums">{movie.watch_date ? format(new Date(movie.watch_date), 'yyyy') : 'N/A'}</span>
+            <span className="tabular-nums">{watchYear}</span>
 
             {displayFlag && (
               <>
