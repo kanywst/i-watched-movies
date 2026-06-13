@@ -58,7 +58,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, index, rank, isNew,
       role="button"
       tabIndex={0}
       aria-label={`${movie.title}${movie.published ? `, rated ${movie.point} out of 10` : ''}`}
-      className="card-enter group relative flex flex-col bg-transparent cursor-pointer rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950"
+      className="card-enter group relative flex flex-col bg-transparent cursor-pointer rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-stone-400 focus-visible:ring-offset-stone-50 dark:focus-visible:ring-stone-300 dark:focus-visible:ring-offset-stone-950"
       style={{ '--card-index': index } as React.CSSProperties}
     >
       {/* Rank Badge - Floating */}
@@ -82,17 +82,17 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, index, rank, isNew,
       {/* Image Container */}
       <div
         style={posterStyle}
-        className="aspect-[2/3] w-full overflow-hidden relative bg-dark-card rounded-lg shadow-sm border border-white/5 transition-all duration-500 group-hover:shadow-2xl group-hover:border-white/20"
+        className="aspect-[2/3] w-full overflow-hidden relative rounded-lg shadow-sm transition-all duration-500 group-hover:shadow-2xl bg-stone-100 border border-stone-200 group-hover:border-stone-300 dark:bg-dark-card dark:border-white/5 dark:group-hover:border-white/20"
       >
         {/* Loading Skeleton */}
         {!isLoaded && !isError && (
-          <div className="absolute inset-0 z-20 flex items-center justify-center bg-dark-card animate-pulse">
-            <ImageIcon className="w-8 h-8 text-stone-700" />
+          <div className="absolute inset-0 z-20 flex items-center justify-center animate-pulse bg-stone-100 dark:bg-dark-card">
+            <ImageIcon className="w-8 h-8 text-stone-400 dark:text-stone-700" />
           </div>
         )}
 
         {isError ? (
-          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-dark-card text-stone-500 p-4 text-center">
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-stone-500 p-4 text-center bg-stone-100 dark:bg-dark-card">
             <ImageIcon className="w-8 h-8 mb-2 opacity-50" />
             <span className="text-xs">No Image</span>
           </div>
@@ -134,7 +134,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, index, rank, isNew,
 
       {/* Content - Minimalist below card */}
       <div className="pt-4 flex flex-col gap-1">
-        <h2 className="text-base font-semibold leading-tight text-stone-200 group-hover:text-white transition-colors line-clamp-1">
+        <h2 className="text-base font-semibold leading-tight transition-colors line-clamp-1 text-stone-800 group-hover:text-stone-950 dark:text-stone-200 dark:group-hover:text-white">
           {movie.title}
         </h2>
 
@@ -151,7 +151,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, index, rank, isNew,
 
             <span className="w-0.5 h-0.5 rounded-full bg-stone-500"></span>
             <div className="flex items-center gap-1 text-stone-400 tabular-nums">
-              <Star className="h-3 w-3 fill-stone-600 text-stone-600" />
+              <Star className="h-3 w-3 fill-stone-400 text-stone-400 dark:fill-stone-600 dark:text-stone-600" />
               <span>{movie.point}</span>
             </div>
           </div>
