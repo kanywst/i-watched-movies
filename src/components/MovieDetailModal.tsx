@@ -63,6 +63,13 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({ movie, onClo
 
   const posterStyle: React.CSSProperties = { viewTransitionName: `poster-${movie.id}` };
 
+  const formatDate = (value: string): string | null => {
+    const d = new Date(value);
+    return Number.isNaN(d.getTime()) ? null : format(d, 'MMMM d, yyyy');
+  };
+  const releasedLabel = movie.release_date ? formatDate(movie.release_date) : null;
+  const watchedLabel = movie.watch_date ? formatDate(movie.watch_date) : null;
+
   return (
     <div
       onClick={onClose}
@@ -124,16 +131,16 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({ movie, onClo
             </h2>
 
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-stone-500">
-              {movie.release_date && (
+              {releasedLabel && (
                 <div className="flex items-center gap-1.5">
                   <Film className="w-4 h-4" />
-                  <span className="tabular-nums">Released: {format(new Date(movie.release_date), 'MMMM d, yyyy')}</span>
+                  <span className="tabular-nums">Released: {releasedLabel}</span>
                 </div>
               )}
-              {movie.watch_date && (
+              {watchedLabel && (
                 <div className="flex items-center gap-1.5">
                   <Calendar className="w-4 h-4" />
-                  <span className="tabular-nums">Watched: {format(new Date(movie.watch_date), 'MMMM d, yyyy')}</span>
+                  <span className="tabular-nums">Watched: {watchedLabel}</span>
                 </div>
               )}
               {movie.published && (
