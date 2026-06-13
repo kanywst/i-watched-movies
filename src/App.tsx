@@ -91,13 +91,13 @@ const App: React.FC = () => {
   const filteredMovies = useMemo(() => {
     const q = search.trim().toLowerCase();
     const filtered = viewMovies.filter((movie) => {
-      const matchesSearch = q === '' || [
-        movie.title,
-        movie.summary,
-        movie.national,
-        movie.content,
-        ...movie.tags,
-      ].some(field => field?.toLowerCase().includes(q));
+      const matchesSearch =
+        q === '' ||
+        movie.title.toLowerCase().includes(q) ||
+        (movie.summary?.toLowerCase().includes(q) ?? false) ||
+        (movie.national?.toLowerCase().includes(q) ?? false) ||
+        movie.content.toLowerCase().includes(q) ||
+        movie.tags.some(tag => tag.toLowerCase().includes(q));
       const matchesTags = selectedTags.length === 0 || selectedTags.every(t => movie.tags.includes(t));
       return matchesSearch && matchesTags;
     });
