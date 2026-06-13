@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { X, Calendar, Star, Quote } from 'lucide-react';
+import { X, Calendar, Film, Star, Quote } from 'lucide-react';
 import { Movie } from '../types';
 import { format } from 'date-fns';
 
@@ -123,15 +123,25 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({ movie, onClo
               {movie.title}
             </h2>
 
-            <div className="flex items-center gap-6 text-sm text-stone-500">
-              <div className="flex items-center gap-1.5">
-                <Calendar className="w-4 h-4" />
-                <span className="tabular-nums">Watched: {movie.watch_date ? format(new Date(movie.watch_date), 'MMMM d, yyyy') : 'N/A'}</span>
-              </div>
-              <div className="flex items-center gap-1 text-stone-300 font-medium tabular-nums">
-                <Star className="w-4 h-4 fill-stone-300" />
-                <span>{movie.point}/10</span>
-              </div>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-stone-500">
+              {movie.release_date && (
+                <div className="flex items-center gap-1.5">
+                  <Film className="w-4 h-4" />
+                  <span className="tabular-nums">Released: {format(new Date(movie.release_date), 'MMMM d, yyyy')}</span>
+                </div>
+              )}
+              {movie.watch_date && (
+                <div className="flex items-center gap-1.5">
+                  <Calendar className="w-4 h-4" />
+                  <span className="tabular-nums">Watched: {format(new Date(movie.watch_date), 'MMMM d, yyyy')}</span>
+                </div>
+              )}
+              {movie.published && (
+                <div className="flex items-center gap-1 text-stone-300 font-medium tabular-nums">
+                  <Star className="w-4 h-4 fill-stone-300" />
+                  <span>{movie.point}/10</span>
+                </div>
+              )}
             </div>
           </div>
 
