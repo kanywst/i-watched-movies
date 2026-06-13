@@ -146,7 +146,7 @@ const App: React.FC = () => {
         {view === 'watched' ? (
           <div className="flex items-end gap-8">
             <div className="flex flex-col items-start md:items-end gap-1">
-              <div className="text-5xl font-light text-stone-200 tabular-nums">{filteredMovies.length}</div>
+              <div className="text-5xl font-light text-stone-200 tabular-nums">{stats.total}</div>
               <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Collected</div>
             </div>
             <div className="flex flex-col items-start md:items-end gap-1">
@@ -160,7 +160,7 @@ const App: React.FC = () => {
           </div>
         ) : (
           <div className="flex flex-col items-start md:items-end gap-1">
-            <div className="text-5xl font-light text-stone-200 tabular-nums">{filteredMovies.length}</div>
+            <div className="text-5xl font-light text-stone-200 tabular-nums">{watchlistMovies.length}</div>
             <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">On Watchlist</div>
           </div>
         )}
@@ -192,7 +192,7 @@ const App: React.FC = () => {
             movie={movie}
             index={index}
             rank={getRank(movie.id)}
-            isNew={view === 'watched' && sort === 'watch_date_desc' && newMovieIds.has(movie.id)}
+            isNew={view === 'watched' && newMovieIds.has(movie.id)}
             isSelected={movie.id === urlState.selected}
             onClick={openMovie}
           />
