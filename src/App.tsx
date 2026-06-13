@@ -10,7 +10,7 @@ import { clsx } from 'clsx';
 import { CONFIG } from './config';
 import { NEW_LIMIT, RANK_LIMIT, SORT_OPTIONS } from './constants';
 import { sortMovies } from './sortMovies';
-import { computeStats } from './stats';
+import { computeStats, computeWatchlistStats } from './stats';
 import { useDocumentMetadata } from './useDocumentMetadata';
 import { urlParams, useUrlState } from './useUrlState';
 
@@ -64,6 +64,8 @@ const App: React.FC = () => {
 
   const stats = useMemo(() => computeStats(watchedMovies), [watchedMovies]);
 
+  const watchlistStats = useMemo(() => computeWatchlistStats(watchlistMovies), [watchlistMovies]);
+
   const viewMovies = view === 'watched' ? watchedMovies : watchlistMovies;
 
   const allTags = useMemo(() => {
@@ -87,8 +89,15 @@ const App: React.FC = () => {
   }, [watchedMovies]);
 
   const filteredMovies = useMemo(() => {
+    const q = search.trim().toLowerCase();
     const filtered = viewMovies.filter((movie) => {
-      const matchesSearch = movie.title.toLowerCase().includes(search.toLowerCase());
+      const matchesSearch = q === '' || [
+        movie.title,
+        movie.summary,
+        movie.national,
+        movie.content,
+        ...movie.tags,
+      ].some(field => field?.toLowerCase().includes(q));
       const matchesTags = selectedTags.length === 0 || selectedTags.every(t => movie.tags.includes(t));
       return matchesSearch && matchesTags;
     });
@@ -179,9 +188,19 @@ const App: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-start md:items-end gap-1">
-            <div className="text-5xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{watchlistMovies.length}</div>
-            <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">On Watchlist</div>
+          <div className="flex items-end gap-8">
+            <div className="flex flex-col items-start md:items-end gap-1">
+              <div className="text-5xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{watchlistMovies.length}</div>
+              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">On Watchlist</div>
+            </div>
+            <div className="flex flex-col items-start md:items-end gap-1">
+              <div className="text-3xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{watchlistStats.upcoming}</div>
+              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Upcoming</div>
+            </div>
+            <div className="flex flex-col items-start md:items-end gap-1">
+              <div className="text-3xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{watchlistStats.genres}</div>
+              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Genres</div>
+            </div>
           </div>
         )}
       </header>

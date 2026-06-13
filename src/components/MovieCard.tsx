@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Star, Image as ImageIcon, Trophy, Crown, Sparkles } from 'lucide-react';
+import { Star, Image as ImageIcon, Medal, Award, Crown, Sparkles } from 'lucide-react';
 import { Movie } from '../types';
 import { format } from 'date-fns';
 import { clsx } from 'clsx';
@@ -27,8 +27,8 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, index, rank, isNew,
 
   const getRankBadge = (r: number) => {
     if (r === 1) return { color: 'text-yellow-100', bg: 'bg-yellow-600/80 backdrop-blur-md shadow-lg', icon: Crown };
-    if (r === 2) return { color: 'text-slate-100', bg: 'bg-slate-500/80 backdrop-blur-md shadow-lg', icon: Trophy };
-    if (r === 3) return { color: 'text-orange-100', bg: 'bg-orange-700/80 backdrop-blur-md shadow-lg', icon: Trophy };
+    if (r === 2) return { color: 'text-slate-100', bg: 'bg-slate-500/80 backdrop-blur-md shadow-lg', icon: Medal };
+    if (r === 3) return { color: 'text-orange-100', bg: 'bg-orange-700/80 backdrop-blur-md shadow-lg', icon: Award };
     return null;
   };
 
