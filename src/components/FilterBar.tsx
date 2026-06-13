@@ -42,6 +42,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           <input
             type="text"
             placeholder="Search movies..."
+            aria-label="Search movies by title"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full bg-transparent border-b border-stone-800 py-3 pl-10 pr-4 text-sm text-stone-200 placeholder-stone-600 focus:outline-none focus:border-stone-500 transition-all rounded-none"
@@ -54,6 +55,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as SortKey)}
+            aria-label="Sort movies"
             className="w-full bg-transparent border-b border-stone-800 py-3 pl-10 pr-8 text-sm text-stone-200 focus:outline-none focus:border-stone-500 appearance-none cursor-pointer transition-all rounded-none"
           >
             {SORT_OPTIONS.map(({ value, label }) => (

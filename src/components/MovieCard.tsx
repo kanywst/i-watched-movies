@@ -44,7 +44,16 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, index, rank, isNew,
   return (
     <div
       onClick={() => onClick(movie)}
-      className="card-enter group relative flex flex-col bg-transparent cursor-pointer"
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick(movie);
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label={`${movie.title}${movie.published ? `, rated ${movie.point} out of 10` : ''}`}
+      className="card-enter group relative flex flex-col bg-transparent cursor-pointer rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950"
       style={{ '--card-index': index } as React.CSSProperties}
     >
       {/* Rank Badge - Floating */}
