@@ -193,6 +193,7 @@ const App: React.FC = () => {
             index={index}
             rank={getRank(movie.id)}
             isNew={view === 'watched' && sort === 'watch_date_desc' && newMovieIds.has(movie.id)}
+            isSelected={movie.id === urlState.selected}
             onClick={openMovie}
           />
         ))}

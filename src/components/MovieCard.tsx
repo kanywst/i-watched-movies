@@ -10,10 +10,11 @@ interface MovieCardProps {
   index: number;
   rank?: number;
   isNew?: boolean;
+  isSelected?: boolean;
   onClick: (movie: Movie) => void;
 }
 
-export const MovieCard: React.FC<MovieCardProps> = ({ movie, index, rank, isNew, onClick }) => {
+export const MovieCard: React.FC<MovieCardProps> = ({ movie, index, rank, isNew, isSelected, onClick }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isPortrait, setIsPortrait] = useState(true);
@@ -33,7 +34,12 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, index, rank, isNew,
 
   const rankStyle = rank ? getRankBadge(rank) : null;
   const displayFlag = movie.national ? COUNTRY_FLAGS[movie.national] : null;
-  const posterStyle: React.CSSProperties = { viewTransitionName: `poster-${movie.id}` };
+  // When this card's modal is open, the modal owns the shared poster name.
+  // Keeping it here too would make two live elements share one
+  // view-transition-name, which aborts the transition.
+  const posterStyle: React.CSSProperties = isSelected
+    ? {}
+    : { viewTransitionName: `poster-${movie.id}` };
 
   return (
     <div
