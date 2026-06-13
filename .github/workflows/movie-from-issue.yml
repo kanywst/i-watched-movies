@@ -3,8 +3,6 @@ name: Movie from issue
 on:
   issues:
     types: [opened, edited, labeled, reopened]
-  pull_request:
-    types: [closed]
 
 permissions:
   contents: write
@@ -109,7 +107,7 @@ jobs:
           git commit -m "feat(movies): $VERB $TITLE"
           git push --force-with-lease origin "$BRANCH"
 
-      - name: Open or update PR
+      - name: Open or update PR and merge
         if: steps.changes.outputs.changed == 'true'
         id: pr
         env:
@@ -140,16 +138,20 @@ jobs:
               --body "$BODY" \
               --label bot)
             NUMBER=$(basename "$URL")
-            gh pr merge "$NUMBER" --auto --squash
           else
+            NUMBER="$EXISTING"
             URL=$(gh pr view "$EXISTING" --json url -q .url)
             gh pr edit "$EXISTING" \
               --title "feat(movies): $VERB $TITLE" \
               --body "$BODY"
           fi
+          # Validation (lint+test+build) already ran in-job, so merge directly.
+          # main is unprotected; auto-merge can't be used because a GITHUB_TOKEN
+          # merge would not trigger a follow-up workflow run to close the issue.
+          gh pr merge "$NUMBER" --squash --delete-branch
           echo "url=$URL" >> "$GITHUB_OUTPUT"
 
-      - name: Mark issue as pr-opened
+      - name: Mark issue as merged
         if: success() && steps.changes.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -158,8 +160,10 @@ jobs:
         run: |
           gh issue edit "$ISSUE" \
             --remove-label 'status: processing' \
-            --add-label 'status: pr-opened'
-          gh issue comment "$ISSUE" --body "PR opened: $PR_URL"
+            --remove-label 'status: pr-opened' \
+            --add-label 'status: merged'
+          gh issue comment "$ISSUE" --body "Merged: $PR_URL"
+          gh issue close "$ISSUE" --reason completed || true
 
       - name: Report failure on issue
         if: failure()
@@ -173,25 +177,3 @@ jobs:
             --remove-label 'status: pr-opened' \
             --add-label 'status: failed' || true
           gh issue comment "$ISSUE" --body "Bot failed. See [run logs]($RUN_URL). Edit this issue to retry."
-
-  mark-merged:
-    if: >-
-      github.event_name == 'pull_request' &&
-      github.event.pull_request.merged == true &&
-      contains(github.event.pull_request.labels.*.name, 'bot') &&
-      startsWith(github.event.pull_request.head.ref, 'bot/movie/')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Mark linked issue as merged
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BODY: ${{ github.event.pull_request.body }}
-        run: |
-          ISSUE=$(printf '%s\n' "$BODY" | grep -oE 'Closes #[0-9]+' | head -1 | grep -oE '[0-9]+' || true)
-          if [ -n "$ISSUE" ]; then
-            gh issue edit "$ISSUE" \
-              --remove-label 'status: pr-opened' \
-              --remove-label 'status: processing' \
-              --remove-label 'status: queued' \
-              --add-label 'status: merged'
-          fi
