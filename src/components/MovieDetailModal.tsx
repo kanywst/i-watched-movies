@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { X, Calendar, Star, Quote } from 'lucide-react';
 import { Movie } from '../types';
 import { format } from 'date-fns';
@@ -9,6 +9,10 @@ interface MovieDetailModalProps {
 }
 
 export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({ movie, onClose }) => {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previouslyFocused = useRef<HTMLElement | null>(null);
+
   useEffect(() => {
     if (movie) {
       document.body.style.overflow = 'hidden';
@@ -20,10 +24,36 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({ movie, onClo
     };
   }, [movie]);
 
+  // Move focus into the dialog on open, restore it to the opener on close.
+  useEffect(() => {
+    if (!movie) return;
+    previouslyFocused.current = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+    return () => previouslyFocused.current?.focus?.();
+  }, [movie]);
+
+  // Esc to close, and trap Tab focus within the dialog.
   useEffect(() => {
     if (!movie) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (e.key !== 'Tab' || !dialogRef.current) return;
+      const focusables = dialogRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -39,10 +69,15 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({ movie, onClo
       className="fixed inset-0 bg-stone-950/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 md:p-8"
     >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="movie-detail-title"
         className="bg-stone-900 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-xl border border-white/5 shadow-2xl relative flex flex-col md:flex-row overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <button
+          ref={closeButtonRef}
           onClick={onClose}
           aria-label="Close"
           className="absolute top-4 right-4 z-50 p-2 rounded-full bg-black/20 hover:bg-black/40 text-white transition-colors backdrop-blur-md border border-white/10"
@@ -84,7 +119,7 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({ movie, onClo
               ))}
             </div>
 
-            <h2 className="text-3xl md:text-4xl font-bold text-stone-100 leading-tight mb-3">
+            <h2 id="movie-detail-title" className="text-3xl md:text-4xl font-bold text-stone-100 leading-tight mb-3">
               {movie.title}
             </h2>
 
