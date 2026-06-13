@@ -41,12 +41,22 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-500 group-focus-within:text-stone-300 transition-colors" />
           <input
             type="text"
-            placeholder="Search movies..."
-            aria-label="Search movies by title"
+            placeholder="Search title, tags, summary..."
+            aria-label="Search movies by title, tags, summary or country"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-transparent border-b py-3 pl-10 pr-4 text-sm focus:outline-none transition-all rounded-none border-stone-300 text-stone-800 placeholder-stone-400 focus:border-stone-500 dark:border-stone-800 dark:text-stone-200 dark:placeholder-stone-600"
+            className="w-full bg-transparent border-b py-3 pl-10 pr-10 text-sm focus:outline-none transition-all rounded-none border-stone-300 text-stone-800 placeholder-stone-400 focus:border-stone-500 dark:border-stone-800 dark:text-stone-200 dark:placeholder-stone-600"
           />
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch('')}
+              aria-label="Clear search"
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full transition-colors text-stone-400 hover:text-stone-700 dark:text-stone-500 dark:hover:text-stone-200"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
         </div>
 
         {/* Sort */}

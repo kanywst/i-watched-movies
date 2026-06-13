@@ -28,3 +28,19 @@ export function computeStats(movies: Movie[], now: Date = new Date()): MovieStat
     currentYear,
   };
 }
+
+export interface WatchlistStats {
+  upcoming: number;
+  genres: number;
+}
+
+export function computeWatchlistStats(movies: Movie[], now: Date = new Date()): WatchlistStats {
+  const nowMs = now.getTime();
+  let upcoming = 0;
+  const genres = new Set<string>();
+  for (const m of movies) {
+    if (m.release_date && new Date(m.release_date).getTime() > nowMs) upcoming += 1;
+    m.tags.forEach(t => genres.add(t));
+  }
+  return { upcoming, genres: genres.size };
+}
