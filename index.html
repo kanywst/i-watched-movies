@@ -1,7 +1,19 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // Set the theme before first paint to avoid a flash of the wrong palette.
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          var dark = stored
+            ? stored === 'dark'
+            : window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {}
+      })();
+    </script>
     <link rel="icon" type="image/png" href="https://github.com/kanywst.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>The Movies kanywst Watched</title>
@@ -25,7 +37,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
   </head>
-  <body class="bg-dark-bg text-dark-text min-h-screen selection:bg-purple-500/30">
+  <body class="bg-stone-50 text-stone-900 dark:bg-dark-bg dark:text-dark-text min-h-screen selection:bg-stone-300/60 dark:selection:bg-purple-500/30">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

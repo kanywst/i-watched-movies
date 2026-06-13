@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Toggle dark mode via a `.dark` class on <html> (default is prefers-color-scheme). */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-dark-bg: #0c0a09; /* Stone 950 - Warm dark */
   --color-dark-card: #1c1917; /* Stone 900 - Soft card bg */
@@ -10,9 +13,9 @@
   --color-accent-subtle: #44403c; /* Stone 700 */
 }
 
-/* Custom base styles */
+/* Custom base styles. Light is the default; `.dark` flips to the warm dark palette. */
 body {
-  @apply antialiased bg-dark-bg text-dark-text selection:bg-stone-700/50;
+  @apply antialiased bg-stone-50 text-stone-900 selection:bg-stone-300/60 dark:bg-dark-bg dark:text-dark-text dark:selection:bg-stone-700/50;
 }
 
 /* Tabular figures for stat numbers and ratings (lined up digits) */
@@ -28,7 +31,7 @@ body {
   @apply bg-transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-dark-surface rounded-full hover:bg-dark-muted transition-colors;
+  @apply bg-stone-300 rounded-full hover:bg-stone-400 transition-colors dark:bg-dark-surface dark:hover:bg-dark-muted;
 }
 
 /* Honor user motion preferences */
