@@ -75,7 +75,10 @@ export function buildMovie(sections, { issueNumber } = {}) {
     throw new Error('Title is required.');
   }
 
-  const slug = slugify(movie.title, issueNumber ? `movie-${issueNumber}` : 'movie');
+  // slugify() strips everything outside [a-z0-9], so a Japanese title yields nothing and
+  // would land on the movie-<issue> fallback. An explicit Slug section overrides it.
+  const fallback = issueNumber ? `movie-${issueNumber}` : 'movie';
+  const slug = slugify(sections['Slug'], '') || slugify(movie.title, fallback);
   return { movie, slug };
 }
 

@@ -27,6 +27,13 @@ body:
       required: true
 
   - type: input
+    id: slug
+    attributes:
+      label: Slug
+      description: 'Optional. Filename for movies/<slug>.md. Set this for a Japanese title, which otherwise falls back to movie-<issue number>.'
+      placeholder: shikei-ni-itaru-yamai
+
+  - type: input
     id: watch_date
     attributes:
       label: Watch date

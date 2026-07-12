@@ -113,6 +113,24 @@ describe('buildMovie', () => {
   it('throws when title is missing', () => {
     expect(() => buildMovie({})).toThrow(/Title is required/);
   });
+
+  it('prefers an explicit Slug over the title', () => {
+    const { slug } = buildMovie(
+      { Title: '死刑にいたる病', Slug: 'Shikei ni Itaru Yamai' },
+      { issueNumber: '7' }
+    );
+    expect(slug).toBe('shikei-ni-itaru-yamai');
+  });
+
+  it('still falls back to the issue number when a Japanese title has no Slug', () => {
+    const { slug } = buildMovie({ Title: '死刑にいたる病' }, { issueNumber: '7' });
+    expect(slug).toBe('movie-7');
+  });
+
+  it('ignores a Slug that slugifies to nothing', () => {
+    const { slug } = buildMovie({ Title: '28 Years Later', Slug: '???' });
+    expect(slug).toBe('28-years-later');
+  });
 });
 
 describe('formatFile', () => {
