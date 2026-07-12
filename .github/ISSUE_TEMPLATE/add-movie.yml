@@ -70,6 +70,7 @@ body:
         - Germany
         - Canada
         - Australia
+        - Hong Kong
 
   - type: input
     id: tags

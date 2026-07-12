@@ -10,6 +10,7 @@ export const COUNTRY_FLAGS: Record<string, string> = {
   France: '🇫🇷',
   Korea: '🇰🇷',
   China: '🇨🇳',
+  'Hong Kong': '🇭🇰',
   India: '🇮🇳',
   Germany: '🇩🇪',
   Canada: '🇨🇦',
