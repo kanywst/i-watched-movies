@@ -4,7 +4,7 @@ published: true
 tags:
   - 'Horror'
 national: 'Japan'
-cover_image: 'https://media.eiga.com/images/movie/103059/photo/74bbff878f580140/160.jpg'
+cover_image: 'https://media.eiga.com/images/movie/103059/photo/74bbff878f580140/640.jpg'
 release_date: '2025-08-08'
 watch_date: '2025-08-08'
 point: 7.3

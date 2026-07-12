@@ -4,7 +4,7 @@ published: true
 tags:
   - 'Action'
 national: 'India'
-cover_image: 'https://media.eiga.com/images/movie/104957/photo/89858e2505d461eb/160.jpg'
+cover_image: 'https://media.eiga.com/images/movie/104957/photo/89858e2505d461eb/640.jpg'
 release_date: '2026-01-02'
 watch_date: '2026-01-18'
 point: 7.4

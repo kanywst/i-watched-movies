@@ -6,7 +6,7 @@ tags:
   - 'Suspense'
   - 'Mystery'
 national: 'Japan'
-cover_image: 'https://media.eiga.com/images/movie/95557/photo/1ebf7479ef1dcdf2/160.jpg'
+cover_image: 'https://media.eiga.com/images/movie/95557/photo/1ebf7479ef1dcdf2/640.jpg'
 release_date: '2022-05-06'
 summary: 'A drifting college student receives a letter from Haimura, a serial killer convicted of 24 murders and sentenced to death. Haimura insists the last of those charges was a false accusation, and asks him to find the real culprit.'
 ---

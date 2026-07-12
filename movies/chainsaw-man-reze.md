@@ -5,7 +5,7 @@ tags:
   - 'Horror'
   - 'Anime'
 national: 'Japan'
-cover_image: 'https://media.eiga.com/images/movie/100938/photo/86db6065986a9eef/160.jpg'
+cover_image: 'https://media.eiga.com/images/movie/100938/photo/86db6065986a9eef/640.jpg'
 release_date: '2025-09-19'
 watch_date: '2025-10-04'
 point: 8.5

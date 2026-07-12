@@ -4,7 +4,7 @@ published: true
 tags:
   - 'Crime'
 national: 'Japan'
-cover_image: 'https://media.eiga.com/images/movie/103774/photo/136efb04235ee86f/160.jpg'
+cover_image: 'https://media.eiga.com/images/movie/103774/photo/136efb04235ee86f/640.jpg'
 release_date: '2025-10-24'
 watch_date: '2025-11-09'
 point: 8.0
