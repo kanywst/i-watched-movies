@@ -51,7 +51,7 @@ body:
     id: national
     attributes:
       label: National
-      description: Optional
+      description: Optional. Must match a key in COUNTRY_FLAGS (src/constants.ts) to render a flag.
       options:
         - Japan
         - USA
@@ -59,7 +59,10 @@ body:
         - France
         - Korea
         - China
-        - Other
+        - India
+        - Germany
+        - Canada
+        - Australia
 
   - type: input
     id: tags

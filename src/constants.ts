@@ -13,6 +13,7 @@ export const COUNTRY_FLAGS: Record<string, string> = {
   India: '🇮🇳',
   Germany: '🇩🇪',
   Canada: '🇨🇦',
+  Australia: '🇦🇺',
 };
 
 export const SORT_OPTIONS: { value: SortKey; label: string }[] = [
