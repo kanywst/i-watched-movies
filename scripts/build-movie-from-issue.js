@@ -3,6 +3,7 @@ import path from 'path';
 import matter from 'gray-matter';
 
 const NO_RESPONSE = '_No response_';
+const MOVIES_DIR = 'movies';
 
 export function parseIssueBody(body) {
   const sections = {};
@@ -76,10 +77,32 @@ export function buildMovie(sections, { issueNumber } = {}) {
   }
 
   // slugify() strips everything outside [a-z0-9], so a Japanese title yields nothing and
-  // would land on the movie-<issue> fallback. An explicit Slug section overrides it.
+  // would land on the movie-<issue> fallback. Prefer, in order: an entry that already
+  // holds this title (so re-logging a watchlist film updates it instead of forking a
+  // second file), then an explicit Slug section, then the title, then the fallback.
   const fallback = issueNumber ? `movie-${issueNumber}` : 'movie';
-  const slug = slugify(sections['Slug'], '') || slugify(movie.title, fallback);
+  const slug =
+    findSlugByTitle(movie.title) ||
+    slugify(sections['Slug'], '') ||
+    slugify(movie.title, fallback);
   return { movie, slug };
+}
+
+// Scan movies/ for an entry whose title matches, and return its slug. Without this a
+// Japanese-titled film already on the watchlist gets a fresh movie-<issue>.md when it is
+// later logged as watched, because readExisting() only ever looks a file up by slug.
+export function findSlugByTitle(title, dir = MOVIES_DIR) {
+  if (!title || !fs.existsSync(dir)) return '';
+  for (const file of fs.readdirSync(dir)) {
+    if (!file.endsWith('.md')) continue;
+    try {
+      const { data } = matter(fs.readFileSync(path.join(dir, file), 'utf8'));
+      if (String(data.title || '').trim() === title) return file.replace(/\.md$/, '');
+    } catch {
+      // A malformed file should not block the entry being written.
+    }
+  }
+  return '';
 }
 
 function existingDate(value) {
@@ -169,7 +192,7 @@ function main() {
 
   const sections = parseIssueBody(body);
   const { movie: incoming, slug } = buildMovie(sections, { issueNumber });
-  const outPath = path.join('movies', `${slug}.md`);
+  const outPath = path.join(MOVIES_DIR, `${slug}.md`);
 
   let finalMovie = incoming;
   let action = 'add';

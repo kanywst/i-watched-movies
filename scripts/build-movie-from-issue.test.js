@@ -5,6 +5,7 @@ import path from 'path';
 import { afterEach, beforeEach, describe, it, expect } from 'vitest';
 import {
   buildMovie,
+  findSlugByTitle,
   formatFile,
   mergeMovie,
   parseIssueBody,
@@ -122,14 +123,31 @@ describe('buildMovie', () => {
     expect(slug).toBe('shikei-ni-itaru-yamai');
   });
 
-  it('still falls back to the issue number when a Japanese title has no Slug', () => {
-    const { slug } = buildMovie({ Title: '死刑にいたる病' }, { issueNumber: '7' });
+  it('still falls back to the issue number for a new Japanese title with no Slug', () => {
+    const { slug } = buildMovie({ Title: 'まだ存在しない邦題' }, { issueNumber: '7' });
     expect(slug).toBe('movie-7');
   });
 
   it('ignores a Slug that slugifies to nothing', () => {
     const { slug } = buildMovie({ Title: '28 Years Later', Slug: '???' });
     expect(slug).toBe('28-years-later');
+  });
+
+  it('reuses the slug of an existing entry with the same title', () => {
+    // A Japanese-titled film already on the watchlist, re-logged as watched without a
+    // Slug, must land on the same file instead of forking a movie-<issue>.md duplicate.
+    const { slug } = buildMovie({ Title: '死刑にいたる病', List: 'Watched' }, { issueNumber: '150' });
+    expect(slug).toBe('shikei-ni-itaru-yamai');
+  });
+});
+
+describe('findSlugByTitle', () => {
+  it('finds the file holding a title', () => {
+    expect(findSlugByTitle('死刑にいたる病')).toBe('shikei-ni-itaru-yamai');
+  });
+
+  it('returns empty for a title no entry holds', () => {
+    expect(findSlugByTitle('A Film That Does Not Exist')).toBe('');
   });
 });
 
