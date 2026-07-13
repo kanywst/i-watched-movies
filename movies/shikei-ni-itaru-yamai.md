@@ -1,6 +1,6 @@
 ---
 title: '死刑にいたる病'
-published: false
+published: true
 tags:
   - 'Crime'
   - 'Suspense'
@@ -8,6 +8,8 @@ tags:
 national: 'Japan'
 cover_image: 'https://media.eiga.com/images/movie/95557/photo/1ebf7479ef1dcdf2/640.jpg'
 release_date: '2022-05-06'
+watch_date: '2026-07-13'
+point: 8.4
 summary: 'A drifting college student receives a letter from Haimura, a serial killer convicted of 24 murders and sentenced to death. Haimura insists the last of those charges was a false accusation, and asks him to find the real culprit.'
 ---
 
