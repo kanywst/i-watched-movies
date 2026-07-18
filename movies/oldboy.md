@@ -1,6 +1,6 @@
 ---
 title: 'Oldboy'
-published: false
+published: true
 tags:
   - 'Mystery'
   - 'Thriller'
