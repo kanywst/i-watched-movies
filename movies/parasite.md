@@ -1,6 +1,7 @@
 ---
 title: 'Parasite'
 published: false
+seen: true
 tags:
   - 'Thriller'
   - 'Drama'

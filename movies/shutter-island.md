@@ -1,6 +1,7 @@
 ---
 title: 'Shutter Island'
 published: false
+seen: true
 tags:
   - 'Thriller'
   - 'Mystery'

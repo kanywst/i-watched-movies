@@ -1,6 +1,7 @@
 ---
 title: '孤狼の血'
 published: false
+seen: true
 tags:
   - 'Crime'
   - 'Thriller'

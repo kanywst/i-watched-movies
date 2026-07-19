@@ -28,6 +28,7 @@ impression: 'Loved it'`,
       id: 'test-movie',
       title: 'Test',
       published: true,
+      seen: false,
       tags: ['A', 'B'],
       national: 'Japan',
       cover_image: 'https://example.com/c.png',
@@ -49,6 +50,16 @@ impression: 'Loved it'`,
 
   it('defaults published to true when omitted', () => {
     expect(parseMovie(md(`title: 'T'`), 'p').published).toBe(true);
+  });
+
+  it('defaults seen to false when omitted', () => {
+    expect(parseMovie(md(`title: 'T'`), 'p').seen).toBe(false);
+  });
+
+  it('parses seen: true for a seen-but-unrated entry', () => {
+    const movie = parseMovie(md(`title: 'Seen It'\npublished: false\nseen: true`), 's');
+    expect(movie.seen).toBe(true);
+    expect(movie.published).toBe(false);
   });
 
   it('defaults missing scalar fields', () => {

@@ -18,10 +18,11 @@ body:
     id: list
     attributes:
       label: List
-      description: Where to add this entry
+      description: 'Where to add this entry. Seen = watched but left unrated (its own section, no score).'
       options:
         - Watched
         - Watchlist
+        - Seen
       default: 0
     validations:
       required: true

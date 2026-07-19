@@ -109,6 +109,20 @@ describe('buildMovie', () => {
     const body = sample.replace('### List\n\nWatched', '### List\n\nWatchlist');
     const { movie } = buildMovie(parseIssueBody(body));
     expect(movie.published).toBe(false);
+    expect(movie.seen).toBe(false);
+  });
+
+  it('sets seen=true and published=false when List is Seen', () => {
+    const body = sample.replace('### List\n\nWatched', '### List\n\nSeen');
+    const { movie } = buildMovie(parseIssueBody(body));
+    expect(movie.seen).toBe(true);
+    expect(movie.published).toBe(false);
+  });
+
+  it('marks a Watched entry as not seen', () => {
+    const { movie } = buildMovie(parseIssueBody(sample));
+    expect(movie.seen).toBe(false);
+    expect(movie.published).toBe(true);
   });
 
   it('throws when title is missing', () => {
@@ -166,6 +180,16 @@ describe('formatFile', () => {
     const { movie } = buildMovie(parseIssueBody(sample));
     const out = formatFile(movie);
     expect(out).not.toContain('summary:');
+  });
+
+  it('omits seen for a normal entry but emits it for a Seen entry', () => {
+    const watched = formatFile(buildMovie(parseIssueBody(sample)).movie);
+    expect(watched).not.toContain('seen:');
+
+    const seenBody = sample.replace('### List\n\nWatched', '### List\n\nSeen');
+    const seenOut = formatFile(buildMovie(parseIssueBody(seenBody)).movie);
+    expect(seenOut).toContain('published: false');
+    expect(seenOut).toContain('seen: true');
   });
 });
 

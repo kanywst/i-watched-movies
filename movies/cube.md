@@ -1,6 +1,7 @@
 ---
 title: 'CUBE 一度入ったら、最後'
 published: false
+seen: true
 tags:
   - 'Thriller'
   - 'Suspense'

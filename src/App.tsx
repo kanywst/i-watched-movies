@@ -5,7 +5,7 @@ import { Movie, SortKey, View } from './types';
 import { MovieCard } from './components/MovieCard';
 import { FilterBar } from './components/FilterBar';
 import { MovieDetailModal } from './components/MovieDetailModal';
-import { Film, Bookmark, Eye, Sun, Moon } from 'lucide-react';
+import { Film, Bookmark, Eye, Check, Sun, Moon } from 'lucide-react';
 import { clsx } from 'clsx';
 import { CONFIG } from './config';
 import { NEW_LIMIT, RANK_LIMIT, SORT_OPTIONS } from './constants';
@@ -14,7 +14,7 @@ import { computeStats, computeWatchlistStats } from './stats';
 import { useDocumentMetadata } from './useDocumentMetadata';
 import { urlParams, useUrlState } from './useUrlState';
 
-const VIEW_VALUES: View[] = ['watched', 'watchlist'];
+const VIEW_VALUES: View[] = ['watched', 'watchlist', 'seen'];
 const SORT_VALUES: SortKey[] = SORT_OPTIONS.map(o => o.value);
 
 const URL_SPECS = {
@@ -54,8 +54,11 @@ const App: React.FC = () => {
 
   const allMovies = moviesData as Movie[];
 
-  const watchedMovies = useMemo(() => allMovies.filter(m => m.published), [allMovies]);
-  const watchlistMovies = useMemo(() => allMovies.filter(m => !m.published), [allMovies]);
+  // `seen` (watched but deliberately unrated) is its own axis: exclude it from both the
+  // rated Watched grid and the to-watch Watchlist so those counts and stats stay honest.
+  const watchedMovies = useMemo(() => allMovies.filter(m => m.published && !m.seen), [allMovies]);
+  const watchlistMovies = useMemo(() => allMovies.filter(m => !m.published && !m.seen), [allMovies]);
+  const seenMovies = useMemo(() => allMovies.filter(m => m.seen), [allMovies]);
 
   const selectedMovie: Movie | null = useMemo(
     () => allMovies.find(m => m.id === urlState.selected) ?? null,
@@ -66,7 +69,13 @@ const App: React.FC = () => {
 
   const watchlistStats = useMemo(() => computeWatchlistStats(watchlistMovies), [watchlistMovies]);
 
-  const viewMovies = view === 'watched' ? watchedMovies : watchlistMovies;
+  const viewMovies =
+    view === 'watched' ? watchedMovies : view === 'seen' ? seenMovies : watchlistMovies;
+
+  const seenGenres = useMemo(
+    () => new Set(seenMovies.flatMap(m => m.tags)).size,
+    [seenMovies],
+  );
 
   const allTags = useMemo(() => {
     const tags = new Set<string>();
@@ -186,6 +195,17 @@ const App: React.FC = () => {
               <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">{stats.currentYear}</div>
             </div>
           </div>
+        ) : view === 'seen' ? (
+          <div className="flex items-end gap-8">
+            <div className="flex flex-col items-start md:items-end gap-1">
+              <div className="text-5xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{seenMovies.length}</div>
+              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Seen</div>
+            </div>
+            <div className="flex flex-col items-start md:items-end gap-1">
+              <div className="text-3xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{seenGenres}</div>
+              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Genres</div>
+            </div>
+          </div>
         ) : (
           <div className="flex items-end gap-8">
             <div className="flex flex-col items-start md:items-end gap-1">
@@ -208,6 +228,7 @@ const App: React.FC = () => {
       <div className="flex gap-1 mb-6 p-1 rounded-full w-fit bg-stone-100 border border-stone-200 dark:bg-white/5 dark:border-white/5">
         <ViewTab active={view === 'watched'} onClick={() => switchView('watched')} icon={Eye} label="Watched" count={watchedMovies.length} />
         <ViewTab active={view === 'watchlist'} onClick={() => switchView('watchlist')} icon={Bookmark} label="Watchlist" count={watchlistMovies.length} />
+        <ViewTab active={view === 'seen'} onClick={() => switchView('seen')} icon={Check} label="Seen" count={seenMovies.length} />
       </div>
 
       {/* Filters */}
@@ -242,7 +263,9 @@ const App: React.FC = () => {
           <p className="text-lg">
             {view === 'watchlist' && watchlistMovies.length === 0
               ? 'No movies on your watchlist yet.'
-              : 'No movies found matching your criteria.'}
+              : view === 'seen' && seenMovies.length === 0
+                ? 'Nothing here yet. This is for films you have seen but do not rate.'
+                : 'No movies found matching your criteria.'}
           </p>
         </div>
       )}

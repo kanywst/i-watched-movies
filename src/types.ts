@@ -2,6 +2,7 @@ export interface Movie {
   id: string;
   title: string;
   published: boolean;
+  seen?: boolean;
   tags: string[];
   national?: string;
   cover_image: string;
@@ -13,7 +14,7 @@ export interface Movie {
   impression?: string;
 }
 
-export type View = 'watched' | 'watchlist';
+export type View = 'watched' | 'watchlist' | 'seen';
 
 export type SortKey =
   | 'watch_date_desc'

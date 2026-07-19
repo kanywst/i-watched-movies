@@ -55,12 +55,16 @@ function parseDate(raw) {
 }
 
 export function buildMovie(sections, { issueNumber } = {}) {
-  const list = (sections['List'] || 'Watched').trim();
-  const published = list.toLowerCase() !== 'watchlist';
+  const list = (sections['List'] || 'Watched').trim().toLowerCase();
+  // "Seen" is watched-but-unrated: not published (no score, kept out of the Watched grid)
+  // and flagged so it lands in its own Seen section rather than the Watchlist.
+  const seen = list === 'seen';
+  const published = list === 'watched';
 
   const movie = {
     title: (sections['Title'] || '').trim(),
     published,
+    seen,
     tags: parseTags(sections['Tags']),
     national: (sections['National'] || '').trim(),
     cover_image: (sections['Cover image URL'] || '').trim(),
@@ -123,6 +127,7 @@ export function readExisting(filePath) {
   return {
     title: (data.title ?? '').toString().trim(),
     published: data.published ?? true,
+    seen: data.seen ?? false,
     tags: Array.isArray(data.tags) ? data.tags.filter(Boolean).map(String) : parseTags(data.tags),
     national: (data.national ?? '').toString().trim(),
     cover_image: (data.cover_image ?? '').toString().trim(),
@@ -139,6 +144,7 @@ export function mergeMovie(existing, incoming) {
   return {
     title: incoming.title,
     published: incoming.published,
+    seen: incoming.seen,
     tags: incoming.tags.length ? incoming.tags : existing.tags,
     national: incoming.national || existing.national,
     cover_image: incoming.cover_image || existing.cover_image,
@@ -159,6 +165,7 @@ export function formatFile(movie) {
   const lines = ['---'];
   lines.push(`title: ${quote(movie.title)}`);
   lines.push(`published: ${movie.published}`);
+  if (movie.seen) lines.push('seen: true');
   if (movie.tags.length) {
     lines.push('tags:');
     for (const t of movie.tags) lines.push(`  - ${quote(t)}`);
@@ -207,7 +214,7 @@ function main() {
   emit('slug', slug);
   emit('path', outPath);
   emit('title', finalMovie.title);
-  emit('list', finalMovie.published ? 'Watched' : 'Watchlist');
+  emit('list', finalMovie.seen ? 'Seen' : finalMovie.published ? 'Watched' : 'Watchlist');
   emit('watchlist', finalMovie.published ? 'false' : 'true');
   emit('action', action);
 }

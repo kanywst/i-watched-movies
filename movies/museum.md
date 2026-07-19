@@ -1,6 +1,7 @@
 ---
 title: 'ミュージアム'
 published: false
+seen: true
 tags:
   - 'Crime'
   - 'Thriller'

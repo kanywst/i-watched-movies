@@ -1,6 +1,7 @@
 ---
 title: 'Se7en'
 published: false
+seen: true
 tags:
   - 'Crime'
   - 'Thriller'

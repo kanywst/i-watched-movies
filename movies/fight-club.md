@@ -1,6 +1,7 @@
 ---
 title: 'Fight Club'
 published: false
+seen: true
 tags:
   - 'Drama'
   - 'Thriller'
