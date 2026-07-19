@@ -14,7 +14,7 @@ export interface Movie {
   impression?: string;
 }
 
-export type View = 'watched' | 'watchlist' | 'seen';
+export type View = 'watched' | 'watchlist' | 'seen' | 'history';
 
 export type SortKey =
   | 'watch_date_desc'
