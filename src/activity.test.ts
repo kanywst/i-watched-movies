@@ -90,7 +90,17 @@ describe('computeActivity', () => {
     expect(a.longestStreak).toBe(4);
   });
 
-  it('reports a zero current streak when today has no film', () => {
+  it('keeps the current streak alive when the latest film was yesterday', () => {
+    // NOW is 2026-07-19; a film on the 18th (yesterday) should still count as streak 1.
+    const movies = [
+      make({ id: 'a', watch_date: '2026-07-17' }),
+      make({ id: 'b', watch_date: '2026-07-18' }),
+    ];
+    const a = computeActivity(movies, NOW);
+    expect(a.currentStreak).toBe(2);
+  });
+
+  it('reports a zero current streak when neither today nor yesterday has a film', () => {
     const movies = [make({ watch_date: '2026-07-10' })];
     const a = computeActivity(movies, NOW);
     expect(a.currentStreak).toBe(0);

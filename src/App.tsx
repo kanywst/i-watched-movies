@@ -72,10 +72,13 @@ const App: React.FC = () => {
   const watchlistStats = useMemo(() => computeWatchlistStats(watchlistMovies), [watchlistMovies]);
 
   // Viewing history spans everything actually watched (rated + `seen`), keyed by watch_date.
-  const activity = useMemo(() => computeActivity(allMovies), [allMovies]);
+  // Exclude watchlist entries up front so a stray placeholder date could never leak in
+  // (computeActivity also drops empty/invalid dates, but the intent is clearer here).
+  const historyMovies = useMemo(() => allMovies.filter(m => m.published || m.seen), [allMovies]);
+  const activity = useMemo(() => computeActivity(historyMovies), [historyMovies]);
   const historyCount = useMemo(
-    () => allMovies.filter(m => isValidWatchDate(m.watch_date)).length,
-    [allMovies],
+    () => historyMovies.filter(m => isValidWatchDate(m.watch_date)).length,
+    [historyMovies],
   );
 
   const viewMovies =
