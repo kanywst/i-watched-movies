@@ -30,6 +30,9 @@ interface HoverState {
   w: number;
   d: number;
   rect: DOMRect;
+  // Set when a multi-film day was opened via keyboard, so focus moves into the tooltip.
+  viaKeyboard?: boolean;
+  cell?: SVGRectElement | null;
 }
 
 export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ summary, onOpenMovie }) => {
@@ -37,6 +40,7 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ summary, onOpe
     summary;
   const [hover, setHover] = useState<HoverState | null>(null);
   const closeTimer = useRef<number | null>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
 
   const cancelClose = useCallback(() => {
     if (closeTimer.current !== null) {
@@ -55,7 +59,22 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ summary, onOpe
     cancelClose();
     closeTimer.current = window.setTimeout(() => setHover(null), CLOSE_DELAY_MS);
   }, [cancelClose]);
-  const handleOpen = useCallback((movie: Movie) => onOpenMovie(movie), [onOpenMovie]);
+  const handleOpen = useCallback(
+    (movie: Movie) => {
+      setHover(null);
+      onOpenMovie(movie);
+    },
+    [onOpenMovie],
+  );
+
+  // When a multi-film day is opened by keyboard, move focus into the tooltip so its film
+  // buttons are reachable (Tab would otherwise land on the next cell and dismiss it).
+  useEffect(() => {
+    if (hover?.viaKeyboard) {
+      cancelClose();
+      tooltipRef.current?.querySelector('button')?.focus();
+    }
+  }, [hover, cancelClose]);
 
   // Clear the pending timer on unmount, and dismiss an open tooltip on scroll/resize
   // (its position is captured from a getBoundingClientRect and would otherwise go stale).
@@ -155,6 +174,19 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ summary, onOpe
             Interactive so each film of a multi-film day is individually openable. */}
         {hover && (
           <div
+            ref={tooltipRef}
+            onKeyDown={e => {
+              if (e.key === 'Escape') {
+                e.stopPropagation();
+                const cell = hover.cell;
+                setHover(null);
+                cell?.focus();
+              }
+            }}
+            onBlur={e => {
+              // Close once focus leaves the tooltip entirely (e.g. Tab past the last film).
+              if (!tooltipRef.current?.contains(e.relatedTarget as Node | null)) setHover(null);
+            }}
             className="fixed z-50 w-max max-w-[220px] rounded-lg border p-3 shadow-xl bg-white border-stone-200 text-stone-800 dark:bg-dark-card dark:border-white/10 dark:text-stone-100"
             style={{
               left: hover.rect.left + hover.rect.width / 2,
@@ -270,9 +302,9 @@ const DayCell = React.memo<DayCellProps>(({ day, w, d, isHovered, onHover, onLea
     (single ? ', open' : ', show films');
   // On touch there is no hover, so a tap fires onClick directly. Open a single-film day
   // straight away, but surface the tooltip for multi-film days so every film is reachable.
-  const activate = (rect: DOMRect) => {
+  const activate = (cell: SVGRectElement, viaKeyboard: boolean) => {
     if (single) onOpen(day.movies[0]);
-    else onHover({ day, w, d, rect });
+    else onHover({ day, w, d, rect: cell.getBoundingClientRect(), viaKeyboard, cell });
   };
   return (
     <rect
@@ -301,12 +333,12 @@ const DayCell = React.memo<DayCellProps>(({ day, w, d, isHovered, onHover, onLea
           ? e => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                activate(e.currentTarget.getBoundingClientRect());
+                activate(e.currentTarget, true);
               }
             }
           : undefined
       }
-      onClick={interactive ? e => activate(e.currentTarget.getBoundingClientRect()) : undefined}
+      onClick={interactive ? e => activate(e.currentTarget, false) : undefined}
     />
   );
 });

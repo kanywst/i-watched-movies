@@ -17,6 +17,8 @@ import { useDocumentMetadata } from './useDocumentMetadata';
 import { urlParams, useUrlState } from './useUrlState';
 
 const VIEW_VALUES: View[] = ['watched', 'watchlist', 'seen', 'history'];
+// Stable empty reference so the History view doesn't bust the allTags/filteredMovies memos.
+const EMPTY_MOVIES: Movie[] = [];
 const SORT_VALUES: SortKey[] = SORT_OPTIONS.map(o => o.value);
 
 const URL_SPECS = {
@@ -84,7 +86,7 @@ const App: React.FC = () => {
   const viewMovies =
     view === 'watched' ? watchedMovies
       : view === 'seen' ? seenMovies
-        : view === 'history' ? watchedMovies
+        : view === 'history' ? EMPTY_MOVIES // history renders the heatmap, not the grid/filters
           : watchlistMovies;
 
   const seenGenres = useMemo(
