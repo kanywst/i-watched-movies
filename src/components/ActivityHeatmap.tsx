@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { format } from 'date-fns';
 import { Flame, Trophy, CalendarCheck, Clapperboard } from 'lucide-react';
 import type { Movie } from '../types';
@@ -15,15 +15,56 @@ const STEP = CELL + GAP;
 const LEFT_PAD = 30; // weekday labels
 const TOP_PAD = 18; // month labels
 const WEEKDAY_ROWS: Record<number, string> = { 1: 'Mon', 3: 'Wed', 5: 'Fri' };
+// Grace period so moving the pointer from a cell into its tooltip does not dismiss it.
+const CLOSE_DELAY_MS = 120;
 
 const fmtDay = (iso: string) => format(new Date(iso + 'T00:00:00'), 'EEE, MMM d, yyyy');
+
+interface HoverState {
+  day: ActivityDay;
+  w: number;
+  d: number;
+  rect: DOMRect;
+}
 
 export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ summary, onOpenMovie }) => {
   const { weeks, monthLabels, total, activeDays, busiestDay, currentStreak, longestStreak, monthly } =
     summary;
-  const [hover, setHover] = useState<
-    { day: ActivityDay; w: number; d: number; rect: DOMRect } | null
-  >(null);
+  const [hover, setHover] = useState<HoverState | null>(null);
+  const closeTimer = useRef<number | null>(null);
+
+  const cancelClose = useCallback(() => {
+    if (closeTimer.current !== null) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  }, []);
+  const openHover = useCallback(
+    (h: HoverState) => {
+      cancelClose();
+      setHover(h);
+    },
+    [cancelClose],
+  );
+  const scheduleClose = useCallback(() => {
+    cancelClose();
+    closeTimer.current = window.setTimeout(() => setHover(null), CLOSE_DELAY_MS);
+  }, [cancelClose]);
+  const handleOpen = useCallback((movie: Movie) => onOpenMovie(movie), [onOpenMovie]);
+
+  // Clear the pending timer on unmount, and dismiss an open tooltip on scroll/resize
+  // (its position is captured from a getBoundingClientRect and would otherwise go stale).
+  useEffect(() => () => cancelClose(), [cancelClose]);
+  useEffect(() => {
+    if (!hover) return;
+    const close = () => setHover(null);
+    window.addEventListener('scroll', close, true);
+    window.addEventListener('resize', close);
+    return () => {
+      window.removeEventListener('scroll', close, true);
+      window.removeEventListener('resize', close);
+    };
+  }, [hover]);
 
   const cols = weeks.length;
   const gridWidth = LEFT_PAD + cols * STEP;
@@ -85,63 +126,36 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ summary, onOpe
           {/* Day cells. Only days with a film are focusable/announced; empty days are
               decorative so keyboard and screen-reader users step through active days only. */}
           {weeks.map((column, w) =>
-            column.map((day, d) => {
-              if (!day) return null;
-              const isHover = hover?.w === w && hover?.d === d;
-              const interactive = day.count > 0;
-              const label = `${day.count} ${day.count === 1 ? 'film' : 'films'} on ${fmtDay(day.date)}`;
-              const focus = (e: React.FocusEvent<SVGRectElement>) =>
-                setHover({ day, w, d, rect: e.currentTarget.getBoundingClientRect() });
-              return (
-                <rect
+            column.map((day, d) =>
+              day ? (
+                <DayCell
                   key={day.date}
-                  x={LEFT_PAD + w * STEP}
-                  y={TOP_PAD + d * STEP}
-                  width={CELL}
-                  height={CELL}
-                  rx={2}
-                  fill={`var(--act-${day.level})`}
-                  stroke={isHover ? 'currentColor' : 'transparent'}
-                  strokeWidth={1}
-                  className={
-                    'text-stone-600 dark:text-stone-200 focus:outline-none' +
-                    (interactive ? ' cursor-pointer' : '')
-                  }
-                  role={interactive ? 'button' : undefined}
-                  tabIndex={interactive ? 0 : undefined}
-                  aria-hidden={interactive ? undefined : true}
-                  aria-label={interactive ? `${label}, open` : undefined}
-                  onMouseEnter={e => setHover({ day, w, d, rect: e.currentTarget.getBoundingClientRect() })}
-                  onMouseLeave={() => setHover(null)}
-                  onFocus={interactive ? focus : undefined}
-                  onBlur={interactive ? () => setHover(null) : undefined}
-                  onKeyDown={
-                    interactive
-                      ? e => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            onOpenMovie(day.movies[0]);
-                          }
-                        }
-                      : undefined
-                  }
-                  onClick={interactive ? () => onOpenMovie(day.movies[0]) : undefined}
+                  day={day}
+                  w={w}
+                  d={d}
+                  isHovered={hover?.w === w && hover?.d === d}
+                  onHover={openHover}
+                  onLeave={scheduleClose}
+                  onOpen={handleOpen}
                 />
-              );
-            }),
+              ) : null,
+            ),
           )}
         </svg>
 
         {/* Tooltip. Fixed positioning escapes the scroll container's overflow clipping
-            (overflow-x-auto forces overflow-y to auto, which would clip an absolute child). */}
+            (overflow-x-auto forces overflow-y to auto, which would clip an absolute child).
+            Interactive so each film of a multi-film day is individually openable. */}
         {hover && (
           <div
-            className="pointer-events-none fixed z-50 w-max max-w-[220px] rounded-lg border p-3 shadow-xl bg-white border-stone-200 text-stone-800 dark:bg-dark-card dark:border-white/10 dark:text-stone-100"
+            className="fixed z-50 w-max max-w-[220px] rounded-lg border p-3 shadow-xl bg-white border-stone-200 text-stone-800 dark:bg-dark-card dark:border-white/10 dark:text-stone-100"
             style={{
               left: hover.rect.left + hover.rect.width / 2,
               top: hover.rect.bottom + 8,
               transform: 'translateX(-50%)',
             }}
+            onMouseEnter={cancelClose}
+            onMouseLeave={scheduleClose}
           >
             <div className="text-xs font-medium text-stone-500 dark:text-stone-400 mb-1">
               {fmtDay(hover.day.date)}
@@ -151,13 +165,19 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ summary, onOpe
             ) : (
               <ul className="flex flex-col gap-1.5">
                 {hover.day.movies.map(m => (
-                  <li key={m.id} className="flex items-center gap-2">
-                    <img
-                      src={m.cover_image}
-                      alt=""
-                      className="w-6 h-9 object-cover rounded-sm bg-stone-100 dark:bg-dark-surface shrink-0"
-                    />
-                    <span className="text-sm leading-tight line-clamp-2">{m.title}</span>
+                  <li key={m.id}>
+                    <button
+                      type="button"
+                      onClick={() => handleOpen(m)}
+                      className="flex items-center gap-2 w-full text-left rounded-sm hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-400"
+                    >
+                      <img
+                        src={m.cover_image}
+                        alt=""
+                        className="w-6 h-9 object-cover rounded-sm bg-stone-100 dark:bg-dark-surface shrink-0"
+                      />
+                      <span className="text-sm leading-tight line-clamp-2">{m.title}</span>
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -210,6 +230,62 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ summary, onOpe
     </section>
   );
 };
+
+interface DayCellProps {
+  day: ActivityDay;
+  w: number;
+  d: number;
+  isHovered: boolean;
+  onHover: (h: HoverState) => void;
+  onLeave: () => void;
+  onOpen: (movie: Movie) => void;
+}
+
+// Memoised so hovering (which re-renders the parent) only re-renders the two cells whose
+// `isHovered` flips, not all ~371 rects. Relies on the parent passing stable callbacks.
+const DayCell = React.memo<DayCellProps>(({ day, w, d, isHovered, onHover, onLeave, onOpen }) => {
+  const interactive = day.count > 0;
+  const titles = day.movies.map(m => m.title).join(', ');
+  const label =
+    `${day.count} ${day.count === 1 ? 'film' : 'films'} on ${fmtDay(day.date)}` +
+    (titles ? `: ${titles}` : '');
+  return (
+    <rect
+      x={LEFT_PAD + w * STEP}
+      y={TOP_PAD + d * STEP}
+      width={CELL}
+      height={CELL}
+      rx={2}
+      fill={`var(--act-${day.level})`}
+      stroke={isHovered ? 'currentColor' : 'transparent'}
+      strokeWidth={1}
+      className={
+        'text-stone-600 dark:text-stone-200 focus:outline-none' +
+        (interactive ? ' cursor-pointer' : '')
+      }
+      role={interactive ? 'button' : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      aria-hidden={interactive ? undefined : true}
+      aria-label={interactive ? `${label}, open` : undefined}
+      onMouseEnter={e => onHover({ day, w, d, rect: e.currentTarget.getBoundingClientRect() })}
+      onMouseLeave={onLeave}
+      onFocus={interactive ? e => onHover({ day, w, d, rect: e.currentTarget.getBoundingClientRect() }) : undefined}
+      onBlur={interactive ? onLeave : undefined}
+      onKeyDown={
+        interactive
+          ? e => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onOpen(day.movies[0]);
+              }
+            }
+          : undefined
+      }
+      onClick={interactive ? () => onOpen(day.movies[0]) : undefined}
+    />
+  );
+});
+DayCell.displayName = 'DayCell';
 
 interface StatProps {
   icon: React.ComponentType<{ className?: string }>;

@@ -53,8 +53,9 @@ const MONTH_LABELS = [
 ];
 
 // `parseMovie` normalises watch_date to a full ISO datetime ('2026-07-19T00:00:00.000Z'),
-// so match the leading date prefix rather than anchoring the whole string.
-const isValidDay = (s: string | undefined): s is string =>
+// so match the leading date prefix rather than anchoring the whole string. Exported so the
+// "films logged" count and the heatmap agree on what counts as a real watch date.
+export const isValidWatchDate = (s: string | undefined): s is string =>
   !!s && /^\d{4}-\d{2}-\d{2}/.test(s) && !Number.isNaN(Date.parse(s));
 
 const toUtc = (iso: string): Date => {
@@ -81,7 +82,7 @@ export function activityLevel(count: number): ActivityLevel {
 function bucketByDay(movies: Movie[]): Map<string, Movie[]> {
   const byDay = new Map<string, Movie[]>();
   for (const m of movies) {
-    if (!isValidDay(m.watch_date)) continue;
+    if (!isValidWatchDate(m.watch_date)) continue;
     const k = m.watch_date.slice(0, 10);
     const bucket = byDay.get(k);
     if (bucket) bucket.push(m);

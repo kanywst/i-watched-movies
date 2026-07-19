@@ -12,7 +12,7 @@ import { CONFIG } from './config';
 import { NEW_LIMIT, RANK_LIMIT, SORT_OPTIONS } from './constants';
 import { sortMovies } from './sortMovies';
 import { computeStats, computeWatchlistStats } from './stats';
-import { computeActivity } from './activity';
+import { computeActivity, isValidWatchDate } from './activity';
 import { useDocumentMetadata } from './useDocumentMetadata';
 import { urlParams, useUrlState } from './useUrlState';
 
@@ -74,7 +74,7 @@ const App: React.FC = () => {
   // Viewing history spans everything actually watched (rated + `seen`), keyed by watch_date.
   const activity = useMemo(() => computeActivity(allMovies), [allMovies]);
   const historyCount = useMemo(
-    () => allMovies.filter(m => !!m.watch_date && !Number.isNaN(Date.parse(m.watch_date))).length,
+    () => allMovies.filter(m => isValidWatchDate(m.watch_date)).length,
     [allMovies],
   );
 
