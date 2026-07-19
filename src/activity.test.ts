@@ -106,6 +106,17 @@ describe('computeActivity', () => {
     expect(a.currentStreak).toBe(0);
   });
 
+  it('never places two month labels within one column of each other', () => {
+    // '2026-02-01' is a Sunday, so the trailing-year grid starts on a partial week that
+    // can push adjacent month labels; the min-gap rule must keep them from overlapping.
+    for (const now of [NOW, new Date('2026-02-01T12:00:00Z'), new Date('2026-01-31T12:00:00Z')]) {
+      const { monthLabels } = computeActivity([], now);
+      for (let i = 1; i < monthLabels.length; i += 1) {
+        expect(monthLabels[i].index - monthLabels[i - 1].index).toBeGreaterThanOrEqual(2);
+      }
+    }
+  });
+
   it('returns 12 trailing months oldest-first with per-month counts', () => {
     const movies = [
       make({ id: 'a', watch_date: '2026-07-19' }),
