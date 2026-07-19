@@ -59,13 +59,16 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ summary, onOpe
     cancelClose();
     closeTimer.current = window.setTimeout(() => setHover(null), CLOSE_DELAY_MS);
   }, [cancelClose]);
-  const handleOpen = useCallback(
-    (movie: Movie) => {
-      setHover(null);
-      onOpenMovie(movie);
-    },
-    [onOpenMovie],
-  );
+  // Keep handleOpen referentially stable across every parent re-render (App recreates
+  // onOpenMovie each render) so the memoised DayCells never re-render just because of it.
+  const onOpenMovieRef = useRef(onOpenMovie);
+  useEffect(() => {
+    onOpenMovieRef.current = onOpenMovie;
+  }, [onOpenMovie]);
+  const handleOpen = useCallback((movie: Movie) => {
+    setHover(null);
+    onOpenMovieRef.current(movie);
+  }, []);
 
   // When a multi-film day is opened by keyboard, move focus into the tooltip so its film
   // buttons are reachable (Tab would otherwise land on the next cell and dismiss it).
