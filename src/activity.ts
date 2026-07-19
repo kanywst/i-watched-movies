@@ -111,10 +111,11 @@ function computeStreaks(
     if (run > longest) longest = run;
   }
 
-  // Current streak counts back from today; if today has no film it is 0.
+  // Current streak counts back from today, or from yesterday when today has no film yet,
+  // so an active daily habit is not reset to 0 just because today is not logged.
   const active = new Set(activeDays);
+  let cursor = active.has(key(today)) ? today : addDays(today, -1);
   let current = 0;
-  let cursor = today;
   while (active.has(key(cursor))) {
     current += 1;
     cursor = addDays(cursor, -1);

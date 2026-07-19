@@ -18,7 +18,12 @@ const WEEKDAY_ROWS: Record<number, string> = { 1: 'Mon', 3: 'Wed', 5: 'Fri' };
 // Grace period so moving the pointer from a cell into its tooltip does not dismiss it.
 const CLOSE_DELAY_MS = 120;
 
-const fmtDay = (iso: string) => format(new Date(iso + 'T00:00:00'), 'EEE, MMM d, yyyy');
+// Build the local date at noon so DST midnight transitions can't shift the calendar day.
+const parseIso = (iso: string) => {
+  const [y, m, d] = iso.split('-').map(Number);
+  return new Date(y, m - 1, d, 12);
+};
+const fmtDay = (iso: string) => format(parseIso(iso), 'EEE, MMM d, yyyy');
 
 interface HoverState {
   day: ActivityDay;
@@ -83,7 +88,7 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ summary, onOpe
           <Stat
             icon={Clapperboard}
             value={busiestDay.count}
-            label={`Busiest · ${format(new Date(busiestDay.date + 'T00:00:00'), 'MMM d')}`}
+            label={`Busiest · ${format(parseIso(busiestDay.date), 'MMM d')}`}
           />
         )}
       </div>
