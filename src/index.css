@@ -18,6 +18,23 @@ body {
   @apply antialiased bg-stone-50 text-stone-900 selection:bg-stone-300/60 dark:bg-dark-bg dark:text-dark-text dark:selection:bg-stone-700/50;
 }
 
+/* Activity heatmap levels (GitHub contribution-graph palette). Driven by CSS vars so
+   the SVG cells stay in sync with dark mode; retune here to reskin (e.g. to stone/amber). */
+:root {
+  --act-0: #ebedf0;
+  --act-1: #9be9a8;
+  --act-2: #40c463;
+  --act-3: #30a14e;
+  --act-4: #216e39;
+}
+.dark {
+  --act-0: rgba(255, 255, 255, 0.06);
+  --act-1: #0e4429;
+  --act-2: #006d32;
+  --act-3: #26a641;
+  --act-4: #39d353;
+}
+
 /* Tabular figures for stat numbers and ratings (lined up digits) */
 .tabular-nums {
   font-variant-numeric: tabular-nums;

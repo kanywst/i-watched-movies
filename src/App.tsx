@@ -5,16 +5,18 @@ import { Movie, SortKey, View } from './types';
 import { MovieCard } from './components/MovieCard';
 import { FilterBar } from './components/FilterBar';
 import { MovieDetailModal } from './components/MovieDetailModal';
-import { Film, Bookmark, Eye, Check, Sun, Moon } from 'lucide-react';
+import { ActivityHeatmap } from './components/ActivityHeatmap';
+import { Film, Bookmark, Eye, Check, Activity, Sun, Moon } from 'lucide-react';
 import { clsx } from 'clsx';
 import { CONFIG } from './config';
 import { NEW_LIMIT, RANK_LIMIT, SORT_OPTIONS } from './constants';
 import { sortMovies } from './sortMovies';
 import { computeStats, computeWatchlistStats } from './stats';
+import { computeActivity } from './activity';
 import { useDocumentMetadata } from './useDocumentMetadata';
 import { urlParams, useUrlState } from './useUrlState';
 
-const VIEW_VALUES: View[] = ['watched', 'watchlist', 'seen'];
+const VIEW_VALUES: View[] = ['watched', 'watchlist', 'seen', 'history'];
 const SORT_VALUES: SortKey[] = SORT_OPTIONS.map(o => o.value);
 
 const URL_SPECS = {
@@ -69,8 +71,18 @@ const App: React.FC = () => {
 
   const watchlistStats = useMemo(() => computeWatchlistStats(watchlistMovies), [watchlistMovies]);
 
+  // Viewing history spans everything actually watched (rated + `seen`), keyed by watch_date.
+  const activity = useMemo(() => computeActivity(allMovies), [allMovies]);
+  const historyCount = useMemo(
+    () => allMovies.filter(m => !!m.watch_date && !Number.isNaN(Date.parse(m.watch_date))).length,
+    [allMovies],
+  );
+
   const viewMovies =
-    view === 'watched' ? watchedMovies : view === 'seen' ? seenMovies : watchlistMovies;
+    view === 'watched' ? watchedMovies
+      : view === 'seen' ? seenMovies
+        : view === 'history' ? watchedMovies
+          : watchlistMovies;
 
   const seenGenres = useMemo(
     () => new Set(seenMovies.flatMap(m => m.tags)).size,
@@ -206,6 +218,17 @@ const App: React.FC = () => {
               <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Genres</div>
             </div>
           </div>
+        ) : view === 'history' ? (
+          <div className="flex items-end gap-8">
+            <div className="flex flex-col items-start md:items-end gap-1">
+              <div className="text-5xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{historyCount}</div>
+              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Logged</div>
+            </div>
+            <div className="flex flex-col items-start md:items-end gap-1">
+              <div className="text-3xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{activity.total}</div>
+              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Last 12 Mo</div>
+            </div>
+          </div>
         ) : (
           <div className="flex items-end gap-8">
             <div className="flex flex-col items-start md:items-end gap-1">
@@ -229,45 +252,52 @@ const App: React.FC = () => {
         <ViewTab active={view === 'watched'} onClick={() => switchView('watched')} icon={Eye} label="Watched" count={watchedMovies.length} />
         <ViewTab active={view === 'watchlist'} onClick={() => switchView('watchlist')} icon={Bookmark} label="Watchlist" count={watchlistMovies.length} />
         <ViewTab active={view === 'seen'} onClick={() => switchView('seen')} icon={Check} label="Seen" count={seenMovies.length} />
+        <ViewTab active={view === 'history'} onClick={() => switchView('history')} icon={Activity} label="History" count={historyCount} />
       </div>
 
-      {/* Filters */}
-      <FilterBar
-        search={search}
-        setSearch={setSearch}
-        sort={sort}
-        setSort={setSort}
-        selectedTags={selectedTags}
-        toggleTag={toggleTag}
-        clearTags={() => setUrlState({ tags: [] })}
-        allTags={allTags}
-      />
-
-      {/* Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-10">
-        {filteredMovies.map((movie, index) => (
-          <MovieCard
-            key={movie.id}
-            movie={movie}
-            index={index}
-            rank={getRank(movie.id)}
-            isNew={view === 'watched' && newMovieIds.has(movie.id)}
-            isSelected={movie.id === urlState.selected}
-            onClick={openMovie}
+      {view === 'history' ? (
+        <ActivityHeatmap summary={activity} onOpenMovie={openMovie} />
+      ) : (
+        <>
+          {/* Filters */}
+          <FilterBar
+            search={search}
+            setSearch={setSearch}
+            sort={sort}
+            setSort={setSort}
+            selectedTags={selectedTags}
+            toggleTag={toggleTag}
+            clearTags={() => setUrlState({ tags: [] })}
+            allTags={allTags}
           />
-        ))}
-      </div>
 
-      {filteredMovies.length === 0 && (
-        <div className="py-32 text-center text-stone-500">
-          <p className="text-lg">
-            {view === 'watchlist' && watchlistMovies.length === 0
-              ? 'No movies on your watchlist yet.'
-              : view === 'seen' && seenMovies.length === 0
-                ? 'Nothing here yet. This is for films you have seen but do not rate.'
-                : 'No movies found matching your criteria.'}
-          </p>
-        </div>
+          {/* Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-10">
+            {filteredMovies.map((movie, index) => (
+              <MovieCard
+                key={movie.id}
+                movie={movie}
+                index={index}
+                rank={getRank(movie.id)}
+                isNew={view === 'watched' && newMovieIds.has(movie.id)}
+                isSelected={movie.id === urlState.selected}
+                onClick={openMovie}
+              />
+            ))}
+          </div>
+
+          {filteredMovies.length === 0 && (
+            <div className="py-32 text-center text-stone-500">
+              <p className="text-lg">
+                {view === 'watchlist' && watchlistMovies.length === 0
+                  ? 'No movies on your watchlist yet.'
+                  : view === 'seen' && seenMovies.length === 0
+                    ? 'Nothing here yet. This is for films you have seen but do not rate.'
+                    : 'No movies found matching your criteria.'}
+              </p>
+            </div>
+          )}
+        </>
       )}
 
       {/* Footer */}
