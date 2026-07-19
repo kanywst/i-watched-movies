@@ -130,22 +130,24 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ summary, onOpe
 
           {/* Day cells. Only days with a film are focusable/announced; empty days are
               decorative so keyboard and screen-reader users step through active days only. */}
-          {weeks.map((column, w) =>
-            column.map((day, d) =>
-              day ? (
-                <DayCell
-                  key={day.date}
-                  day={day}
-                  w={w}
-                  d={d}
-                  isHovered={hover?.w === w && hover?.d === d}
-                  onHover={openHover}
-                  onLeave={scheduleClose}
-                  onOpen={handleOpen}
-                />
-              ) : null,
-            ),
-          )}
+          {weeks.map((column, w) => (
+            <g key={w}>
+              {column.map((day, d) =>
+                day ? (
+                  <DayCell
+                    key={day.date}
+                    day={day}
+                    w={w}
+                    d={d}
+                    isHovered={hover?.w === w && hover?.d === d}
+                    onHover={openHover}
+                    onLeave={scheduleClose}
+                    onOpen={handleOpen}
+                  />
+                ) : null,
+              )}
+            </g>
+          ))}
         </svg>
 
         {/* Tooltip. Fixed positioning escapes the scroll container's overflow clipping

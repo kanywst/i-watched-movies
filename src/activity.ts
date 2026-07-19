@@ -47,6 +47,8 @@ export interface ActivitySummary {
 }
 
 const DAY_MS = 86_400_000;
+// Minimum columns (weeks) between adjacent month labels so they never overlap in the SVG.
+const MONTH_LABEL_MIN_GAP = 2;
 const MONTH_LABELS = [
   'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
@@ -161,7 +163,15 @@ export function computeActivity(movies: Movie[], now: Date = new Date()): Activi
     const columnStart = addDays(firstSunday, w * 7);
     const month = columnStart.getUTCMonth();
     if (month !== lastMonth) {
-      monthLabels.push({ index: w, label: MONTH_LABELS[month] });
+      const prev = monthLabels[monthLabels.length - 1];
+      // A leading partial week can put two month labels one column apart, which overlap
+      // in the SVG. If the previous label is too close, replace it so the later month
+      // wins instead of both rendering on top of each other.
+      if (!prev || w - prev.index >= MONTH_LABEL_MIN_GAP) {
+        monthLabels.push({ index: w, label: MONTH_LABELS[month] });
+      } else {
+        monthLabels[monthLabels.length - 1] = { index: w, label: MONTH_LABELS[month] };
+      }
       lastMonth = month;
     }
     for (let d = 0; d < 7; d += 1) {
