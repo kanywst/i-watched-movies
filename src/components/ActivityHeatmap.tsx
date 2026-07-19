@@ -158,8 +158,16 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ summary, onOpe
             className="fixed z-50 w-max max-w-[220px] rounded-lg border p-3 shadow-xl bg-white border-stone-200 text-stone-800 dark:bg-dark-card dark:border-white/10 dark:text-stone-100"
             style={{
               left: hover.rect.left + hover.rect.width / 2,
-              top: hover.rect.bottom + 8,
-              transform: 'translateX(-50%)',
+              // Flip above the cell when it sits in the lower part of the viewport, since any
+              // scroll dismisses the tooltip and a cut-off one could not be scrolled into view.
+              top:
+                hover.rect.bottom > window.innerHeight * 0.6
+                  ? hover.rect.top - 8
+                  : hover.rect.bottom + 8,
+              transform:
+                hover.rect.bottom > window.innerHeight * 0.6
+                  ? 'translate(-50%, -100%)'
+                  : 'translateX(-50%)',
             }}
             onMouseEnter={cancelClose}
             onMouseLeave={scheduleClose}
@@ -254,10 +262,18 @@ interface DayCellProps {
 // `isHovered` flips, not all ~371 rects. Relies on the parent passing stable callbacks.
 const DayCell = React.memo<DayCellProps>(({ day, w, d, isHovered, onHover, onLeave, onOpen }) => {
   const interactive = day.count > 0;
+  const single = day.count === 1;
   const titles = day.movies.map(m => m.title).join(', ');
   const label =
-    `${day.count} ${day.count === 1 ? 'film' : 'films'} on ${fmtDay(day.date)}` +
-    (titles ? `: ${titles}` : '');
+    `${day.count} ${single ? 'film' : 'films'} on ${fmtDay(day.date)}` +
+    (titles ? `: ${titles}` : '') +
+    (single ? ', open' : ', show films');
+  // On touch there is no hover, so a tap fires onClick directly. Open a single-film day
+  // straight away, but surface the tooltip for multi-film days so every film is reachable.
+  const activate = (rect: DOMRect) => {
+    if (single) onOpen(day.movies[0]);
+    else onHover({ day, w, d, rect });
+  };
   return (
     <rect
       x={LEFT_PAD + w * STEP}
@@ -275,7 +291,7 @@ const DayCell = React.memo<DayCellProps>(({ day, w, d, isHovered, onHover, onLea
       role={interactive ? 'button' : undefined}
       tabIndex={interactive ? 0 : undefined}
       aria-hidden={interactive ? undefined : true}
-      aria-label={interactive ? `${label}, open` : undefined}
+      aria-label={interactive ? label : undefined}
       onMouseEnter={e => onHover({ day, w, d, rect: e.currentTarget.getBoundingClientRect() })}
       onMouseLeave={onLeave}
       onFocus={interactive ? e => onHover({ day, w, d, rect: e.currentTarget.getBoundingClientRect() }) : undefined}
@@ -285,12 +301,12 @@ const DayCell = React.memo<DayCellProps>(({ day, w, d, isHovered, onHover, onLea
           ? e => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                onOpen(day.movies[0]);
+                activate(e.currentTarget.getBoundingClientRect());
               }
             }
           : undefined
       }
-      onClick={interactive ? () => onOpen(day.movies[0]) : undefined}
+      onClick={interactive ? e => activate(e.currentTarget.getBoundingClientRect()) : undefined}
     />
   );
 });

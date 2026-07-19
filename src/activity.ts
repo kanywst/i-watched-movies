@@ -100,7 +100,8 @@ function computeStreaks(
   byDay: Map<string, Movie[]>,
   today: Date,
 ): { currentStreak: number; longestStreak: number } {
-  const activeDays = [...byDay.keys()].filter(k => (byDay.get(k)?.length ?? 0) > 0).sort();
+  // bucketByDay only ever creates non-empty buckets, so every key is an active day.
+  const activeDays = [...byDay.keys()].sort();
   if (activeDays.length === 0) return { currentStreak: 0, longestStreak: 0 };
 
   let longest = 1;
