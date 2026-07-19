@@ -217,8 +217,10 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ summary, onOpe
               title={`${m.count} in ${m.label}`}
             >
               <span className="text-[10px] text-stone-400 tabular-nums mb-1">{m.count || ''}</span>
+              {/* shrink-0 keeps the bar at its true percentage height; without it the flex
+                  column squeezes the tallest bar to fit the count label and skews the scale. */}
               <div
-                className="w-full rounded-t bg-stone-300 dark:bg-stone-600"
+                className="w-full shrink-0 rounded-t bg-stone-300 dark:bg-stone-600"
                 style={{ height: `${(m.count / maxMonthly) * 100}%`, minHeight: m.count ? 3 : 0 }}
               />
             </div>
