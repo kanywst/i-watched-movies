@@ -6,18 +6,21 @@ import { MovieCard } from './components/MovieCard';
 import { FilterBar } from './components/FilterBar';
 import { MovieDetailModal } from './components/MovieDetailModal';
 import { ActivityHeatmap } from './components/ActivityHeatmap';
-import { Film, Bookmark, Eye, Check, Activity, Sun, Moon } from 'lucide-react';
+import { TastePanel } from './components/TastePanel';
+import { Film, Bookmark, Eye, Check, Activity, ChartColumn, Sun, Moon } from 'lucide-react';
 import { clsx } from 'clsx';
 import { CONFIG } from './config';
-import { NEW_LIMIT, RANK_LIMIT, SORT_OPTIONS } from './constants';
+import { NEW_LIMIT, RANK_LIMIT, RECOMMENDATION_LIMIT, SORT_OPTIONS } from './constants';
 import { sortMovies } from './sortMovies';
 import { computeStats, computeWatchlistStats } from './stats';
 import { computeActivity, isValidWatchDate } from './activity';
+import { computeScoringHabits, computeTasteProfile, recommendWatchlist } from './taste';
 import { useDocumentMetadata } from './useDocumentMetadata';
 import { urlParams, useUrlState } from './useUrlState';
 
-const VIEW_VALUES: View[] = ['watched', 'watchlist', 'seen', 'history'];
-// Stable empty reference so the History view doesn't bust the allTags/filteredMovies memos.
+const VIEW_VALUES: View[] = ['watched', 'watchlist', 'seen', 'history', 'stats'];
+// Stable empty reference so the History and Stats views don't bust the
+// allTags/filteredMovies memos.
 const EMPTY_MOVIES: Movie[] = [];
 const SORT_VALUES: SortKey[] = SORT_OPTIONS.map(o => o.value);
 
@@ -83,10 +86,23 @@ const App: React.FC = () => {
     [historyMovies],
   );
 
+  // Taste analysis reads the rated films only: `seen` entries carry no score and watchlist
+  // entries have not been watched, so neither can say anything about how kt rates things.
+  const tasteProfile = useMemo(() => computeTasteProfile(watchedMovies), [watchedMovies]);
+  const scoringHabits = useMemo(
+    () => computeScoringHabits(watchedMovies, tasteProfile),
+    [watchedMovies, tasteProfile],
+  );
+  const recommendations = useMemo(
+    () => recommendWatchlist(watchlistMovies, tasteProfile, RECOMMENDATION_LIMIT),
+    [watchlistMovies, tasteProfile],
+  );
+
   const viewMovies =
     view === 'watched' ? watchedMovies
       : view === 'seen' ? seenMovies
-        : view === 'history' ? EMPTY_MOVIES // history renders the heatmap, not the grid/filters
+        // history and stats render their own panels, not the grid/filters
+        : view === 'history' || view === 'stats' ? EMPTY_MOVIES
           : watchlistMovies;
 
   const seenGenres = useMemo(
@@ -234,6 +250,21 @@ const App: React.FC = () => {
               <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Last 12 Mo</div>
             </div>
           </div>
+        ) : view === 'stats' ? (
+          <div className="flex items-end gap-8">
+            <div className="flex flex-col items-start md:items-end gap-1">
+              <div className="text-5xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{tasteProfile.total}</div>
+              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Rated</div>
+            </div>
+            <div className="flex flex-col items-start md:items-end gap-1">
+              <div className="text-3xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{tasteProfile.baseline.toFixed(1)}</div>
+              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Average</div>
+            </div>
+            <div className="flex flex-col items-start md:items-end gap-1">
+              <div className="text-3xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{tasteProfile.genres.length}</div>
+              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Genres</div>
+            </div>
+          </div>
         ) : (
           <div className="flex items-end gap-8">
             <div className="flex flex-col items-start md:items-end gap-1">
@@ -258,10 +289,18 @@ const App: React.FC = () => {
         <ViewTab active={view === 'watchlist'} onClick={() => switchView('watchlist')} icon={Bookmark} label="Watchlist" count={watchlistMovies.length} />
         <ViewTab active={view === 'seen'} onClick={() => switchView('seen')} icon={Check} label="Seen" count={seenMovies.length} />
         <ViewTab active={view === 'history'} onClick={() => switchView('history')} icon={Activity} label="History" count={historyCount} />
+        <ViewTab active={view === 'stats'} onClick={() => switchView('stats')} icon={ChartColumn} label="Stats" count={tasteProfile.total} />
       </div>
 
       {view === 'history' ? (
         <ActivityHeatmap summary={activity} onOpenMovie={openMovie} />
+      ) : view === 'stats' ? (
+        <TastePanel
+          profile={tasteProfile}
+          habits={scoringHabits}
+          recommendations={recommendations}
+          onOpenMovie={openMovie}
+        />
       ) : (
         <>
           {/* Filters */}
