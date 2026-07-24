@@ -4,6 +4,16 @@ My personal log of movies I've watched. Each entry is a markdown file in `movies
 
 Live: <https://i-watched-movies.kanywst12.workers.dev/> · [RSS](https://i-watched-movies.kanywst12.workers.dev/feed.xml)
 
+## Views
+
+Five tabs, each linkable through `?view=`. Filters, search, sort and the open film are mirrored to the query string too.
+
+- **Watched** (`?view=watched`): the rated grid, with rank badges on the top 3 by score and NEW badges on the 2 most recent
+- **Watchlist** (`?view=watchlist`): `published: false`, films not seen yet. `watch_date` is legitimately empty here
+- **Seen** (`?view=seen`): `seen: true`, watched but deliberately left unrated, so it never skews the average
+- **History** (`?view=history`): a contribution-graph heatmap of the last 53 weeks, plus streaks and films per month
+- **Stats** (`?view=stats`): taste analysis over the rated films. Genre, country and era affinities as deltas against the personal average, how the 0-10 scale actually gets used, and a watchlist ranking by the score the profile predicts
+
 ## Add a movie
 
 Two paths.
@@ -16,6 +26,7 @@ Two paths.
 ---
 title: 'Title'
 published: true              # false = lives on the Watchlist tab instead
+seen: true                   # optional, watched but unrated: own tab, no score
 tags: ['Sci-Fi', 'Action']
 national: 'Japan'            # optional, shows a flag emoji
 cover_image: 'https://...'
@@ -49,7 +60,10 @@ Node `>= 20.18`.
 - `scripts/build-feeds.js`: RSS + JSON-LD builders (covered by tests)
 - `src/App.tsx`: view toggle, filter/sort/tag state mirrored to the URL
 - `src/components/MovieCard.tsx`, `MovieDetailModal.tsx`: the grid card and the detail view. Modal hand-off uses the View Transitions API (no framer-motion)
+- `src/activity.ts` + `src/components/ActivityHeatmap.tsx`: the History heatmap, streaks and monthly bars
+- `src/taste.ts` + `src/components/TastePanel.tsx`: the Stats view. Affinities, scoring habits and the watchlist ranking, all pure functions over the rated films
 - `src/sortMovies.ts`, `src/stats.ts`, `src/useUrlState.ts`, `src/useDocumentMetadata.ts`: small utilities, each tested
+- `src/constants.ts`: the tunables (rank/NEW limits, country flags, sort options, the taste-analysis thresholds). Nothing is inlined at the call site
 
 ## Forking this for your own log
 
@@ -67,7 +81,8 @@ React 19, Vite 8, Tailwind 4, TypeScript 6, Vitest 4. Animation is browser-nativ
 
 ## CI / Deploy
 
-- `ci.yml`: lint + test + audit + build on every PR
+- `ci.yml`: lint + test + audit + build on every PR. The audit runs `--omit=dev`, so a vulnerability that ships in the bundle fails the build while a build-time-only one does not
+- `claude-code-review.yml`: Claude reviews every non-bot PR. No-ops while `ANTHROPIC_API_KEY` is unset
 - Cloudflare Workers auto-deploys on push to `main` (via the GitHub integration). Build command `npm run build`, output `dist`
 - `movie-from-issue.yml`: turns "Add a movie" issues into PRs and auto-merges them. Mirrors progress into `status:*` labels
 - `sync-labels.yml`: pushes `.github/labels.yml` to the repo's actual labels. Runs on changes to that file or via manual dispatch
