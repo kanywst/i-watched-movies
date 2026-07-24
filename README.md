@@ -82,7 +82,7 @@ React 19, Vite 8, Tailwind 4, TypeScript 6, Vitest 4. Animation is browser-nativ
 ## CI / Deploy
 
 - `ci.yml`: lint + test + audit + build on every PR. The audit runs `--omit=dev`, so a vulnerability that ships in the bundle fails the build while a build-time-only one does not
-- `claude-code-review.yml`: Claude reviews every non-bot PR. No-ops while `ANTHROPIC_API_KEY` is unset
+- `claude-code-review.yml`: Claude reviews every non-bot PR. Advisory, never a merge gate. Authenticates with `CLAUDE_CODE_OAUTH_TOKEN` (from `claude setup-token`, so it runs on the subscription rather than on API credit) and no-ops while that secret is unset. The action refuses to run when the PR changes this workflow file, so a PR that edits it cannot test it
 - Cloudflare Workers auto-deploys on push to `main` (via the GitHub integration). Build command `npm run build`, output `dist`
 - `movie-from-issue.yml`: turns "Add a movie" issues into PRs and auto-merges them. Mirrors progress into `status:*` labels
 - `sync-labels.yml`: pushes `.github/labels.yml` to the repo's actual labels. Runs on changes to that file or via manual dispatch
