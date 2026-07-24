@@ -1,6 +1,7 @@
 ---
 title: 'The Call'
 published: false
+seen: true
 tags:
   - 'Thriller'
   - 'Mystery'
