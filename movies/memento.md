@@ -1,6 +1,7 @@
 ---
 title: 'Memento'
 published: false
+seen: true
 tags:
   - 'Thriller'
   - 'Mystery'
