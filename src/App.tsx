@@ -289,7 +289,7 @@ const App: React.FC = () => {
         <ViewTab active={view === 'watchlist'} onClick={() => switchView('watchlist')} icon={Bookmark} label="Watchlist" count={watchlistMovies.length} />
         <ViewTab active={view === 'seen'} onClick={() => switchView('seen')} icon={Check} label="Seen" count={seenMovies.length} />
         <ViewTab active={view === 'history'} onClick={() => switchView('history')} icon={Activity} label="History" count={historyCount} />
-        <ViewTab active={view === 'stats'} onClick={() => switchView('stats')} icon={ChartColumn} label="Stats" count={tasteProfile.total} />
+        <ViewTab active={view === 'stats'} onClick={() => switchView('stats')} icon={ChartColumn} label="Stats" />
       </div>
 
       {view === 'history' ? (
@@ -371,7 +371,8 @@ interface ViewTabProps {
   onClick: () => void;
   icon: React.ComponentType<{ className?: string }>;
   label: string;
-  count: number;
+  /** Omitted where a count would only repeat another tab's, as on Stats. */
+  count?: number;
 }
 
 const ViewTab: React.FC<ViewTabProps> = ({ active, onClick, icon: Icon, label, count }) => (
@@ -386,7 +387,9 @@ const ViewTab: React.FC<ViewTabProps> = ({ active, onClick, icon: Icon, label, c
   >
     <Icon className="w-4 h-4" />
     <span>{label}</span>
-    <span className={clsx('text-xs', active ? 'text-stone-300 dark:text-stone-500' : 'text-stone-400 dark:text-stone-600')}>{count}</span>
+    {count !== undefined && (
+      <span className={clsx('text-xs', active ? 'text-stone-300 dark:text-stone-500' : 'text-stone-400 dark:text-stone-600')}>{count}</span>
+    )}
   </button>
 );
 

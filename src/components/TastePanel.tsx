@@ -51,13 +51,17 @@ export const TastePanel: React.FC<TastePanelProps> = ({
             <Callout value={topGenre.key} label={`Most watched · ${topGenre.count} films`} />
           )}
           {lift && <Callout value={signed(lift.delta)} label={`Rated highest · ${lift.key}`} />}
+          {/* Both read the same release-to-watch gaps, so neither means anything when no
+              film carries both dates. */}
           {profile.medianLagDays !== null && (
-            <Callout
-              value={formatLag(profile.medianLagDays)}
-              label="Median wait after release"
-            />
+            <>
+              <Callout
+                value={formatLag(profile.medianLagDays)}
+                label="Median wait after release"
+              />
+              <Callout value={pct(profile.newReleaseShare)} label="Caught on release" />
+            </>
           )}
-          <Callout value={pct(profile.newReleaseShare)} label="Caught on release" />
         </div>
 
         <div className="grid gap-10 md:grid-cols-2">
