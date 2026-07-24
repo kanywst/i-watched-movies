@@ -123,7 +123,6 @@ describe('computeScoringHabits', () => {
       { start: 7.5, count: 1 },
       { start: 9.5, count: 1 },
     ]);
-    expect(habits.peak).toEqual({ start: 0, count: 1 });
   });
 
   it('reports the extremes and how tightly scores cluster', () => {

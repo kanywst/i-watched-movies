@@ -150,8 +150,6 @@ export interface ScoreDrift {
 
 export interface ScoringHabits {
   buckets: ScoreBucket[];
-  /** The fullest bucket, i.e. the score band that gets reached for most often. */
-  peak: ScoreBucket | null;
   lowest: Movie | null;
   highest: Movie | null;
   /** Share (0-1) of ratings sitting within SCORE_BUCKET_STEP of the mean. */
@@ -176,6 +174,7 @@ function computeDrift(movies: Movie[]): ScoreDrift | null {
   return { earlier, later, delta: later - earlier };
 }
 
+/** `profile` must be the one built from this same list, since every delta is read off it. */
 export function computeScoringHabits(movies: Movie[], profile: TasteProfile): ScoringHabits {
   const buckets: ScoreBucket[] = Array.from({ length: BUCKET_COUNT }, (_, i) => ({
     start: i * SCORE_BUCKET_STEP,
@@ -210,14 +209,8 @@ export function computeScoringHabits(movies: Movie[], profile: TasteProfile): Sc
           )
       : [];
 
-  const peak = buckets.reduce<ScoreBucket | null>(
-    (best, b) => (b.count > 0 && (!best || b.count > best.count) ? b : best),
-    null,
-  );
-
   return {
     buckets,
-    peak,
     lowest,
     highest,
     concentration: movies.length ? concentrated / movies.length : 0,
