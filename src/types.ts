@@ -12,6 +12,11 @@ export interface Movie {
   content: string;
   summary?: string;
   impression?: string;
+  // Watchlist-only: streaming services the film was available on when last checked,
+  // as keys into STREAMING_SERVICES. `checked` is the YYYY-MM that availability was
+  // verified, surfaced next to the badges so a stale entry reads as stale.
+  streaming?: string[];
+  checked?: string;
 }
 
 export type View = 'watched' | 'watchlist' | 'seen' | 'history' | 'stats';

@@ -81,6 +81,20 @@ body:
       placeholder: Horror, Sci-fi
 
   - type: input
+    id: streaming
+    attributes:
+      label: Streaming
+      description: 'Watchlist only. Comma-separated services it is available on. Must match a key in STREAMING_SERVICES (src/constants.ts): Netflix, Disney+, Prime Video, U-NEXT, Hulu.'
+      placeholder: Netflix, Disney+
+
+  - type: input
+    id: checked
+    attributes:
+      label: Availability checked
+      description: 'YYYY-MM. When streaming availability was last verified (shown next to the badges).'
+      placeholder: '2026-07'
+
+  - type: input
     id: cover_image
     attributes:
       label: Cover image URL

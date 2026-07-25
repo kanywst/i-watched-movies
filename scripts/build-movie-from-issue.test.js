@@ -125,6 +125,34 @@ describe('buildMovie', () => {
     expect(movie.published).toBe(true);
   });
 
+  it('parses Streaming into an array and Availability checked into a month', () => {
+    const body = `### Title
+
+Night in Paradise
+
+### List
+
+Watchlist
+
+### Streaming
+
+Netflix, Disney+
+
+### Availability checked
+
+2026-07
+`;
+    const { movie } = buildMovie(parseIssueBody(body), { issueNumber: '9' });
+    expect(movie.streaming).toEqual(['Netflix', 'Disney+']);
+    expect(movie.checked).toBe('2026-07');
+  });
+
+  it('defaults streaming to [] and checked to empty when the sections are absent', () => {
+    const { movie } = buildMovie(parseIssueBody(sample));
+    expect(movie.streaming).toEqual([]);
+    expect(movie.checked).toBe('');
+  });
+
   it('throws when title is missing', () => {
     expect(() => buildMovie({})).toThrow(/Title is required/);
   });
@@ -180,6 +208,32 @@ describe('formatFile', () => {
     const { movie } = buildMovie(parseIssueBody(sample));
     const out = formatFile(movie);
     expect(out).not.toContain('summary:');
+    expect(out).not.toContain('streaming:');
+    expect(out).not.toContain('checked:');
+  });
+
+  it('emits streaming as a list and checked as a quoted month', () => {
+    const body = `### Title
+
+Night in Paradise
+
+### List
+
+Watchlist
+
+### Streaming
+
+Netflix, Disney+
+
+### Availability checked
+
+2026-07
+`;
+    const out = formatFile(buildMovie(parseIssueBody(body)).movie);
+    expect(out).toContain('streaming:');
+    expect(out).toContain("  - 'Netflix'");
+    expect(out).toContain("  - 'Disney+'");
+    expect(out).toContain("checked: '2026-07'");
   });
 
   it('omits seen for a normal entry but emits it for a Seen entry', () => {
@@ -233,6 +287,35 @@ describe('readExisting', () => {
     expect(m.body).toBe('Body text.');
   });
 
+  it('reads streaming as an array and checked as a month', () => {
+    const file = path.join(tmpDir, 'wl-streaming.md');
+    fs.writeFileSync(
+      file,
+      [
+        '---',
+        "title: 'WL'",
+        'published: false',
+        'streaming:',
+        "  - 'Netflix'",
+        "  - 'Disney+'",
+        "checked: '2026-07'",
+        '---',
+        '',
+      ].join('\n'),
+    );
+    const m = readExisting(file);
+    expect(m.streaming).toEqual(['Netflix', 'Disney+']);
+    expect(m.checked).toBe('2026-07');
+  });
+
+  it('defaults streaming to [] and checked to empty when absent', () => {
+    const file = path.join(tmpDir, 'no-streaming.md');
+    fs.writeFileSync(file, ['---', "title: 'T'", 'published: false', '---', ''].join('\n'));
+    const m = readExisting(file);
+    expect(m.streaming).toEqual([]);
+    expect(m.checked).toBe('');
+  });
+
   it('falls back to comma-split when tags is a string', () => {
     const file = path.join(tmpDir, 'string-tags.md');
     fs.writeFileSync(
@@ -264,10 +347,13 @@ describe('mergeMovie', () => {
     release_date: '2026-06-01',
     watch_date: '',
     point: null,
+    streaming: ['Netflix'],
+    checked: '2026-06',
     summary: 'old summary',
     impression: '',
     body: 'old body',
   };
+  const noStreaming = { streaming: [], checked: '' };
 
   it('promotes watchlist to watched and adds new fields without losing existing', () => {
     const incoming = {
@@ -279,6 +365,7 @@ describe('mergeMovie', () => {
       release_date: '',
       watch_date: '2026-05-12',
       point: 8.5,
+      ...noStreaming,
       summary: '',
       impression: 'Wild ride.',
       body: '',
@@ -294,6 +381,9 @@ describe('mergeMovie', () => {
     expect(merged.release_date).toBe('2026-06-01');
     expect(merged.summary).toBe('old summary');
     expect(merged.body).toBe('old body');
+    // A blank streaming/checked from the issue keeps the last known availability.
+    expect(merged.streaming).toEqual(['Netflix']);
+    expect(merged.checked).toBe('2026-06');
   });
 
   it('lets the issue overwrite non-empty fields when re-submitted with new values', () => {
@@ -306,6 +396,8 @@ describe('mergeMovie', () => {
       release_date: '2026-07-10',
       watch_date: '2026-05-12',
       point: 9,
+      streaming: ['Disney+'],
+      checked: '2026-08',
       summary: 'new summary',
       impression: '',
       body: 'new body',
@@ -316,6 +408,9 @@ describe('mergeMovie', () => {
     expect(merged.release_date).toBe('2026-07-10');
     expect(merged.summary).toBe('new summary');
     expect(merged.body).toBe('new body');
+    // A fresh streaming/checked from the issue overwrites the old availability.
+    expect(merged.streaming).toEqual(['Disney+']);
+    expect(merged.checked).toBe('2026-08');
   });
 
   it('preserves existing point when issue point is blank', () => {
@@ -328,6 +423,7 @@ describe('mergeMovie', () => {
       release_date: '',
       watch_date: '',
       point: null,
+      ...noStreaming,
       summary: '',
       impression: '',
       body: '',
@@ -345,6 +441,7 @@ describe('mergeMovie', () => {
       release_date: '',
       watch_date: '',
       point: 0,
+      ...noStreaming,
       summary: '',
       impression: '',
       body: '',

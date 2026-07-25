@@ -4,6 +4,7 @@ import { Movie } from '../types';
 import { format } from 'date-fns';
 import { clsx } from 'clsx';
 import { COUNTRY_FLAGS } from '../constants';
+import { StreamingBadges } from './StreamingBadges';
 
 interface MovieCardProps {
   movie: Movie;
@@ -167,6 +168,8 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, index, rank, isNew,
             </span>
           ))}
         </div>
+
+        <StreamingBadges movie={movie} variant="card" />
       </div>
     </div>
   );
