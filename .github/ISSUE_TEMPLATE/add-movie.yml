@@ -80,12 +80,17 @@ body:
       description: Comma-separated
       placeholder: Horror, Sci-fi
 
-  - type: input
+  - type: checkboxes
     id: streaming
     attributes:
       label: Streaming
-      description: 'Watchlist only. Comma-separated services it is available on. Must match a key in STREAMING_SERVICES (src/constants.ts): Netflix, Disney+, Prime Video, U-NEXT, Hulu.'
-      placeholder: Netflix, Disney+
+      description: 'Watchlist only. Tick the JP subscription services it is available on (leave all unticked otherwise). Options are the exact keys in STREAMING_SERVICES (src/constants.ts).'
+      options:
+        - label: Netflix
+        - label: Disney+
+        - label: Prime Video
+        - label: U-NEXT
+        - label: Hulu
 
   - type: input
     id: checked

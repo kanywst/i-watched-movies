@@ -42,6 +42,21 @@ function parseTags(raw) {
     .filter(Boolean);
 }
 
+// The Streaming form field is a checkboxes list, so its section body is lines like
+// "- [x] Netflix". Extract the ticked labels. Falls back to comma-splitting so a
+// hand-written or legacy comma list still works.
+function parseStreaming(raw) {
+  const text = String(raw || '');
+  if (/-\s*\[[ xX]\]/.test(text)) {
+    return text
+      .split('\n')
+      .map(line => line.match(/^\s*-\s*\[[xX]\]\s*(.+?)\s*$/))
+      .filter(Boolean)
+      .map(m => m[1].trim());
+  }
+  return parseTags(text);
+}
+
 function parsePoint(raw) {
   if (!raw) return null;
   const n = Number(raw);
@@ -85,7 +100,7 @@ export function buildMovie(sections, { issueNumber } = {}) {
     release_date: parseDate(sections['Release date']),
     watch_date: parseDate(sections['Watch date']),
     point: parsePoint(sections['Point']),
-    streaming: parseTags(sections['Streaming']),
+    streaming: parseStreaming(sections['Streaming']),
     checked: parseMonth(sections['Availability checked']),
     summary: (sections['Summary'] || '').trim(),
     impression: (sections['Impression'] || '').trim(),
