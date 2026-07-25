@@ -14,4 +14,5 @@ release_date: '2017-08-26'
 summary: 'Ishida Mitsunari holds a coalition together on principle while Tokugawa Ieyasu buys it apart, one general at a time, in the six hours that decided who ruled Japan.'
 ---
 
-Masato Harada. Netflix JP.
+
+Masato Harada.

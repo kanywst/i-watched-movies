@@ -14,4 +14,5 @@ release_date: '2018-09-28'
 summary: 'A wolf expert is called to a remote Alaskan village to hunt the animals that took a boy, and walks into something far more violent among the people who live there.'
 ---
 
-Jeremy Saulnier (Rebel Ridge, Blue Ruin), a bleak wilderness manhunt. Netflix original. Netflix JP.
+
+Jeremy Saulnier (Rebel Ridge, Blue Ruin), a bleak wilderness manhunt. Netflix original.

@@ -13,4 +13,5 @@ release_date: '2022-03-18'
 summary: 'A man burgling an empty holiday house is still inside when the tech billionaire who owns it arrives with his wife. Nobody can leave, and the negotiation drags on for days.'
 ---
 
-Netflix original. Netflix JP.
+
+Netflix original.

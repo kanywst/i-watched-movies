@@ -13,4 +13,5 @@ release_date: '2016-08-12'
 summary: 'Two brothers rob branches of the bank that is foreclosing on their mother''s ranch, to pay the bank with its own money, while a Texas Ranger a fortnight from retirement works out the pattern.'
 ---
 
-Taylor Sheridan. RT 97%. Netflix JP.
+
+Taylor Sheridan. RT 97%.

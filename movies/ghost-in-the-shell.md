@@ -16,4 +16,5 @@ release_date: '1995-11-18'
 summary: 'A cyborg counter-terrorism officer hunts a hacker who breaks into people''s brains and rewrites their memories. What she finds forces the question of what is left of her that is actually hers.'
 ---
 
-Mamoru Oshii. Netflix JP.
+
+Mamoru Oshii.

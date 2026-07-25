@@ -15,4 +15,5 @@ release_date: '2022-05-18'
 summary: 'A bulldozer of a detective flies to Vietnam to extradite a suspect and instead runs down a sadistic killer preying on Korean tourists.'
 ---
 
-Ma Dong-seok''s fists versus a monster, brutal crime action. On Netflix JP as 犯罪都市 THE ROUNDUP. Netflix JP.
+
+Ma Dong-seok''s fists versus a monster, brutal crime action. On Netflix JP as 犯罪都市 THE ROUNDUP.

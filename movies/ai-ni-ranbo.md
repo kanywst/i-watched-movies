@@ -13,4 +13,3 @@ release_date: '2024-08-30'
 summary: 'A woman keeps an immaculate house in the annex of her mother-in-law''s home. The floorboards are rotting, her husband is barely present, and something in the walls is coming apart along with her.'
 ---
 
-Netflix JP.

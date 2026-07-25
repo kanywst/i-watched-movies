@@ -14,4 +14,5 @@ release_date: '2017-02-22'
 summary: 'A journalist whose son was kidnapped uses lucid-dreaming therapy to re-enter his own memory of the abduction and chase the people behind it, until the reveal recasts who was really involved.'
 ---
 
-A Korean crime-SF thriller with a black-box reveal. Netflix original. Netflix JP.
+
+A Korean crime-SF thriller with a black-box reveal. Netflix original.

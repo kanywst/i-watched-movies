@@ -14,4 +14,5 @@ release_date: '2006-10-06'
 summary: 'Scorsese''s remake of Infernal Affairs, moved to the Irish mob in Boston.'
 ---
 
-Watch it after the Hong Kong original, not before. Netflix JP.
+
+Watch it after the Hong Kong original, not before.
