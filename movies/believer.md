@@ -16,4 +16,4 @@ summary: 'A detective who lost everything to a faceless drug lord teams with a b
 ---
 
 
-Korean remake of Drug War, a cold cartel-manhunt noir. A sequel, Believer 2, is also on Netflix JP.
+Korean remake of Drug War, a cold cartel-manhunt noir. A sequel, Believer 2, followed.
