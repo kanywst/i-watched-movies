@@ -5,6 +5,10 @@ tags:
   - 'Period'
   - 'Action'
 national: 'Japan'
+streaming:
+  - 'Netflix'
+  - 'U-NEXT'
+checked: '2026-07'
 cover_image: 'https://media.eiga.com/images/movie/90757/photo/0bcc98077dd7444c/640.jpg'
 release_date: '2021-10-15'
 summary: 'Hijikata Toshizo turns a gang of provincial swordsmen into the Shinsengumi, and keeps it together by executing its own members.'

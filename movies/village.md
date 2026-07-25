@@ -6,6 +6,9 @@ tags:
   - 'Suspense'
   - 'Drama'
 national: 'Japan'
+streaming:
+  - 'Netflix'
+checked: '2026-07'
 cover_image: 'https://image.tmdb.org/t/p/original/4uJqWtWIp9PZ4iAk4R5SsTno5Dw.jpg'
 release_date: '2023-04-21'
 summary: 'A young man trapped in a corrupt village built around its waste-disposal plant finds a way to climb out, then is slowly pulled back down into its darkness.'
