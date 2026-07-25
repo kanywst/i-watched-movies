@@ -69,10 +69,11 @@ function parseDate(raw) {
   return m ? m[0] : '';
 }
 
-// `checked` is a month stamp (YYYY-MM). Accept a full date and keep the month part.
+// `checked` is a month stamp (YYYY-MM). Accept a full date and keep the month part;
+// reject impossible months (00, 13-99) rather than storing them as a stamp.
 function parseMonth(raw) {
   if (!raw) return '';
-  const m = String(raw).trim().match(/^\d{4}-\d{2}/);
+  const m = String(raw).trim().match(/^\d{4}-(?:0[1-9]|1[0-2])/);
   return m ? m[0] : '';
 }
 
