@@ -20,7 +20,7 @@ function normalizeChecked(value) {
   if (value instanceof Date) {
     return Number.isNaN(value.getTime()) ? '' : value.toISOString().slice(0, 7);
   }
-  const m = String(value).trim().match(/^\d{4}-\d{2}/);
+  const m = String(value).trim().match(/^\d{4}-(?:0[1-9]|1[0-2])/);
   return m ? m[0] : '';
 }
 

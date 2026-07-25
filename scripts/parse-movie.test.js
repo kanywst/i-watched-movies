@@ -75,6 +75,11 @@ checked: '2026-07'`),
     expect(parseMovie(md(`checked: 'July 2026'`), 'p').checked).toBe('');
   });
 
+  it('rejects an impossible month in checked', () => {
+    expect(parseMovie(md(`checked: '2026-13'`), 'p').checked).toBe('');
+    expect(parseMovie(md(`checked: '2026-00'`), 'p').checked).toBe('');
+  });
+
   it('preserves published: false for watchlist items', () => {
     const movie = parseMovie(md(`title: 'On Watchlist'\npublished: false`), 'wl');
     expect(movie).not.toBeNull();

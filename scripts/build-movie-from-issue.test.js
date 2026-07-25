@@ -153,6 +153,18 @@ Netflix, Disney+
     expect(movie.checked).toBe('');
   });
 
+  it('rejects an impossible Availability checked month', () => {
+    const body = `### Title
+
+X
+
+### Availability checked
+
+2026-13
+`;
+    expect(buildMovie(parseIssueBody(body)).movie.checked).toBe('');
+  });
+
   it('parses the checkboxes form of Streaming, keeping only ticked services', () => {
     const body = `### Title
 
