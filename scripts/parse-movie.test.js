@@ -37,8 +37,42 @@ impression: 'Loved it'`,
       point: 8.5,
       summary: 'A summary',
       impression: 'Loved it',
+      streaming: [],
+      checked: '',
       content: '\nBody text\n',
     });
+  });
+
+  it('parses streaming as an array and checked as a month', () => {
+    const movie = parseMovie(
+      md(`title: 'WL'
+published: false
+streaming:
+  - 'Netflix'
+  - 'Disney+'
+checked: '2026-07'`),
+      'wl',
+    );
+    expect(movie.streaming).toEqual(['Netflix', 'Disney+']);
+    expect(movie.checked).toBe('2026-07');
+  });
+
+  it('coerces a single streaming string to an array', () => {
+    expect(parseMovie(md(`streaming: 'Netflix'`), 'p').streaming).toEqual(['Netflix']);
+  });
+
+  it('defaults streaming to [] and checked to empty when omitted', () => {
+    const movie = parseMovie(md(`title: 'T'`), 'p');
+    expect(movie.streaming).toEqual([]);
+    expect(movie.checked).toBe('');
+  });
+
+  it('coerces an unquoted YAML date in checked back to YYYY-MM', () => {
+    expect(parseMovie(md(`checked: 2026-07-15`), 'p').checked).toBe('2026-07');
+  });
+
+  it('drops a malformed checked value', () => {
+    expect(parseMovie(md(`checked: 'July 2026'`), 'p').checked).toBe('');
   });
 
   it('preserves published: false for watchlist items', () => {

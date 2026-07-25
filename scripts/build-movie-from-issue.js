@@ -54,6 +54,20 @@ function parseDate(raw) {
   return m ? m[0] : '';
 }
 
+// `checked` is a month stamp (YYYY-MM). Accept a full date and keep the month part.
+function parseMonth(raw) {
+  if (!raw) return '';
+  const m = String(raw).trim().match(/^\d{4}-\d{2}/);
+  return m ? m[0] : '';
+}
+
+function existingMonth(value) {
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? '' : value.toISOString().slice(0, 7);
+  }
+  return parseMonth(value);
+}
+
 export function buildMovie(sections, { issueNumber } = {}) {
   const list = (sections['List'] || 'Watched').trim().toLowerCase();
   // "Seen" is watched-but-unrated: not published (no score, kept out of the Watched grid)
@@ -71,6 +85,8 @@ export function buildMovie(sections, { issueNumber } = {}) {
     release_date: parseDate(sections['Release date']),
     watch_date: parseDate(sections['Watch date']),
     point: parsePoint(sections['Point']),
+    streaming: parseTags(sections['Streaming']),
+    checked: parseMonth(sections['Availability checked']),
     summary: (sections['Summary'] || '').trim(),
     impression: (sections['Impression'] || '').trim(),
     body: (sections['Body'] || '').trim(),
@@ -134,6 +150,10 @@ export function readExisting(filePath) {
     release_date: existingDate(data.release_date),
     watch_date: existingDate(data.watch_date),
     point,
+    streaming: Array.isArray(data.streaming)
+      ? data.streaming.filter(Boolean).map(String)
+      : parseTags(data.streaming),
+    checked: existingMonth(data.checked),
     summary: (data.summary ?? '').toString().trim(),
     impression: (data.impression ?? '').toString().trim(),
     body: (content ?? '').trim(),
@@ -151,6 +171,8 @@ export function mergeMovie(existing, incoming) {
     release_date: incoming.release_date || existing.release_date,
     watch_date: incoming.watch_date || existing.watch_date,
     point: incoming.point !== null ? incoming.point : existing.point,
+    streaming: incoming.streaming.length ? incoming.streaming : existing.streaming,
+    checked: incoming.checked || existing.checked,
     summary: incoming.summary || existing.summary,
     impression: incoming.impression || existing.impression,
     body: incoming.body || existing.body,
@@ -171,6 +193,11 @@ export function formatFile(movie) {
     for (const t of movie.tags) lines.push(`  - ${quote(t)}`);
   }
   if (movie.national) lines.push(`national: ${quote(movie.national)}`);
+  if (movie.streaming && movie.streaming.length) {
+    lines.push('streaming:');
+    for (const s of movie.streaming) lines.push(`  - ${quote(s)}`);
+  }
+  if (movie.checked) lines.push(`checked: ${quote(movie.checked)}`);
   if (movie.cover_image) lines.push(`cover_image: ${quote(movie.cover_image)}`);
   if (movie.release_date) lines.push(`release_date: ${quote(movie.release_date)}`);
   if (movie.watch_date) lines.push(`watch_date: ${quote(movie.watch_date)}`);

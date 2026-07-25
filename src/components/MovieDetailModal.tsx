@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { X, Calendar, Film, Star, Quote } from 'lucide-react';
 import { Movie } from '../types';
 import { format } from 'date-fns';
+import { StreamingBadges } from './StreamingBadges';
 
 interface MovieDetailModalProps {
   movie: Movie | null;
@@ -150,6 +151,8 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({ movie, onClo
                 </div>
               )}
             </div>
+
+            <StreamingBadges movie={movie} variant="detail" />
           </div>
 
           <div className="space-y-8 overflow-y-auto pr-2 custom-scrollbar">
