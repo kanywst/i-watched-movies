@@ -16,4 +16,4 @@ summary: 'A bulldozer of a detective flies to Vietnam to extradite a suspect and
 ---
 
 
-Ma Dong-seok''s fists versus a monster, brutal crime action. On Netflix JP as 犯罪都市 THE ROUNDUP.
+Ma Dong-seok''s fists versus a monster, brutal crime action. Released in Japan as 犯罪都市 THE ROUNDUP.

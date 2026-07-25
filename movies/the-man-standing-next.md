@@ -17,4 +17,4 @@ summary: 'In the 40 days before the 1979 assassination of the president, the dir
 ---
 
 
-Political noir in the Inside Men lane, Lee Byung-hun. On Netflix JP as KCIA 南山の部長たち.
+Political noir in the Inside Men lane, Lee Byung-hun. Released in Japan as KCIA 南山の部長たち.
