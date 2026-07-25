@@ -14,4 +14,5 @@ release_date: '2020-09-04'
 summary: 'A young woman rides through a snowstorm to meet her boyfriend''s parents while thinking of ending the relationship, and the trip dissolves into a reversal of identity and reality.'
 ---
 
-Charlie Kaufman, a cerebral slow-burn twist. Netflix original. Netflix JP.
+
+Charlie Kaufman, a cerebral slow-burn twist. Netflix original.

@@ -14,4 +14,5 @@ release_date: '2023-04-21'
 summary: 'A young man trapped in a corrupt village built around its waste-disposal plant finds a way to climb out, then is slowly pulled back down into its darkness.'
 ---
 
-Fujii Michihito again (the 正体 director), Yokohama Ryusei sliding into the dark. Netflix JP.
+
+Fujii Michihito again (the 正体 director), Yokohama Ryusei sliding into the dark.

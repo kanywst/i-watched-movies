@@ -16,4 +16,5 @@ release_date: '2016-09-17'
 summary: 'A killer leaves the word RAGE written in blood and vanishes after plastic surgery. A year later, three strangers turn up in three towns, and the people who love them start to wonder.'
 ---
 
-Lee Sang-il. Netflix JP.
+
+Lee Sang-il.

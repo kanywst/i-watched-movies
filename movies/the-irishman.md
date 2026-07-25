@@ -13,4 +13,5 @@ release_date: '2019-11-01'
 summary: 'A mob hitman recounts his life of service, including what he says he did to Jimmy Hoffa, from a wheelchair in a home where nobody visits him.'
 ---
 
-Scorsese. 209 minutes. Netflix JP.
+
+Scorsese. 209 minutes.

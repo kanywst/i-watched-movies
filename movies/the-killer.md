@@ -13,4 +13,5 @@ release_date: '2023-11-10'
 summary: 'A hitman narrates his own discipline in a loop of platitudes, misses a shot, and then works methodically through everyone connected to the contract.'
 ---
 
-Fincher. Netflix original. Netflix JP.
+
+Fincher. Netflix original.

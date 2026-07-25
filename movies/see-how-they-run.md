@@ -14,4 +14,5 @@ release_date: '2022-09-16'
 summary: 'When a member of the crew adapting a hit West End play is murdered, a world-weary inspector and an eager young constable work a case that keeps winking at its own genre.'
 ---
 
-A meta whodunit in the Christie mold. Disney+ JP (Star).
+
+A meta whodunit in the Christie mold.

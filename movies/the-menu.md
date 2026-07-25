@@ -14,4 +14,5 @@ release_date: '2022-11-18'
 summary: 'A young couple travels to an exclusive island restaurant for a tasting menu, and the celebrity chef serves each course as part of a meticulously planned act of revenge.'
 ---
 
-A tight single-location thriller with a cruel design. Disney+ JP (Star).
+
+A tight single-location thriller with a cruel design.

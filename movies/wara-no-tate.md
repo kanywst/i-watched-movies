@@ -17,4 +17,5 @@ release_date: '2013-04-26'
 summary: 'A billionaire takes out a national newspaper ad offering one billion yen to anyone who kills the man who murdered his granddaughter. Police have to escort that man 1,200km across a country that now wants him dead.'
 ---
 
-Takashi Miike. Netflix JP.
+
+Takashi Miike.
