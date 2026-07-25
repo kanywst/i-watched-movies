@@ -20,6 +20,38 @@ const ServicePill: React.FC<{
   detail: boolean;
 }> = ({ svc, href, title, detail }) => {
   const logoHeight = detail ? 15 : 12;
+  const pillClass = clsx(
+    'inline-flex items-center rounded-full text-white shadow-sm',
+    detail ? 'px-3 py-1.5 transition-transform hover:scale-105' : 'px-2.5 py-1',
+  );
+  const content = svc.logo ? (
+    // brightness(0) invert(1) repaints any logo (black, coloured, gradient) to a flat
+    // white silhouette, so a single pill style works for every brand and it survives
+    // Vite inlining small SVGs as data URIs (a CSS mask silently fails on those).
+    <img
+      src={svc.logo}
+      alt=""
+      aria-hidden="true"
+      style={{ height: logoHeight, width: 'auto', filter: 'brightness(0) invert(1)' }}
+    />
+  ) : (
+    <span className={clsx('font-semibold tracking-wide', detail ? 'text-xs' : 'text-[10px]')}>
+      {svc.label}
+    </span>
+  );
+
+  // On a card the badges are a non-interactive visual cue: the whole card is already a
+  // role="button" that opens the modal, and nesting links inside it would add stray tab
+  // stops and invalid button-in-button ARIA. The live links live in the modal (detail),
+  // which is not itself a button.
+  if (!detail) {
+    return (
+      <span className={pillClass} style={{ backgroundColor: svc.brandBg }} title={svc.label}>
+        {content}
+      </span>
+    );
+  }
+
   return (
     <a
       href={href}
@@ -28,26 +60,9 @@ const ServicePill: React.FC<{
       onClick={(e) => e.stopPropagation()}
       aria-label={`Watch ${title} on ${svc.label}`}
       style={{ backgroundColor: svc.brandBg }}
-      className={clsx(
-        'inline-flex items-center rounded-full text-white shadow-sm transition-transform hover:scale-105',
-        detail ? 'px-3 py-1.5' : 'px-2.5 py-1',
-      )}
+      className={pillClass}
     >
-      {svc.logo ? (
-        // brightness(0) invert(1) repaints any logo (black, coloured, gradient) to a flat
-        // white silhouette, so a single pill style works for every brand and it survives
-        // Vite inlining small SVGs as data URIs (a CSS mask silently fails on those).
-        <img
-          src={svc.logo}
-          alt=""
-          aria-hidden="true"
-          style={{ height: logoHeight, width: 'auto', filter: 'brightness(0) invert(1)' }}
-        />
-      ) : (
-        <span className={clsx('font-semibold tracking-wide', detail ? 'text-xs' : 'text-[10px]')}>
-          {svc.label}
-        </span>
-      )}
+      {content}
     </a>
   );
 };
