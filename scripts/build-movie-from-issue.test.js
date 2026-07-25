@@ -153,6 +153,27 @@ Netflix, Disney+
     expect(movie.checked).toBe('');
   });
 
+  it('parses the checkboxes form of Streaming, keeping only ticked services', () => {
+    const body = `### Title
+
+X
+
+### List
+
+Watchlist
+
+### Streaming
+
+- [x] Netflix
+- [ ] Disney+
+- [x] Prime Video
+- [ ] U-NEXT
+- [ ] Hulu
+`;
+    const { movie } = buildMovie(parseIssueBody(body));
+    expect(movie.streaming).toEqual(['Netflix', 'Prime Video']);
+  });
+
   it('throws when title is missing', () => {
     expect(() => buildMovie({})).toThrow(/Title is required/);
   });
