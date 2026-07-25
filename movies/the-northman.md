@@ -6,6 +6,9 @@ tags:
   - 'Action'
   - 'Period'
 national: 'USA'
+streaming:
+  - 'Netflix'
+checked: '2026-07'
 cover_image: 'https://media.eiga.com/images/movie/97073/photo/c67f05c4d222aaca/640.jpg'
 release_date: '2022-04-22'
 summary: 'A Viking prince watches his uncle murder his father and take his mother, and spends twenty years turning himself into the instrument of a revenge he swore as a child.'

@@ -6,6 +6,9 @@ tags:
   - 'Thriller'
   - 'Crime'
 national: 'USA'
+streaming:
+  - 'Netflix'
+checked: '2026-07'
 cover_image: 'https://upload.wikimedia.org/wikipedia/en/e/e5/Rebel_Ridge_film_poster.jpg'
 release_date: '2024-09-06'
 summary: 'A small-town police force seizes an ex-Marine''s cash under civil forfeiture. He asks for it back through the proper channels first.'
