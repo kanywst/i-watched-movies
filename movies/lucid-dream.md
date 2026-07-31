@@ -1,6 +1,6 @@
 ---
 title: 'Lucid Dream'
-published: false
+published: true
 tags:
   - 'Thriller'
   - 'Mystery'
@@ -11,8 +11,9 @@ streaming:
 checked: '2026-07'
 cover_image: 'https://image.tmdb.org/t/p/original/wwvr6adqgIW2UIU78CDAHa3IKgg.jpg'
 release_date: '2017-02-22'
+watch_date: '2026-07-31'
+point: 7.2
 summary: 'A journalist whose son was kidnapped uses lucid-dreaming therapy to re-enter his own memory of the abduction and chase the people behind it, until the reveal recasts who was really involved.'
 ---
-
 
 A Korean crime-SF thriller with a black-box reveal. Netflix original.
