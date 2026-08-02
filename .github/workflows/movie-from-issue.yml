@@ -148,7 +148,24 @@ jobs:
           # Validation (lint+test+build) already ran in-job, so merge directly.
           # main is unprotected; auto-merge can't be used because a GITHUB_TOKEN
           # merge would not trigger a follow-up workflow run to close the issue.
-          gh pr merge "$NUMBER" --squash --delete-branch
+          #
+          # Several issues can be in flight at once (each has its own concurrency
+          # group), and whichever run merges first moves main under the others, so
+          # the loser gets "Base branch was modified". That is transient: GitHub
+          # only needs to recompute mergeability against the new base. Retry with
+          # backoff instead of failing the issue.
+          for attempt in 1 2 3 4 5; do
+            if gh pr merge "$NUMBER" --squash --delete-branch; then
+              MERGED=1
+              break
+            fi
+            echo "Merge attempt $attempt failed; base branch likely moved. Retrying."
+            sleep $((attempt * 10))
+          done
+          if [ -z "$MERGED" ]; then
+            echo "Could not merge PR #$NUMBER after 5 attempts."
+            exit 1
+          fi
           echo "url=$URL" >> "$GITHUB_OUTPUT"
 
       - name: Mark issue as merged
