@@ -35,6 +35,9 @@ export const NEW_RELEASE_WINDOW_DAYS = 90;
 // Below this many rated films, an early-half vs late-half average says nothing.
 export const MIN_DRIFT_SAMPLE = 6;
 
+// Keyed by the value written to a movie's `national` frontmatter. A country with no entry
+// here renders no flag, so the list only has to cover what the diary actually holds plus
+// the production countries the watchlist is reaching into.
 export const COUNTRY_FLAGS: Record<string, string> = {
   Japan: '🇯🇵',
   USA: '🇺🇸',
@@ -43,10 +46,35 @@ export const COUNTRY_FLAGS: Record<string, string> = {
   Korea: '🇰🇷',
   China: '🇨🇳',
   'Hong Kong': '🇭🇰',
+  Taiwan: '🇹🇼',
   India: '🇮🇳',
+  Thailand: '🇹🇭',
+  Indonesia: '🇮🇩',
+  Philippines: '🇵🇭',
+  Vietnam: '🇻🇳',
   Germany: '🇩🇪',
+  Austria: '🇦🇹',
+  Spain: '🇪🇸',
+  Italy: '🇮🇹',
+  Ireland: '🇮🇪',
+  Netherlands: '🇳🇱',
+  Belgium: '🇧🇪',
+  Sweden: '🇸🇪',
+  Norway: '🇳🇴',
+  Denmark: '🇩🇰',
+  Finland: '🇫🇮',
+  Iceland: '🇮🇸',
+  Poland: '🇵🇱',
+  Turkey: '🇹🇷',
+  Iran: '🇮🇷',
+  Israel: '🇮🇱',
   Canada: '🇨🇦',
+  Mexico: '🇲🇽',
+  Brazil: '🇧🇷',
+  Argentina: '🇦🇷',
+  Chile: '🇨🇱',
   Australia: '🇦🇺',
+  'New Zealand': '🇳🇿',
 };
 
 // Streaming badges shown on watchlist entries. Keyed by the value written to a movie's

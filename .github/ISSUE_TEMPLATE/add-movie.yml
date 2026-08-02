@@ -67,11 +67,36 @@ body:
         - France
         - Korea
         - China
-        - India
-        - Germany
-        - Canada
-        - Australia
         - Hong Kong
+        - Taiwan
+        - India
+        - Thailand
+        - Indonesia
+        - Philippines
+        - Vietnam
+        - Germany
+        - Austria
+        - Spain
+        - Italy
+        - Ireland
+        - Netherlands
+        - Belgium
+        - Sweden
+        - Norway
+        - Denmark
+        - Finland
+        - Iceland
+        - Poland
+        - Turkey
+        - Iran
+        - Israel
+        - Canada
+        - Mexico
+        - Brazil
+        - Argentina
+        - Chile
+        - Australia
+        - New Zealand
 
   - type: input
     id: tags
