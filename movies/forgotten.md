@@ -1,6 +1,7 @@
 ---
 title: 'Forgotten'
 published: false
+seen: true
 tags:
   - 'Mystery'
   - 'Suspense'
