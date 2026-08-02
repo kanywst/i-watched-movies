@@ -196,6 +196,7 @@ describe('recommendWatchlist', () => {
         make({ id: 'w1', published: false, title: 'Comic', tags: ['Comedy'], national: 'USA' }),
         make({ id: 'w2', published: false, title: 'Heist', tags: ['Crime'], national: 'Korea' }),
       ],
+      rated,
       profile,
       10,
     );
@@ -207,6 +208,7 @@ describe('recommendWatchlist', () => {
   it('leaves an entry with no known genre or country on the baseline', () => {
     const [pick] = recommendWatchlist(
       [make({ id: 'w1', published: false, tags: ['Western'], national: 'France' })],
+      rated,
       profile,
       10,
     );
@@ -215,12 +217,14 @@ describe('recommendWatchlist', () => {
   });
 
   it('shrinks a thin genre toward the baseline', () => {
-    const thin = computeTasteProfile([
+    const thinRated = [
       make({ id: 'a', tags: ['Crime'], point: 9 }),
       make({ id: 'b', tags: ['Comedy'], point: 3 }),
-    ]);
+    ];
+    const thin = computeTasteProfile(thinRated);
     const [pick] = recommendWatchlist(
       [make({ id: 'w1', published: false, tags: ['Crime'] })],
+      thinRated,
       thin,
       10,
     );
@@ -234,6 +238,7 @@ describe('recommendWatchlist', () => {
         make({ id: 'w1', published: false, title: 'One', tags: ['Crime'] }),
         make({ id: 'w2', published: false, title: 'Two', tags: ['Crime', 'Comedy'] }),
       ],
+      rated,
       profile,
       10,
     );
@@ -246,12 +251,75 @@ describe('recommendWatchlist', () => {
   it('keeps the strongest pull first whichever way it points', () => {
     const [pick] = recommendWatchlist(
       [make({ id: 'w1', published: false, tags: ['Comedy'], national: 'Korea' })],
+      rated,
       profile,
       10,
     );
     expect(pick.reasons.map(r => r.key)).toEqual(['Comedy', 'Korea']);
     expect(pick.reasons[0].contribution).toBeLessThan(0);
     expect(pick.reasons[1].contribution).toBeGreaterThan(0);
+  });
+
+  // A country whose overall average sits below the baseline can still be the best thing on
+  // the list within one genre. Scoring the candidate against the flat country average charges
+  // it for films it has nothing in common with.
+  describe('country term', () => {
+    // Japan averages 5.0 against a 6.0 baseline, but its crime entries are the top of the
+    // diary and its comedies are the bottom.
+    const mixed = [
+      make({ id: 'j1', tags: ['Crime'], national: 'Japan', point: 9 }),
+      make({ id: 'j2', tags: ['Crime'], national: 'Japan', point: 9 }),
+      make({ id: 'j3', tags: ['Comedy'], national: 'Japan', point: 3 }),
+      make({ id: 'j4', tags: ['Comedy'], national: 'Japan', point: 3 }),
+      make({ id: 'j5', tags: ['Comedy'], national: 'Japan', point: 3 }),
+      make({ id: 'j6', tags: ['Comedy'], national: 'Japan', point: 3 }),
+      make({ id: 'u1', tags: ['Crime'], national: 'USA', point: 9 }),
+      make({ id: 'u2', tags: ['Crime'], national: 'USA', point: 9 }),
+    ];
+    const mixedProfile = computeTasteProfile(mixed);
+    const countryReason = (movie: Movie) => {
+      const [pick] = recommendWatchlist([movie], mixed, mixedProfile, 10);
+      return pick.reasons.find(r => r.key === 'Japan');
+    };
+
+    it('does not charge a film for its country when its genre is the strong one', () => {
+      // The flat average is what the Stats panel shows, and it is negative.
+      expect(mixedProfile.countries.find(c => c.key === 'Japan')!.delta).toBeLessThan(0);
+      // The prediction must not inherit that: this film shares its tag with the good half.
+      expect(
+        countryReason(make({ id: 'w1', published: false, tags: ['Crime'], national: 'Japan' }))!
+          .contribution,
+      ).toBeGreaterThan(0);
+    });
+
+    it('still penalises a film whose genre is the weak half of the same country', () => {
+      expect(
+        countryReason(make({ id: 'w2', published: false, tags: ['Comedy'], national: 'Japan' }))!
+          .contribution,
+      ).toBeLessThan(0);
+    });
+
+    it('falls back to the whole country when no rated film shares a tag', () => {
+      // No Japanese horror has been rated, so there is nothing better than the flat average.
+      expect(
+        countryReason(make({ id: 'w3', published: false, tags: ['Horror'], national: 'Japan' }))!
+          .contribution,
+      ).toBeLessThan(0);
+    });
+
+    it('ranks a genre-matched entry above the country average would', () => {
+      const picks = recommendWatchlist(
+        [
+          make({ id: 'w1', published: false, title: 'JP Crime', tags: ['Crime'], national: 'Japan' }),
+          make({ id: 'w2', published: false, title: 'US Crime', tags: ['Crime'], national: 'USA' }),
+        ],
+        mixed,
+        mixedProfile,
+        10,
+      );
+      // Both are crime; neither should be pushed below the other by nationality alone.
+      expect(picks[0].predicted - picks[1].predicted).toBeLessThan(0.2);
+    });
   });
 
   it('breaks ties by title and honours the limit', () => {
@@ -261,6 +329,7 @@ describe('recommendWatchlist', () => {
         make({ id: 'w2', published: false, title: 'Alpha', tags: ['Crime'] }),
         make({ id: 'w3', published: false, title: 'Gamma', tags: ['Comedy'] }),
       ],
+      rated,
       profile,
       2,
     );

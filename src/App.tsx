@@ -94,8 +94,8 @@ const App: React.FC = () => {
     [watchedMovies, tasteProfile],
   );
   const recommendations = useMemo(
-    () => recommendWatchlist(watchlistMovies, tasteProfile, RECOMMENDATION_LIMIT),
-    [watchlistMovies, tasteProfile],
+    () => recommendWatchlist(watchlistMovies, watchedMovies, tasteProfile, RECOMMENDATION_LIMIT),
+    [watchlistMovies, watchedMovies, tasteProfile],
   );
 
   const viewMovies =

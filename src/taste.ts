@@ -237,32 +237,75 @@ export interface Recommendation {
 /** Pull a small-sample delta back toward the baseline before trusting it. */
 const shrink = (a: Affinity) => a.delta * (a.count / (a.count + AFFINITY_PRIOR));
 
+function genreHits(movie: Movie, genreIndex: Map<string, Affinity>): Affinity[] {
+  return movie.tags.map(t => genreIndex.get(t)).filter((a): a is Affinity => a !== undefined);
+}
+
+/**
+ * The genre half of a prediction. Averaged, not summed, so a five-genre entry is not
+ * mechanically ranked above a two-genre one just for carrying more tags.
+ */
+function genrePull(movie: Movie, genreIndex: Map<string, Affinity>): number {
+  const hits = genreHits(movie, genreIndex);
+  return hits.length ? mean(hits.map(shrink)) : 0;
+}
+
+/**
+ * How this country's films score once genre is already accounted for, measured on the
+ * rated films of that country that overlap the candidate's tags.
+ *
+ * `profile.countries` is a flat per-country average, which is the right thing to display
+ * but the wrong thing to predict with: it mixes every genre the diary covers, so it charges
+ * a film for its passport rather than its content. Japanese crime and mystery entries
+ * average well above the personal baseline while Japanese comedy and period pieces pull the
+ * country mean below it, and scoring a Japanese thriller against that mean applies a penalty
+ * earned by an unrelated comedy. Restricting the slice to tag-overlapping films measures the
+ * interaction that actually matters, and taking the residual against each film's own genre
+ * prediction keeps the term from paying out the genre bonus a second time.
+ *
+ * Falls back to the whole-country slice when the genre-matched one is below
+ * MIN_AFFINITY_SAMPLE, and returns null when the country has no rated films at all.
+ */
+function countryAffinity(
+  movie: Movie,
+  rated: Movie[],
+  genreIndex: Map<string, Affinity>,
+  baseline: number,
+): Affinity | null {
+  if (!movie.national) return null;
+  const sameCountry = rated.filter(m => m.national === movie.national);
+  if (sameCountry.length === 0) return null;
+
+  const matched = sameCountry.filter(m => m.tags.some(t => movie.tags.includes(t)));
+  const slice = matched.length >= MIN_AFFINITY_SAMPLE ? matched : sameCountry;
+  const delta = mean(slice.map(m => m.point - (baseline + genrePull(m, genreIndex))));
+  return { key: movie.national, count: slice.length, average: baseline + delta, delta };
+}
+
 /**
  * Rank watchlist entries by how well they match the rated profile. This predicts how the
  * film would be scored, not how good it is: an untagged entry or one whose genres have
  * never been rated simply lands on the baseline.
+ *
+ * `rated` must be the same list the profile was built from, as with computeScoringHabits.
  */
 export function recommendWatchlist(
   watchlist: Movie[],
+  rated: Movie[],
   profile: TasteProfile,
   limit: number,
 ): Recommendation[] {
   const genreIndex = new Map(profile.genres.map(a => [a.key, a]));
-  const countryIndex = new Map(profile.countries.map(a => [a.key, a]));
 
   return watchlist
     .map((movie): Recommendation => {
       const reasons: RecommendationReason[] = [];
 
-      const hits = movie.tags
-        .map(t => genreIndex.get(t))
-        .filter((a): a is Affinity => a !== undefined);
-      // Averaged, not summed, so a five-genre entry is not mechanically ranked above a
-      // two-genre one just for carrying more tags.
-      const genrePart = hits.length ? mean(hits.map(shrink)) : 0;
+      const hits = genreHits(movie, genreIndex);
+      const genrePart = genrePull(movie, genreIndex);
       for (const a of hits) reasons.push({ key: a.key, contribution: shrink(a) / hits.length });
 
-      const country = movie.national ? countryIndex.get(movie.national) : undefined;
+      const country = countryAffinity(movie, rated, genreIndex, profile.baseline);
       const countryPart = country ? shrink(country) * COUNTRY_AFFINITY_WEIGHT : 0;
       if (country) reasons.push({ key: country.key, contribution: countryPart });
 
