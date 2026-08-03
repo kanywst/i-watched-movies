@@ -35,9 +35,10 @@ export const VIEW_SPECS: ViewSpec[] = [
 
 export const DEFAULT_VIEW: View = 'watched';
 
-const VIEW_KEYS = new Set<string>(VIEW_SPECS.map(s => s.key));
+// Keyed rather than searched, so viewSpec has no unreachable fallback branch: the index is
+// typed Record<View, ViewSpec>, which also makes a missing VIEW_SPECS entry a type error.
+const BY_KEY = Object.fromEntries(VIEW_SPECS.map(s => [s.key, s])) as Record<View, ViewSpec>;
 
-export const isView = (v: string): v is View => VIEW_KEYS.has(v);
+export const isView = (v: string): v is View => v in BY_KEY;
 
-export const viewSpec = (v: View): ViewSpec =>
-  VIEW_SPECS.find(s => s.key === v) ?? VIEW_SPECS[0];
+export const viewSpec = (v: View): ViewSpec => BY_KEY[v];
