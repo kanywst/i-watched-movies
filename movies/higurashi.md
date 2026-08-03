@@ -7,6 +7,9 @@ tags:
   - 'Mystery'
   - 'Series'
 national: 'Japan'
+streaming:
+  - 'U-NEXT'
+  - 'Hulu'
 checked: '2026-08'
 cover_image: 'https://image.tmdb.org/t/p/original/m71gbHge6qp1kbWGJD5PsSWZpzI.jpg'
 release_date: '2006-04-12'
