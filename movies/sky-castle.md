@@ -6,6 +6,10 @@ tags:
   - 'Suspense'
   - 'Series'
 national: 'Korea'
+streaming:
+  - 'Netflix'
+  - 'Disney+'
+  - 'Prime Video'
 checked: '2026-08'
 cover_image: 'https://image.tmdb.org/t/p/original/tE2b4DKYteipIBE51re62jLi6RU.jpg'
 release_date: '2018-11-23'
