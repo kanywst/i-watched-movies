@@ -1,6 +1,7 @@
 ---
 title: 'Midsommar'
 published: false
+seen: true
 tags:
   - 'Horror'
   - 'Drama'
@@ -15,4 +16,4 @@ release_date: '2019-07-03'
 summary: 'A grieving woman follows her indifferent boyfriend to a Swedish midsummer festival held once every ninety years.'
 ---
 
-Folk horror shot almost entirely in daylight. Same commune-logic engine as The Wailing (8.2), with the mystery replaced by a nine-day ritual calendar you can read ahead of the characters.
+Logged as seen.
