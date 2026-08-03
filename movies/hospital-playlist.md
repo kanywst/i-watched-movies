@@ -5,6 +5,8 @@ tags:
   - 'Drama'
   - 'Series'
 national: 'Korea'
+streaming:
+  - 'Netflix'
 checked: '2026-08'
 cover_image: 'https://image.tmdb.org/t/p/original/8MSjQkH2FrG0t4l84L5HmiSFrS7.jpg'
 release_date: '2020-03-12'
