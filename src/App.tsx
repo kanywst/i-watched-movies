@@ -8,7 +8,7 @@ import { MovieDetailModal } from './components/MovieDetailModal';
 import { ActivityHeatmap } from './components/ActivityHeatmap';
 import { TastePanel } from './components/TastePanel';
 import { Stat, type StatProps } from './components/ui/Stat';
-import { Film, Bookmark, Eye, Check, Activity, ChartColumn, Sun, Moon } from 'lucide-react';
+import { Film, Sun, Moon } from 'lucide-react';
 import { clsx } from 'clsx';
 import { CONFIG } from './config';
 import { NEW_LIMIT, RANK_LIMIT, RECOMMENDATION_LIMIT, SORT_OPTIONS } from './constants';
@@ -18,8 +18,8 @@ import { computeActivity, isValidWatchDate } from './activity';
 import { computeScoringHabits, computeTasteProfile, recommendWatchlist } from './taste';
 import { useDocumentMetadata } from './useDocumentMetadata';
 import { urlParams, useUrlState } from './useUrlState';
+import { DEFAULT_VIEW, VIEW_SPECS, isView, viewSpec } from './views';
 
-const VIEW_VALUES: View[] = ['watched', 'watchlist', 'seen', 'history', 'stats'];
 // Stable empty reference so the History and Stats views don't bust the
 // allTags/filteredMovies memos.
 const EMPTY_MOVIES: Movie[] = [];
@@ -33,7 +33,6 @@ const URL_SPECS = {
   selected: urlParams.string(''),
 };
 
-const isView = (v: string): v is View => (VIEW_VALUES as string[]).includes(v);
 const isSort = (s: string): s is SortKey => (SORT_VALUES as string[]).includes(s);
 
 const withViewTransition = (fn: () => void) => {
@@ -47,7 +46,7 @@ const withViewTransition = (fn: () => void) => {
 
 const App: React.FC = () => {
   const [urlState, setUrlState] = useUrlState(URL_SPECS);
-  const view: View = isView(urlState.view) ? urlState.view : 'watched';
+  const view: View = isView(urlState.view) ? urlState.view : DEFAULT_VIEW;
   const sort: SortKey = isSort(urlState.sort) ? urlState.sort : 'watch_date_desc';
   const search = urlState.search;
   const selectedTags = urlState.tags;
@@ -99,12 +98,26 @@ const App: React.FC = () => {
     [watchlistMovies, watchedMovies, tasteProfile],
   );
 
+  // Tab badges. History counts everything with a usable watch_date rather than the raw list
+  // length, and Stats shows none, so this cannot just read off `viewMovies`.
+  const tabCounts: Record<View, number> = useMemo(
+    () => ({
+      watched: watchedMovies.length,
+      watchlist: watchlistMovies.length,
+      seen: seenMovies.length,
+      history: historyCount,
+      stats: 0,
+    }),
+    [watchedMovies, watchlistMovies, seenMovies, historyCount],
+  );
+
+  const spec = viewSpec(view);
+  // A `null` source is a view that renders its own panel rather than the grid.
   const viewMovies =
-    view === 'watched' ? watchedMovies
-      : view === 'seen' ? seenMovies
-        // history and stats render their own panels, not the grid/filters
-        : view === 'history' || view === 'stats' ? EMPTY_MOVIES
-          : watchlistMovies;
+    spec.source === 'watched' ? watchedMovies
+      : spec.source === 'watchlist' ? watchlistMovies
+        : spec.source === 'seen' ? seenMovies
+          : EMPTY_MOVIES;
 
   const seenGenres = useMemo(
     () => new Set(seenMovies.flatMap(m => m.tags)).size,
@@ -261,11 +274,16 @@ const App: React.FC = () => {
 
       {/* View Toggle */}
       <div className="flex gap-1 mb-6 p-1 rounded-full w-fit bg-stone-100 border border-stone-200 dark:bg-white/5 dark:border-white/5">
-        <ViewTab active={view === 'watched'} onClick={() => switchView('watched')} icon={Eye} label="Watched" count={watchedMovies.length} />
-        <ViewTab active={view === 'watchlist'} onClick={() => switchView('watchlist')} icon={Bookmark} label="Watchlist" count={watchlistMovies.length} />
-        <ViewTab active={view === 'seen'} onClick={() => switchView('seen')} icon={Check} label="Seen" count={seenMovies.length} />
-        <ViewTab active={view === 'history'} onClick={() => switchView('history')} icon={Activity} label="History" count={historyCount} />
-        <ViewTab active={view === 'stats'} onClick={() => switchView('stats')} icon={ChartColumn} label="Stats" />
+        {VIEW_SPECS.map(s => (
+          <ViewTab
+            key={s.key}
+            active={view === s.key}
+            onClick={() => switchView(s.key)}
+            icon={s.icon}
+            label={s.label}
+            count={s.showCount ? tabCounts[s.key] : undefined}
+          />
+        ))}
       </div>
 
       {view === 'history' ? (
