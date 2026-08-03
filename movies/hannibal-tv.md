@@ -7,6 +7,8 @@ tags:
   - 'Mystery'
   - 'Series'
 national: 'USA'
+streaming:
+  - 'U-NEXT'
 checked: '2026-08'
 cover_image: 'https://image.tmdb.org/t/p/original/pbV2eLnKSIm1epSZt473UYfqaeZ.jpg'
 release_date: '2013-04-11'
