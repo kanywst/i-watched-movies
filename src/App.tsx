@@ -104,8 +104,16 @@ const App: React.FC = () => {
     return Array.from(tags).sort();
   }, [viewMovies]);
 
-  const rankedMovieIds = useMemo(
-    () => sortMovies(WATCHED_MOVIES, 'point_desc').slice(0, RANK_LIMIT).map(m => m.id),
+  // Rank and NEW badges are computed over the full watched list, not the filtered/sorted
+  // index, so they keep tracking the same films when filters change. A Map rather than an
+  // array because getRank runs per rendered card; indexOf made that O(cards x RANK_LIMIT).
+  const movieRanks = useMemo(
+    () =>
+      new Map(
+        sortMovies(WATCHED_MOVIES, 'point_desc')
+          .slice(0, RANK_LIMIT)
+          .map((m, i) => [m.id, i + 1] as const),
+      ),
     [],
   );
 
@@ -172,11 +180,8 @@ const App: React.FC = () => {
     setUrlState({ tags: next });
   };
 
-  const getRank = (movieId: string) => {
-    if (view !== 'watched') return undefined;
-    const index = rankedMovieIds.indexOf(movieId);
-    return index !== -1 ? index + 1 : undefined;
-  };
+  const getRank = (movieId: string) =>
+    view === 'watched' ? movieRanks.get(movieId) : undefined;
 
   const switchView = (next: View) => {
     setUrlState({ view: next, tags: [] });
