@@ -6,6 +6,8 @@ tags:
   - 'Mystery'
   - 'Series'
 national: 'Japan'
+streaming:
+  - 'Netflix'
 checked: '2026-08'
 cover_image: 'https://image.tmdb.org/t/p/original/4KKZlbCX9oyWkHaeh4sh9CffDAz.jpg'
 release_date: '2026-01-18'
