@@ -7,6 +7,7 @@ import { FilterBar } from './components/FilterBar';
 import { MovieDetailModal } from './components/MovieDetailModal';
 import { ActivityHeatmap } from './components/ActivityHeatmap';
 import { TastePanel } from './components/TastePanel';
+import { Stat, type StatProps } from './components/ui/Stat';
 import { Film, Bookmark, Eye, Check, Activity, ChartColumn, Sun, Moon } from 'lucide-react';
 import { clsx } from 'clsx';
 import { CONFIG } from './config';
@@ -130,6 +131,44 @@ const App: React.FC = () => {
     );
   }, [watchedMovies]);
 
+  // One row of counters per view. Data, not JSX, so adding a view means adding a case here
+  // rather than another near-identical block of markup.
+  const headerStats: StatProps[] = useMemo(() => {
+    switch (view) {
+      case 'watched':
+        return [
+          { value: stats.total, label: 'Collected', size: 'lg' },
+          { value: stats.averagePoint.toFixed(1), label: 'Avg Score' },
+          { value: stats.thisYearCount, label: String(stats.currentYear) },
+        ];
+      case 'seen':
+        return [
+          { value: seenMovies.length, label: 'Seen', size: 'lg' },
+          { value: seenGenres, label: 'Genres' },
+        ];
+      case 'history':
+        return [
+          { value: historyCount, label: 'Logged', size: 'lg' },
+          { value: activity.total, label: 'Last 12 Mo' },
+        ];
+      case 'stats':
+        return [
+          { value: tasteProfile.total, label: 'Rated', size: 'lg' },
+          { value: tasteProfile.baseline.toFixed(1), label: 'Average' },
+          { value: tasteProfile.genres.length, label: 'Genres' },
+        ];
+      case 'watchlist':
+        return [
+          { value: watchlistMovies.length, label: 'On Watchlist', size: 'lg' },
+          { value: watchlistStats.upcoming, label: 'Upcoming' },
+          { value: watchlistStats.genres, label: 'Genres' },
+        ];
+    }
+  }, [
+    view, stats, seenMovies, seenGenres, historyCount, activity,
+    tasteProfile, watchlistMovies, watchlistStats,
+  ]);
+
   const filteredMovies = useMemo(() => {
     const q = search.trim().toLowerCase();
     const filtered = viewMovies.filter((movie) => {
@@ -212,75 +251,12 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        {/* Stats */}
-        {view === 'watched' ? (
-          <div className="flex items-end gap-8">
-            <div className="flex flex-col items-start md:items-end gap-1">
-              <div className="text-5xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{stats.total}</div>
-              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Collected</div>
-            </div>
-            <div className="flex flex-col items-start md:items-end gap-1">
-              <div className="text-3xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{stats.averagePoint.toFixed(1)}</div>
-              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Avg Score</div>
-            </div>
-            <div className="flex flex-col items-start md:items-end gap-1">
-              <div className="text-3xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{stats.thisYearCount}</div>
-              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">{stats.currentYear}</div>
-            </div>
-          </div>
-        ) : view === 'seen' ? (
-          <div className="flex items-end gap-8">
-            <div className="flex flex-col items-start md:items-end gap-1">
-              <div className="text-5xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{seenMovies.length}</div>
-              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Seen</div>
-            </div>
-            <div className="flex flex-col items-start md:items-end gap-1">
-              <div className="text-3xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{seenGenres}</div>
-              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Genres</div>
-            </div>
-          </div>
-        ) : view === 'history' ? (
-          <div className="flex items-end gap-8">
-            <div className="flex flex-col items-start md:items-end gap-1">
-              <div className="text-5xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{historyCount}</div>
-              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Logged</div>
-            </div>
-            <div className="flex flex-col items-start md:items-end gap-1">
-              <div className="text-3xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{activity.total}</div>
-              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Last 12 Mo</div>
-            </div>
-          </div>
-        ) : view === 'stats' ? (
-          <div className="flex items-end gap-8">
-            <div className="flex flex-col items-start md:items-end gap-1">
-              <div className="text-5xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{tasteProfile.total}</div>
-              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Rated</div>
-            </div>
-            <div className="flex flex-col items-start md:items-end gap-1">
-              <div className="text-3xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{tasteProfile.baseline.toFixed(1)}</div>
-              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Average</div>
-            </div>
-            <div className="flex flex-col items-start md:items-end gap-1">
-              <div className="text-3xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{tasteProfile.genres.length}</div>
-              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Genres</div>
-            </div>
-          </div>
-        ) : (
-          <div className="flex items-end gap-8">
-            <div className="flex flex-col items-start md:items-end gap-1">
-              <div className="text-5xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{watchlistMovies.length}</div>
-              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">On Watchlist</div>
-            </div>
-            <div className="flex flex-col items-start md:items-end gap-1">
-              <div className="text-3xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{watchlistStats.upcoming}</div>
-              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Upcoming</div>
-            </div>
-            <div className="flex flex-col items-start md:items-end gap-1">
-              <div className="text-3xl font-light text-stone-800 dark:text-stone-200 tabular-nums">{watchlistStats.genres}</div>
-              <div className="text-xs font-medium text-stone-500 uppercase tracking-wider">Genres</div>
-            </div>
-          </div>
-        )}
+        {/* Stats. The lead figure of each group is `lg`, its siblings `md`. */}
+        <div className="flex items-end gap-8">
+          {headerStats.map(s => (
+            <Stat key={s.label} {...s} align="end" size={s.size ?? 'md'} />
+          ))}
+        </div>
       </header>
 
       {/* View Toggle */}

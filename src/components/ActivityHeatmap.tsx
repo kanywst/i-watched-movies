@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import { Flame, Trophy, CalendarCheck, Clapperboard } from 'lucide-react';
 import type { Movie } from '../types';
 import type { ActivityDay, ActivitySummary } from '../activity';
+import { Stat } from './ui/Stat';
 
 interface ActivityHeatmapProps {
   summary: ActivitySummary;
@@ -346,25 +347,3 @@ const DayCell = React.memo<DayCellProps>(({ day, w, d, isHovered, onHover, onLea
   );
 });
 DayCell.displayName = 'DayCell';
-
-interface StatProps {
-  icon: React.ComponentType<{ className?: string }>;
-  value: number;
-  label: string;
-  suffix?: string;
-}
-
-const Stat: React.FC<StatProps> = ({ icon: Icon, value, label, suffix }) => (
-  <div className="flex flex-col gap-1">
-    <div className="flex items-center gap-1.5 text-stone-800 dark:text-stone-200">
-      <Icon className="w-4 h-4 text-stone-400" />
-      <span className="text-2xl font-light tabular-nums">
-        {value}
-        {suffix && <span className="text-base text-stone-400">{suffix}</span>}
-      </span>
-    </div>
-    <div className="text-xs font-medium uppercase tracking-wider text-stone-500 dark:text-stone-400">
-      {label}
-    </div>
-  </div>
-);

@@ -2,6 +2,7 @@ import React from 'react';
 import { Compass, Gauge, Sparkles, TrendingDown, TrendingUp } from 'lucide-react';
 import { clsx } from 'clsx';
 import type { Movie } from '../types';
+import { Stat } from './ui/Stat';
 import type { Affinity, Recommendation, ScoringHabits, TasteProfile } from '../taste';
 import { COUNTRY_FLAGS, MIN_AFFINITY_SAMPLE, SCORE_BUCKET_STEP } from '../constants';
 
@@ -48,18 +49,18 @@ export const TastePanel: React.FC<TastePanelProps> = ({
       >
         <div className="flex flex-wrap gap-x-10 gap-y-4 mb-8">
           {topGenre && (
-            <Callout value={topGenre.key} label={`Most watched · ${topGenre.count} films`} />
+            <Stat value={topGenre.key} label={`Most watched · ${topGenre.count} films`} />
           )}
-          {lift && <Callout value={signed(lift.delta)} label={`Rated highest · ${lift.key}`} />}
+          {lift && <Stat value={signed(lift.delta)} label={`Rated highest · ${lift.key}`} />}
           {/* Both read the same release-to-watch gaps, so neither means anything when no
               film carries both dates. */}
           {profile.medianLagDays !== null && (
             <>
-              <Callout
+              <Stat
                 value={formatLag(profile.medianLagDays)}
                 label="Median wait after release"
               />
-              <Callout value={pct(profile.newReleaseShare)} label="Caught on release" />
+              <Stat value={pct(profile.newReleaseShare)} label="Caught on release" />
             </>
           )}
         </div>
@@ -88,14 +89,14 @@ export const TastePanel: React.FC<TastePanelProps> = ({
         note={`How the 0-10 scale actually gets used across ${profile.total} rated films.`}
       >
         <div className="flex flex-wrap gap-x-10 gap-y-4 mb-8">
-          <Callout value={fmt(profile.median)} label="Median score" />
-          <Callout value={fmt(profile.spread)} label="Spread (σ)" />
-          <Callout
+          <Stat value={fmt(profile.median)} label="Median score" />
+          <Stat value={fmt(profile.spread)} label="Spread (σ)" />
+          <Stat
             value={pct(habits.concentration)}
             label={`Within ±${SCORE_BUCKET_STEP} of average`}
           />
           {habits.drift && (
-            <Callout
+            <Stat
               value={signed(habits.drift.delta)}
               label="Recent half vs older half"
               icon={habits.drift.delta >= 0 ? TrendingUp : TrendingDown}
@@ -259,23 +260,6 @@ const Strong: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <span className="text-stone-800 dark:text-stone-100">{children}</span>
 );
 
-interface CalloutProps {
-  value: string;
-  label: string;
-  icon?: React.ComponentType<{ className?: string }>;
-}
-
-const Callout: React.FC<CalloutProps> = ({ value, label, icon: Icon }) => (
-  <div className="flex flex-col gap-1">
-    <div className="flex items-center gap-1.5 text-stone-800 dark:text-stone-200">
-      {Icon && <Icon className="w-4 h-4 text-stone-400" />}
-      <span className="text-2xl font-light tabular-nums">{value}</span>
-    </div>
-    <div className="text-xs font-medium uppercase tracking-wider text-stone-500 dark:text-stone-400">
-      {label}
-    </div>
-  </div>
-);
 
 interface AffinityListProps {
   title: string;
