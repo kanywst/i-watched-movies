@@ -1,6 +1,7 @@
 ---
 title: 'Incantation'
 published: false
+seen: true
 tags:
   - 'Horror'
   - 'Mystery'
@@ -13,4 +14,4 @@ release_date: '2022-03-18'
 summary: 'A mother addresses the camera directly, asking viewers to help lift the curse she brought back from a mountain sect.'
 ---
 
-Taiwan's highest-grossing horror film, and the second-person conceit is the whole trick. Netflix JP.
+Logged as seen.
