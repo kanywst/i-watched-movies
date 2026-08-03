@@ -6,6 +6,9 @@ tags:
   - 'Action'
   - 'Series'
 national: 'Korea'
+streaming:
+  - 'Netflix'
+  - 'Prime Video'
 checked: '2026-08'
 cover_image: 'https://image.tmdb.org/t/p/original/5Sd01WeraL2oA3Vv6O4rcRxockn.jpg'
 release_date: '2022-11-18'
