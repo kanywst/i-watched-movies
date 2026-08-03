@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { flushSync } from 'react-dom';
 import moviesData from './data/movies.json';
 import { Movie, SortKey, View } from './types';
@@ -18,6 +18,7 @@ import { computeActivity, isValidWatchDate } from './activity';
 import { computeScoringHabits, computeTasteProfile, recommendWatchlist } from './taste';
 import { useDocumentMetadata } from './useDocumentMetadata';
 import { urlParams, useUrlState } from './useUrlState';
+import { useTheme } from './useTheme';
 import { DEFAULT_VIEW, VIEW_SPECS, isView, viewSpec } from './views';
 
 // Stable empty reference so the History and Stats views don't bust the
@@ -220,16 +221,7 @@ const App: React.FC = () => {
   const closeMovie = () =>
     withViewTransition(() => setUrlState({ selected: '' }, { history: 'push' }));
 
-  const [theme, setTheme] = useState<'light' | 'dark'>(() =>
-    typeof document !== 'undefined' && document.documentElement.classList.contains('dark') ? 'dark' : 'light',
-  );
-  const toggleTheme = () => {
-    const next = theme === 'dark' ? 'light' : 'dark';
-    // Side effects belong in the event handler, not the (pure) state updater.
-    document.documentElement.classList.toggle('dark', next === 'dark');
-    try { localStorage.setItem('theme', next); } catch { /* storage unavailable */ }
-    setTheme(next);
-  };
+  const [theme, toggleTheme] = useTheme();
 
   return (
     <div className="min-h-screen p-6 md:p-12 max-w-7xl mx-auto">
