@@ -6,6 +6,8 @@ tags:
   - 'Crime'
   - 'Series'
 national: 'Korea'
+streaming:
+  - 'Prime Video'
 checked: '2026-08'
 cover_image: 'https://image.tmdb.org/t/p/original/b31zFi0ZocmaxxuPCAGxEA6uxGn.jpg'
 release_date: '2023-08-10'
