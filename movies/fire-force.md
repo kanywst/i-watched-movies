@@ -6,6 +6,11 @@ tags:
   - 'Action'
   - 'Series'
 national: 'Japan'
+streaming:
+  - 'Netflix'
+  - 'Prime Video'
+  - 'U-NEXT'
+  - 'Hulu'
 checked: '2026-08'
 cover_image: 'https://image.tmdb.org/t/p/original/96jrp8XIEPKC7xHhbkpWLD15oYW.jpg'
 release_date: '2019-07-12'
