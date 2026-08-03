@@ -6,6 +6,8 @@ tags:
   - 'Mystery'
   - 'Crime'
 national: 'USA'
+streaming:
+  - 'U-NEXT'
 checked: '2026-08'
 cover_image: 'https://image.tmdb.org/t/p/original/uhviyknTT5cEQXbn6vWIqfM4vGm.jpg'
 release_date: '2013-09-20'
