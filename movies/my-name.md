@@ -6,6 +6,8 @@ tags:
   - 'Action'
   - 'Series'
 national: 'Korea'
+streaming:
+  - 'Netflix'
 checked: '2026-08'
 cover_image: 'https://image.tmdb.org/t/p/original/gHozOomiA24DvlgNfjkYCB5NBiO.jpg'
 release_date: '2021-10-15'
