@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { flushSync } from 'react-dom';
-import moviesData from './data/movies.json';
 import { Movie, SortKey, View } from './types';
 import { MovieCard } from './components/MovieCard';
 import { FilterBar } from './components/FilterBar';
@@ -14,8 +13,18 @@ import { CONFIG } from './config';
 import { NEW_LIMIT, RANK_LIMIT, RECOMMENDATION_LIMIT, SORT_OPTIONS } from './constants';
 import { sortMovies } from './sortMovies';
 import { computeStats, computeWatchlistStats } from './stats';
-import { computeActivity, isValidWatchDate } from './activity';
+import { computeActivity } from './activity';
 import { computeScoringHabits, computeTasteProfile, recommendWatchlist } from './taste';
+import {
+  ALL_MOVIES,
+  HISTORY_COUNT,
+  HISTORY_MOVIES,
+  SEEN_GENRE_COUNT,
+  SEEN_MOVIES,
+  TAB_COUNTS,
+  WATCHED_MOVIES,
+  WATCHLIST_MOVIES,
+} from './collections';
 import { useDocumentMetadata } from './useDocumentMetadata';
 import { urlParams, useUrlState } from './useUrlState';
 import { useTheme } from './useTheme';
@@ -60,70 +69,34 @@ const App: React.FC = () => {
     `https://github.com/${CONFIG.USER_NAME}.png`,
   );
 
-  const allMovies = moviesData as Movie[];
-
-  // `seen` (watched but deliberately unrated) is its own axis: exclude it from both the
-  // rated Watched grid and the to-watch Watchlist so those counts and stats stay honest.
-  const watchedMovies = useMemo(() => allMovies.filter(m => m.published && !m.seen), [allMovies]);
-  const watchlistMovies = useMemo(() => allMovies.filter(m => !m.published && !m.seen), [allMovies]);
-  const seenMovies = useMemo(() => allMovies.filter(m => m.seen), [allMovies]);
-
   const selectedMovie: Movie | null = useMemo(
-    () => allMovies.find(m => m.id === urlState.selected) ?? null,
-    [allMovies, urlState.selected],
+    () => ALL_MOVIES.find(m => m.id === urlState.selected) ?? null,
+    [urlState.selected],
   );
 
-  const stats = useMemo(() => computeStats(watchedMovies), [watchedMovies]);
-
-  const watchlistStats = useMemo(() => computeWatchlistStats(watchlistMovies), [watchlistMovies]);
-
-  // Viewing history spans everything actually watched (rated + `seen`), keyed by watch_date.
-  // Exclude watchlist entries up front so a stray placeholder date could never leak in
-  // (computeActivity also drops empty/invalid dates, but the intent is clearer here).
-  const historyMovies = useMemo(() => allMovies.filter(m => m.published || m.seen), [allMovies]);
-  const activity = useMemo(() => computeActivity(historyMovies), [historyMovies]);
-  const historyCount = useMemo(
-    () => historyMovies.filter(m => isValidWatchDate(m.watch_date)).length,
-    [historyMovies],
-  );
+  const stats = useMemo(() => computeStats(WATCHED_MOVIES), []);
+  const watchlistStats = useMemo(() => computeWatchlistStats(WATCHLIST_MOVIES), []);
+  const activity = useMemo(() => computeActivity(HISTORY_MOVIES), []);
 
   // Taste analysis reads the rated films only: `seen` entries carry no score and watchlist
   // entries have not been watched, so neither can say anything about how kt rates things.
-  const tasteProfile = useMemo(() => computeTasteProfile(watchedMovies), [watchedMovies]);
+  const tasteProfile = useMemo(() => computeTasteProfile(WATCHED_MOVIES), []);
   const scoringHabits = useMemo(
-    () => computeScoringHabits(watchedMovies, tasteProfile),
-    [watchedMovies, tasteProfile],
+    () => computeScoringHabits(WATCHED_MOVIES, tasteProfile),
+    [tasteProfile],
   );
   const recommendations = useMemo(
-    () => recommendWatchlist(watchlistMovies, watchedMovies, tasteProfile, RECOMMENDATION_LIMIT),
-    [watchlistMovies, watchedMovies, tasteProfile],
-  );
-
-  // Tab badges. History counts everything with a usable watch_date rather than the raw list
-  // length, and Stats shows none, so this cannot just read off `viewMovies`.
-  const tabCounts: Record<View, number> = useMemo(
-    () => ({
-      watched: watchedMovies.length,
-      watchlist: watchlistMovies.length,
-      seen: seenMovies.length,
-      history: historyCount,
-      stats: 0,
-    }),
-    [watchedMovies, watchlistMovies, seenMovies, historyCount],
+    () => recommendWatchlist(WATCHLIST_MOVIES, WATCHED_MOVIES, tasteProfile, RECOMMENDATION_LIMIT),
+    [tasteProfile],
   );
 
   const spec = viewSpec(view);
   // A `null` source is a view that renders its own panel rather than the grid.
   const viewMovies =
-    spec.source === 'watched' ? watchedMovies
-      : spec.source === 'watchlist' ? watchlistMovies
-        : spec.source === 'seen' ? seenMovies
+    spec.source === 'watched' ? WATCHED_MOVIES
+      : spec.source === 'watchlist' ? WATCHLIST_MOVIES
+        : spec.source === 'seen' ? SEEN_MOVIES
           : EMPTY_MOVIES;
-
-  const seenGenres = useMemo(
-    () => new Set(seenMovies.flatMap(m => m.tags)).size,
-    [seenMovies],
-  );
 
   const allTags = useMemo(() => {
     const tags = new Set<string>();
@@ -131,19 +104,15 @@ const App: React.FC = () => {
     return Array.from(tags).sort();
   }, [viewMovies]);
 
-  const rankedMovieIds = useMemo(() => {
-    return sortMovies(watchedMovies, 'point_desc')
-      .slice(0, RANK_LIMIT)
-      .map(m => m.id);
-  }, [watchedMovies]);
+  const rankedMovieIds = useMemo(
+    () => sortMovies(WATCHED_MOVIES, 'point_desc').slice(0, RANK_LIMIT).map(m => m.id),
+    [],
+  );
 
-  const newMovieIds = useMemo(() => {
-    return new Set(
-      sortMovies(watchedMovies, 'watch_date_desc')
-        .slice(0, NEW_LIMIT)
-        .map(m => m.id),
-    );
-  }, [watchedMovies]);
+  const newMovieIds = useMemo(
+    () => new Set(sortMovies(WATCHED_MOVIES, 'watch_date_desc').slice(0, NEW_LIMIT).map(m => m.id)),
+    [],
+  );
 
   // One row of counters per view. Data, not JSX, so adding a view means adding a case here
   // rather than another near-identical block of markup.
@@ -157,12 +126,12 @@ const App: React.FC = () => {
         ];
       case 'seen':
         return [
-          { value: seenMovies.length, label: 'Seen', size: 'lg' },
-          { value: seenGenres, label: 'Genres' },
+          { value: SEEN_MOVIES.length, label: 'Seen', size: 'lg' },
+          { value: SEEN_GENRE_COUNT, label: 'Genres' },
         ];
       case 'history':
         return [
-          { value: historyCount, label: 'Logged', size: 'lg' },
+          { value: HISTORY_COUNT, label: 'Logged', size: 'lg' },
           { value: activity.total, label: 'Last 12 Mo' },
         ];
       case 'stats':
@@ -173,15 +142,12 @@ const App: React.FC = () => {
         ];
       case 'watchlist':
         return [
-          { value: watchlistMovies.length, label: 'On Watchlist', size: 'lg' },
+          { value: WATCHLIST_MOVIES.length, label: 'On Watchlist', size: 'lg' },
           { value: watchlistStats.upcoming, label: 'Upcoming' },
           { value: watchlistStats.genres, label: 'Genres' },
         ];
     }
-  }, [
-    view, stats, seenMovies, seenGenres, historyCount, activity,
-    tasteProfile, watchlistMovies, watchlistStats,
-  ]);
+  }, [view, stats, activity, tasteProfile, watchlistStats]);
 
   const filteredMovies = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -273,7 +239,7 @@ const App: React.FC = () => {
             onClick={() => switchView(s.key)}
             icon={s.icon}
             label={s.label}
-            count={s.showCount ? tabCounts[s.key] : undefined}
+            count={s.showCount ? TAB_COUNTS[s.key] : undefined}
           />
         ))}
       </div>
@@ -319,9 +285,9 @@ const App: React.FC = () => {
           {filteredMovies.length === 0 && (
             <div className="py-32 text-center text-stone-500">
               <p className="text-lg">
-                {view === 'watchlist' && watchlistMovies.length === 0
+                {view === 'watchlist' && WATCHLIST_MOVIES.length === 0
                   ? 'No movies on your watchlist yet.'
-                  : view === 'seen' && seenMovies.length === 0
+                  : view === 'seen' && SEEN_MOVIES.length === 0
                     ? 'Nothing here yet. This is for films you have seen but do not rate.'
                     : 'No movies found matching your criteria.'}
               </p>
