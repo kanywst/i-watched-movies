@@ -39,6 +39,13 @@ export const DEFAULT_VIEW: View = 'watched';
 // typed Record<View, ViewSpec>, which also makes a missing VIEW_SPECS entry a type error.
 const BY_KEY = Object.fromEntries(VIEW_SPECS.map(s => [s.key, s])) as Record<View, ViewSpec>;
 
-export const isView = (v: string): v is View => v in BY_KEY;
+// Membership is checked against a Set, not with `in` against BY_KEY: `in` walks the
+// prototype chain, so `?view=toString` would pass and then fall through the exhaustive
+// switch that builds the header counters, blanking the page. `view` comes straight off the
+// query string, so this is reachable from a link.
+const VIEW_KEYS = new Set<string>(VIEW_SPECS.map(s => s.key));
 
+export const isView = (v: string): v is View => VIEW_KEYS.has(v);
+
+/** Safe to index directly: callers pass a `View`, which only isView can produce. */
 export const viewSpec = (v: View): ViewSpec => BY_KEY[v];
