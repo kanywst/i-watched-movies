@@ -6,6 +6,8 @@ tags:
   - 'Thriller'
   - 'Series'
 national: 'Korea'
+streaming:
+  - 'Netflix'
 checked: '2026-08'
 cover_image: 'https://image.tmdb.org/t/p/original/pTEFqAjLd5YTsMD6NSUxV6Dq7A6.jpg'
 release_date: '2022-01-28'
