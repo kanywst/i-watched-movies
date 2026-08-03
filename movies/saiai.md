@@ -6,6 +6,11 @@ tags:
   - 'Suspense'
   - 'Series'
 national: 'Japan'
+streaming:
+  - 'Netflix'
+  - 'Disney+'
+  - 'Prime Video'
+  - 'Hulu'
 checked: '2026-08'
 cover_image: 'https://image.tmdb.org/t/p/original/5VyZAGbzKYM4XFaytRE0o8SWB0l.jpg'
 release_date: '2021-10-15'
