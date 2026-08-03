@@ -1,6 +1,7 @@
 ---
 title: '孤狼の血 LEVEL2'
 published: false
+seen: true
 tags:
   - 'Crime'
   - 'Thriller'
@@ -17,4 +18,4 @@ release_date: '2021-08-20'
 summary: 'Three years on, a released convict walks back into Hiroshima and the truce the police built around the gangs comes apart.'
 ---
 
-孤狼の血 is already in Seen, so this is the follow-through. Japanese Crime/Thriller is the strongest pocket in this diary at 8.13.
+Logged as seen.
