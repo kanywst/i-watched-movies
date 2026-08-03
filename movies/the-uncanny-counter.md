@@ -6,6 +6,8 @@ tags:
   - 'Fantasy'
   - 'Series'
 national: 'Korea'
+streaming:
+  - 'Netflix'
 checked: '2026-08'
 cover_image: 'https://image.tmdb.org/t/p/original/bsbuXbQqryQ8aJlwXFkFXbrYko1.jpg'
 release_date: '2020-11-28'
