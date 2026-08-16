@@ -7,7 +7,7 @@ tags:
   - 'Suspense'
 national: 'Japan'
 streaming:
-  - 'U-NEXT'
+  - 'Prime Video'
 checked: '2026-08'
 cover_image: 'https://image.tmdb.org/t/p/original/gPxELHu6pigRe2Ebvo8QaB7qkne.jpg'
 release_date: '2016-05-28'
