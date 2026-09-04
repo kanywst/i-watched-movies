@@ -9,7 +9,7 @@ national: 'USA'
 streaming:
   - 'Netflix'
 checked: '2026-07'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/0/07/The_Pale_Blue_Eye_poster.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/9xkGlFRqrN8btTLU0KQvOfn2PHr.jpg'
 release_date: '2022-12-23'
 watch_date: '2026-08-02'
 point: 7

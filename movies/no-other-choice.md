@@ -5,7 +5,7 @@ tags:
   - 'Black-Comedy'
   - 'Thriller'
 national: 'Korea'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/1/12/No_Other_Choice_film_poster.jpeg'
+cover_image: 'https://image.tmdb.org/t/p/original/vc2S0dvgpsM0XfSiXZDMVkRCSSU.jpg'
 release_date: '2025-09-24'
 watch_date: '2026-03-07'
 point: 6.8

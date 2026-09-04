@@ -6,7 +6,7 @@ tags:
   - 'Thriller'
   - 'Crime'
 national: 'Korea'
-cover_image: 'https://media.eiga.com/images/movie/1575/photo/fe6f7d2302897a5b/640.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/pWDtjs568ZfOTMbURQBYuT4Qxka.jpg'
 release_date: '2003-11-21'
 watch_date: '2026-07-19'
 point: 8.3

@@ -5,7 +5,7 @@ tags:
   - 'Crime'
   - 'Suspense'
 national: 'Japan'
-cover_image: 'https://media.eiga.com/images/movie/95626/photo/25c5e2d8d12a314c/640.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/pvWQzNklnNPiCcoHGD7kUqj4TBO.jpg'
 release_date: '2022-01-21'
 watch_date: '2026-07-17'
 point: 7.7

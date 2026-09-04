@@ -5,7 +5,7 @@ tags:
   - 'Action'
   - 'Fantasy'
 national: 'Germany'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/7/7f/In_the_Lost_Lands.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/dDlfjR7gllmr8HTeN6rfrYhTdwX.jpg'
 release_date: '2025-02-27'
 watch_date: '2026-01-06'
 point: 7.5

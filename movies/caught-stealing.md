@@ -5,7 +5,7 @@ tags:
   - 'Black-Comedy'
   - 'Crime'
 national: 'USA'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/e/e6/Caught_Stealing_poster.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/cvda8s5J8YaHjTyEyXQpvD6f3iV.jpg'
 release_date: '2025-08-29'
 watch_date: '2026-01-10'
 point: 8.3

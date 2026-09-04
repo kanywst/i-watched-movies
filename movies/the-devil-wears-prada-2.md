@@ -5,7 +5,7 @@ tags:
   - 'Comedy'
   - 'Drama'
 national: 'USA'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/9/97/The_Devil_Wears_Prada_2_%28film_poster%29.png'
+cover_image: 'https://image.tmdb.org/t/p/original/xTI42pmsP5EDnvsNJPEDubwWBQO.jpg'
 release_date: '2026-05-01'
 watch_date: '2026-05-01'
 point: 8.6

@@ -5,7 +5,7 @@ tags:
   - 'Thriller'
   - 'Suspense'
 national: 'USA'
-cover_image: 'https://media.eiga.com/images/movie/95726/photo/0cf7ecca470585b3/640.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/m8aR1k35oZMOzZ1kYWUyt401mwq.jpg'
 release_date: '2021-10-01'
 watch_date: '2026-07-19'
 point: 7.9

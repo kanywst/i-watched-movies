@@ -5,7 +5,7 @@ tags:
   - 'Sci-fi'
   - 'Action'
 national: 'USA'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/0/06/Tron_Ares_poster.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/chpWmskl3aKm1aTZqUHRCtviwPy.jpg'
 release_date: '2025-10-10'
 watch_date: '2025-10-26'
 point: 6.9

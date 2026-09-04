@@ -6,7 +6,7 @@ tags:
   - 'Survival'
   - 'Thriller'
 national: 'USA'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/e/e8/The_Long_Walk_%282025_film%29.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/wobVTa99eW0ht6c1rNNzLkazPtR.jpg'
 release_date: '2025-09-12'
 watch_date: '2026-06-28'
 point: 7.2

@@ -4,7 +4,7 @@ published: true
 tags:
   - 'Superhero'
 national: 'USA'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/1/13/The_Fantastic_Four_First_Steps_poster.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/nf5qaSEvyYSNeFH0YhSs5EsBLX9.jpg'
 release_date: '2025-07-25'
 watch_date: '2025-07-25'
 point: 5.0
