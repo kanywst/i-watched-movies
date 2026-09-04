@@ -33,12 +33,15 @@
     <meta name="twitter:image" content="https://github.com/kanywst.png" />
 
     <link rel="alternate" type="application/rss+xml" title="The Movies kanywst Watched" href="./feed.xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- No webfont on purpose. Inter used to be pulled from Google Fonts here, but nothing
+         ever set font-family to it: Tailwind's default --font-sans is the system stack, so
+         every Inter face stayed `unloaded`, document.fonts.check('16px Inter') was false and
+         fonts.gstatic.com was never even hit. All it did was put a render-blocking
+         cross-origin stylesheet in front of the first paint. To actually use Inter, set
+         --font-sans in the @theme block in src/index.css and add the link back. -->
     <!-- Every poster in the grid comes from here, so pay the DNS + TLS handshake in
          parallel with the JS rather than when the first card mounts. -->
     <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
   </head>
   <body class="bg-stone-50 text-stone-900 dark:bg-dark-bg dark:text-dark-text min-h-screen selection:bg-stone-300/60 dark:selection:bg-purple-500/30">
     <div id="root"></div>

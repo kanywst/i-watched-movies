@@ -56,17 +56,41 @@ const URL_SPECS = {
 
 const isSort = (s: string): s is SortKey => (SORT_VALUES as string[]).includes(s);
 
-const withViewTransition = (fn: () => void) => {
-  if (typeof document !== 'undefined' && 'startViewTransition' in document) {
-    (document as Document & { startViewTransition: (cb: () => void) => void })
-      .startViewTransition(() => flushSync(fn));
-  } else {
+interface ViewTransition {
+  finished: Promise<void>;
+}
+type DocumentWithVT = Document & { startViewTransition: (cb: () => void) => ViewTransition };
+
+/**
+ * Runs `fn` inside a View Transition, or plainly where the API is missing. flushSync is
+ * required so React commits the DOM update inside the transition callback, which is what
+ * the browser snapshots as the new state.
+ */
+const withViewTransition = (fn: () => void): ViewTransition | null => {
+  if (typeof document === 'undefined' || !('startViewTransition' in document)) {
     fn();
+    return null;
   }
+  return (document as DocumentWithVT).startViewTransition(() => flushSync(fn));
+};
+
+/**
+ * Drop the view-transition-name once the animation is over, or immediately where there was
+ * no transition to wait on. `finished` rejects when a transition is skipped (a second one
+ * starting on top of it, say), which is not an error here, so both paths just clear.
+ */
+const clearAfter = (transition: ViewTransition | null, clear: (id: string) => void) => {
+  if (!transition) {
+    clear('');
+    return;
+  }
+  transition.finished.then(() => clear(''), () => clear(''));
 };
 
 const App: React.FC = () => {
   const [urlState, setUrlState] = useUrlState(URL_SPECS);
+  // Which card, if any, currently owns the shared poster view-transition-name.
+  const [transitioningId, setTransitioningId] = React.useState('');
   const view: View = isView(urlState.view) ? urlState.view : DEFAULT_VIEW;
   const sort: SortKey = isSort(urlState.sort) ? urlState.sort : 'watch_date_desc';
   const search = urlState.search;
@@ -197,17 +221,36 @@ const App: React.FC = () => {
   };
 
   // Stable identities: MovieCard is memoized, and a fresh onClick closure on every render
-  // would defeat that for all ~185 cards on each keystroke in the search box. `setUrlState`
+  // would defeat that for every card on each keystroke in the search box. `setUrlState`
   // is itself stable (useCallback with no deps in useUrlState).
+  //
+  // Only the card being handed to or from the modal carries a view-transition-name, and
+  // `transitioningId` is what says which one. Naming every card meant the browser captured
+  // a snapshot pair for all of them on every open, when exactly one element morphs.
   const openMovie = useCallback(
-    (movie: Movie) =>
-      withViewTransition(() => setUrlState({ selected: movie.id }, { history: 'push' })),
+    (movie: Movie) => {
+      // The old state is snapshotted the moment startViewTransition is called, so the card
+      // has to be wearing the name already: commit that first, synchronously.
+      flushSync(() => setTransitioningId(movie.id));
+      const transition = withViewTransition(() =>
+        setUrlState({ selected: movie.id }, { history: 'push' }),
+      );
+      clearAfter(transition, setTransitioningId);
+    },
     [setUrlState],
   );
-  const closeMovie = useCallback(
-    () => withViewTransition(() => setUrlState({ selected: '' }, { history: 'push' })),
-    [setUrlState],
-  );
+
+  // Closing runs the other way: the modal already holds the name in the old state, and the
+  // card takes it back in the new one. Both happen in the same commit, so the name is never
+  // on two live elements at once, which is what aborts a transition.
+  const closeMovie = useCallback(() => {
+    const closingId = urlState.selected;
+    const transition = withViewTransition(() => {
+      setTransitioningId(closingId);
+      setUrlState({ selected: '' }, { history: 'push' });
+    });
+    clearAfter(transition, setTransitioningId);
+  }, [setUrlState, urlState.selected]);
 
   const [theme, toggleTheme] = useTheme();
 
@@ -308,6 +351,7 @@ const App: React.FC = () => {
                 rank={getRank(movie.id)}
                 isNew={view === 'watched' && newMovieIds.has(movie.id)}
                 isSelected={movie.id === urlState.selected}
+                hasTransitionName={movie.id === transitioningId}
                 onClick={openMovie}
               />
             ))}

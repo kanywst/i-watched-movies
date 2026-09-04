@@ -31,6 +31,9 @@ interface HoverState {
   w: number;
   d: number;
   rect: DOMRect;
+  // Whether the tooltip renders above the cell rather than below it. Computed once when the
+  // hover opens, so the render body never reads window.innerHeight.
+  flipAbove?: boolean;
   // Set when a multi-film day was opened via keyboard, so focus moves into the tooltip.
   viaKeyboard?: boolean;
   cell?: SVGRectElement | null;
@@ -52,7 +55,10 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ summary, onOpe
   const openHover = useCallback(
     (h: HoverState) => {
       cancelClose();
-      setHover(h);
+      // Decide the flip here, where a layout read is free (we are in an event handler and
+      // `rect` has just been measured), rather than in the render body. `window.innerHeight`
+      // during render is a read of live layout from a phase that is supposed to be pure.
+      setHover({ ...h, flipAbove: h.rect.bottom > window.innerHeight * 0.6 });
     },
     [cancelClose],
   );
@@ -196,14 +202,8 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ summary, onOpe
               left: hover.rect.left + hover.rect.width / 2,
               // Flip above the cell when it sits in the lower part of the viewport, since any
               // scroll dismisses the tooltip and a cut-off one could not be scrolled into view.
-              top:
-                hover.rect.bottom > window.innerHeight * 0.6
-                  ? hover.rect.top - 8
-                  : hover.rect.bottom + 8,
-              transform:
-                hover.rect.bottom > window.innerHeight * 0.6
-                  ? 'translate(-50%, -100%)'
-                  : 'translateX(-50%)',
+              top: hover.flipAbove ? hover.rect.top - 8 : hover.rect.bottom + 8,
+              transform: hover.flipAbove ? 'translate(-50%, -100%)' : 'translateX(-50%)',
             }}
             onMouseEnter={cancelClose}
             onMouseLeave={scheduleClose}
