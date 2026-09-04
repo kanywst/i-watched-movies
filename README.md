@@ -57,7 +57,6 @@ Node `>= 20.18`.
 
 ## What's where
 
-- `docs/watchlist-archive.md`: the entries cut when the watchlist was trimmed to 40, with the taste figures behind each call and how to bring one back. Not read by the build
 - `scripts/generate-movies.js`: walks `movies/`, writes `src/data/movies.json`, also writes `public/feed.xml` and `public/collection.jsonld`
 - `scripts/parse-movie.js`: frontmatter to `Movie` object (point coerced to number, dates to ISO)
 - `scripts/build-feeds.js`: RSS + JSON-LD builders (covered by tests)
