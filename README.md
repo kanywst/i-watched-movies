@@ -2,7 +2,7 @@
 
 My personal log of movies I've watched. Each entry is a markdown file in `movies/`. The site reads them at build time and is deployed to Cloudflare Workers.
 
-Live: <https://i-watched-movies.kanywst12.workers.dev/> · [RSS](https://i-watched-movies.kanywst12.workers.dev/feed.xml)
+Live: <https://i-watched-movies.edgebox12.workers.dev/> · [RSS](https://i-watched-movies.edgebox12.workers.dev/feed.xml)
 
 ## Views
 

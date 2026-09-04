@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { computeScoringHabits, computeTasteProfile, recommendWatchlist } from './taste';
+import { computeStats } from './stats';
+import { countGenres } from './partition';
 import type { Movie } from './types';
 
 const make = (overrides: Partial<Movie>): Movie => ({
@@ -334,5 +336,39 @@ describe('recommendWatchlist', () => {
       2,
     );
     expect(picks.map(p => p.movie.title)).toEqual(['Alpha', 'Beta']);
+  });
+});
+
+/**
+ * The Stats header row is built from `computeStats` and `countGenres` rather than from the
+ * taste profile, so that App does not have to import taste.ts and the module can stay
+ * behind the lazily-loaded TastePanel. That only holds while the three figures agree, so
+ * pin the equivalence here: if `mean`, `buildAffinities` or `computeStats` ever diverge,
+ * the header would silently start showing different numbers from the panel beneath it.
+ */
+describe('taste profile agrees with the cheap header counters', () => {
+  const watched = [
+    make({ id: 'a', point: 8, tags: ['Crime', 'Thriller'] }),
+    make({ id: 'b', point: 6.5, tags: ['Crime'] }),
+    make({ id: 'c', point: 4, tags: ['Horror', 'Thriller'] }),
+    make({ id: 'd', point: 9, tags: [] }),
+  ];
+
+  it('total and baseline match computeStats', () => {
+    const profile = computeTasteProfile(watched);
+    const stats = computeStats(watched);
+    expect(profile.total).toBe(stats.total);
+    expect(profile.baseline).toBe(stats.averagePoint);
+  });
+
+  it('genre count matches countGenres', () => {
+    expect(computeTasteProfile(watched).genres.length).toBe(countGenres(watched));
+  });
+
+  it('still agrees when there is nothing rated', () => {
+    const profile = computeTasteProfile([]);
+    expect(profile.total).toBe(computeStats([]).total);
+    expect(profile.baseline).toBe(computeStats([]).averagePoint);
+    expect(profile.genres.length).toBe(countGenres([]));
   });
 });

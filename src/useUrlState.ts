@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { URL_SYNC_DEBOUNCE_MS } from './constants';
 
 interface ParamSpec<T> {
   parse: (raw: string | null) => T;
@@ -68,6 +69,14 @@ export function useUrlState<S extends Specs>(
   }, [specs]);
 
   // Sync state -> URL after commit so the updater stays pure.
+  //
+  // `replace` writes are debounced, `push` writes are not. Every character typed into the
+  // search box is one replaceState, and Safari throttles the History API to roughly 100
+  // calls per 30 seconds before it starts throwing SecurityError, which fast typing reaches
+  // on its own. A push is a deliberate history entry (opening or closing the modal, so the
+  // back button works) and has to land immediately; the effect cleanup drops any replace
+  // still pending, and since writeParams serializes the whole of `state` rather than a
+  // patch, the push that supersedes it carries the dropped value anyway.
   useEffect(() => {
     if (isFirstSync.current) {
       isFirstSync.current = false;
@@ -77,8 +86,14 @@ export function useUrlState<S extends Specs>(
       isFromPop.current = false;
       return;
     }
-    writeParams(specs, state, nextHistoryMode.current);
+    const mode = nextHistoryMode.current;
     nextHistoryMode.current = 'replace';
+    if (mode === 'push') {
+      writeParams(specs, state, 'push');
+      return;
+    }
+    const timer = setTimeout(() => writeParams(specs, state, 'replace'), URL_SYNC_DEBOUNCE_MS);
+    return () => clearTimeout(timer);
   }, [state, specs]);
 
   const update = useCallback(

@@ -8,6 +8,18 @@ import huluLogo from './assets/streaming/hulu.svg';
 export const RANK_LIMIT = 3;
 export const NEW_LIMIT = 2;
 
+// Card grid entrance stagger (`.card-enter` in src/index.css) is 50ms per card index. The
+// watchlist is ~185 cards, so uncapped the last one starts 9.2s after the grid appears and,
+// because the animation is `both`-filled, sits invisible until it does. Past the first
+// screenful the stagger is not perceptible anyway, so the index feeding the delay is
+// clamped here: 11 gives a 550ms tail, about two full rows on the widest layout.
+export const MAX_STAGGER_INDEX = 11;
+
+// How long a filter/search change waits before it is mirrored to the query string
+// (src/useUrlState.ts). Long enough to collapse a burst of typing into one history write,
+// short enough that the URL is shareable as soon as the user stops.
+export const URL_SYNC_DEBOUNCE_MS = 150;
+
 // Activity heatmap. GitHub buckets non-zero days into relative quartiles, which is
 // unstable for a sparse movie diary (0-3 films/day), so we use fixed absolute cutoffs:
 // the minimum film count that reaches level 1..4. `4+` films all land on level 4.

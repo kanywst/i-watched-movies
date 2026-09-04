@@ -84,5 +84,13 @@ body {
 .card-enter {
   animation: card-fade-up 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
   animation-delay: calc(var(--card-index, 0) * 50ms);
+  /* The watchlist grid is ~185 cards and only a handful are ever on screen. Skipping
+     layout, style and paint for the rest is the difference between rendering a screenful
+     and rendering the whole list. `auto` on contain-intrinsic-size makes the browser
+     remember each card's real size once rendered, so the scrollbar stops jumping after the
+     first pass; the 420px seed is a card at the desktop column width (a 2:3 poster around
+     220px wide plus its title, meta row and tags). */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 420px;
 }
 

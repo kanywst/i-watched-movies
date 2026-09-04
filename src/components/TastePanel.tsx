@@ -1,15 +1,27 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Compass, Gauge, Sparkles, TrendingDown, TrendingUp } from 'lucide-react';
 import { clsx } from 'clsx';
 import type { Movie } from '../types';
 import { Stat } from './ui/Stat';
-import type { Affinity, Recommendation, ScoringHabits, TasteProfile } from '../taste';
-import { COUNTRY_FLAGS, MIN_AFFINITY_SAMPLE, SCORE_BUCKET_STEP } from '../constants';
+import type { Affinity, ScoringHabits } from '../taste';
+import { computeScoringHabits, computeTasteProfile, recommendWatchlist } from '../taste';
+import {
+  COUNTRY_FLAGS,
+  MIN_AFFINITY_SAMPLE,
+  RECOMMENDATION_LIMIT,
+  SCORE_BUCKET_STEP,
+} from '../constants';
 
+/**
+ * The analysis is derived here rather than handed down as props so that `taste.ts` is
+ * reachable only through this component. This panel is loaded lazily (App.tsx), so keeping
+ * the 300-odd lines of affinity maths on this side of the boundary takes them out of the
+ * entry chunk for the four views that never open Stats.
+ */
 interface TastePanelProps {
-  profile: TasteProfile;
-  habits: ScoringHabits;
-  recommendations: Recommendation[];
+  /** The rated films. Must be the same list the header counters are built from. */
+  watched: Movie[];
+  watchlist: Movie[];
   onOpenMovie: (movie: Movie) => void;
 }
 
@@ -21,12 +33,16 @@ const fmt = (n: number) => n.toFixed(1);
 const signed = (n: number) => `${n >= 0 ? '+' : '-'}${Math.abs(n).toFixed(1)}`;
 const pct = (n: number) => `${Math.round(n * 100)}%`;
 
-export const TastePanel: React.FC<TastePanelProps> = ({
-  profile,
-  habits,
-  recommendations,
-  onOpenMovie,
-}) => {
+export const TastePanel: React.FC<TastePanelProps> = ({ watched, watchlist, onOpenMovie }) => {
+  const profile = useMemo(() => computeTasteProfile(watched), [watched]);
+  // Both of these are documented as requiring the profile built from the same list, which
+  // is why they are derived together here rather than by separate callers.
+  const habits = useMemo(() => computeScoringHabits(watched, profile), [watched, profile]);
+  const recommendations = useMemo(
+    () => recommendWatchlist(watchlist, watched, profile, RECOMMENDATION_LIMIT),
+    [watchlist, watched, profile],
+  );
+
   if (profile.total === 0) {
     return (
       <div className="py-32 text-center text-stone-500">

@@ -24,6 +24,10 @@ export const HISTORY_MOVIES = PARTITIONS.history;
 export const HISTORY_COUNT = countLogged(HISTORY_MOVIES);
 export const SEEN_GENRE_COUNT = countGenres(SEEN_MOVIES);
 export const WATCHING_GENRE_COUNT = countGenres(WATCHING_MOVIES);
+// The Stats header's "Genres" figure. Equal to `computeTasteProfile(WATCHED_MOVIES).genres
+// .length` (buildAffinities emits one entry per distinct tag), computed here so App can
+// build that header without importing taste.ts, which lives behind the lazy TastePanel.
+export const WATCHED_GENRE_COUNT = countGenres(WATCHED_MOVIES);
 
 /**
  * Tab badge counts. History counts entries with a usable watch_date rather than the raw list

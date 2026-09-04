@@ -23,8 +23,8 @@
     <meta property="og:title" content="The Movies kanywst Watched" />
     <meta property="og:description" content="A personal archive of movies kanywst has watched, with scores and impressions." />
     <meta property="og:image" content="https://github.com/kanywst.png" />
-    <meta property="og:url" content="https://i-watched-movies.kanywst12.workers.dev/" />
-    <link rel="canonical" href="https://i-watched-movies.kanywst12.workers.dev/" />
+    <meta property="og:url" content="https://i-watched-movies.edgebox12.workers.dev/" />
+    <link rel="canonical" href="https://i-watched-movies.edgebox12.workers.dev/" />
     <meta property="og:site_name" content="The Movies kanywst Watched" />
 
     <meta name="twitter:card" content="summary" />
@@ -35,6 +35,9 @@
     <link rel="alternate" type="application/rss+xml" title="The Movies kanywst Watched" href="./feed.xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Every poster in the grid comes from here, so pay the DNS + TLS handshake in
+         parallel with the JS rather than when the first card mounts. -->
+    <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
   </head>
   <body class="bg-stone-50 text-stone-900 dark:bg-dark-bg dark:text-dark-text min-h-screen selection:bg-stone-300/60 dark:selection:bg-purple-500/30">

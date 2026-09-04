@@ -1,4 +1,7 @@
-const SITE_URL = 'https://i-watched-movies.kanywst12.workers.dev/';
+// The deployed workers.dev hostname. `kanywst12` was never a real subdomain (it does not
+// resolve), so every RSS item link, the feed's channel link and the JSON-LD `url` pointed at
+// a dead host. Keep this in step with the canonical/og:url pair in index.html.
+const SITE_URL = 'https://i-watched-movies.edgebox12.workers.dev/';
 const SITE_NAME = 'The Movies kanywst Watched';
 const SITE_DESC = 'A personal archive of movies kanywst has watched, with scores and impressions.';
 const FEED_LIMIT = 20;
