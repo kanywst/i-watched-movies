@@ -7,7 +7,7 @@ tags:
   - 'Thriller'
   - 'Crime'
 national: 'Japan'
-cover_image: 'https://media.eiga.com/images/movie/103262/photo/1b9625524b4c84c8.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/7d4Gb3R1W6OByg46V5TSCNbbpUW.jpg'
 release_date: '2025-10-31'
 watch_date: '2025-11-08'
 point: 8.5

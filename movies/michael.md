@@ -4,7 +4,7 @@ published: true
 tags:
   - 'Biographical'
 national: 'USA'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/3/37/Michael_%282026_film_poster%29.png'
+cover_image: 'https://image.tmdb.org/t/p/original/dueFqKLvjftnELZaGYwY7xinfaI.jpg'
 release_date: '2026-04-10'
 watch_date: '2026-06-20'
 point: 6.9

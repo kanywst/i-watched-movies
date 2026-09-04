@@ -5,7 +5,7 @@ tags:
   - 'Mystery'
   - 'Comedy'
 national: 'USA'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/8/8f/The_Sheep_Detectives_poster.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/iKy5460GdsoknM8ppmGlJbKxAKa.jpg'
 release_date: '2026-05-08'
 watch_date: '2026-05-10'
 point: 8.7

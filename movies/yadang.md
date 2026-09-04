@@ -4,7 +4,7 @@ published: true
 tags:
   - 'Crime'
 national: 'Korea'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/a/a3/Yadang_The_Snitch.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/y7dsDbG8zVWkrkyOhA6ckZXX1uC.jpg'
 release_date: '2025-04-16'
 watch_date: '2026-01-12'
 point: 8.5

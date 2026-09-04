@@ -4,7 +4,7 @@ published: true
 tags:
   - 'Period'
 national: 'Japan'
-cover_image: 'https://media.eiga.com/images/movie/99284/photo/c4ef47fb26b393d4.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/DG3B7D0cLx3gmoySAwHVZ6QPeb.jpg'
 release_date: '2023-11-23'
 watch_date: '2026-07-04'
 point: 8

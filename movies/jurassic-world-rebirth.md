@@ -5,7 +5,7 @@ tags:
   - 'Sci-fi'
   - 'Action'
 national: 'USA'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/a/a5/Jurassic_World_Rebirth_poster.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/1RICxzeoNCAO5NpcRMIgg1XT6fm.jpg'
 release_date: '2025-06-17'
 watch_date: '2025-06-17'
 point: 7.5

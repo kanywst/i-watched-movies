@@ -5,7 +5,7 @@ tags:
   - 'Period'
   - 'Comedy'
 national: 'Japan'
-cover_image: 'https://media.eiga.com/images/movie/103950/photo/3f3af9bc2c673bda.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/Avaj2wXVa9XopNCwEs3e8FvpL51.jpg'
 release_date: '2025-12-19'
 watch_date: '2025-12-27'
 point: 1.0

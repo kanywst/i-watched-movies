@@ -6,7 +6,7 @@ tags:
   - 'Thriller'
   - 'Sci-fi'
 national: 'USA'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/4/43/Mercy_2026_poster.jpeg'
+cover_image: 'https://image.tmdb.org/t/p/original/pyok1kZJCfyuFapYXzHcy7BLlQa.jpg'
 release_date: '2026-01-23'
 watch_date: '2026-01-25'
 point: 7.6

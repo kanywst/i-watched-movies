@@ -5,7 +5,7 @@ tags:
   - 'Horror'
   - 'Suspense'
 national: 'USA'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/5/56/Creep_%282014_film%29_poster.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/qn53D574tT0YRyLgirEFHQwGUXw.jpg'
 release_date: '2014-06-23'
 watch_date: '2026-07-18'
 point: 6.6

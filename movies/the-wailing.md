@@ -6,7 +6,7 @@ tags:
   - 'Mystery'
   - 'Crime'
 national: 'Korea'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/e/eb/The_Wailing_%28film%29.png'
+cover_image: 'https://image.tmdb.org/t/p/original/lWE9ih9qgjx8HatYboP7fG0nri.jpg'
 release_date: '2016-05-12'
 watch_date: '2026-07-19'
 point: 8.2

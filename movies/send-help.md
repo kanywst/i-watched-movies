@@ -4,7 +4,7 @@ published: true
 tags:
   - 'Hybrid-Genre'
 national: 'USA'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/0/0f/Send_Help_poster.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/zbJWVHOtj3ljBzWgL1P8pxP03Up.jpg'
 release_date: '2026-01-30'
 watch_date: '2026-01-31'
 point: 7.8

@@ -5,7 +5,7 @@ tags:
   - 'Sci-fi'
   - 'Action'
 national: 'USA'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/9/90/Predator_Badlands_Poster.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/pHpq9yNUIo6aDoCXEBzjSolywgz.jpg'
 release_date: '2025-11-03'
 watch_date: '2025-11-15'
 point: 7.7

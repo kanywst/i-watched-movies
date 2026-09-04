@@ -5,7 +5,7 @@ tags:
   - 'Fantasy'
   - 'Anime'
 national: 'Japan'
-cover_image: 'https://media.eiga.com/images/movie/102242/photo/e3a31e125ea3e706/640.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/kmHKB2j2zLxyQhVbJC7etNQldnS.jpg'
 release_date: '2025-05-01'
 watch_date: '2025-08-23'
 point: 5.0

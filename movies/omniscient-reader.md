@@ -5,7 +5,7 @@ tags:
   - 'Action'
   - 'Fantasy'
 national: 'Korea'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/3/3a/Omniscient_Reader.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/uXdKubg6wHG9poAsKweUM1zQpdy.jpg'
 release_date: '2025-07-23'
 watch_date: '2026-03-23'
 point: 7.2

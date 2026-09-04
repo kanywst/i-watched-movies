@@ -4,7 +4,7 @@ published: true
 tags:
   - 'Horror'
 national: 'UK'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/b/b8/28_Years_Later%2C_The_Bone_Temple_poster.jpg?20251229223850'
+cover_image: 'https://image.tmdb.org/t/p/original/kK1BGkG3KAvWB0WMV1DfOx9yTMZ.jpg'
 release_date: '2026-01-16'
 watch_date: '2026-01-17'
 point: 7.0

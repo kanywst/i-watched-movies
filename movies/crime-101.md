@@ -5,7 +5,7 @@ tags:
   - 'Crime'
   - 'Thriller'
 national: 'UK'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/2/29/Crime_101_%282026_film%29_poster.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/tVvpFIoteRHNnoZMhdnwIVwJpCA.jpg'
 release_date: '2026-02-13'
 watch_date: '2026-02-28'
 point: 6.5

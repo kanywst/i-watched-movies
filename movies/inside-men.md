@@ -5,7 +5,7 @@ tags:
   - 'Crime'
   - 'Thriller'
 national: 'Korea'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/c/c2/Inside_Men_(film)_poster.jpeg'
+cover_image: 'https://image.tmdb.org/t/p/original/7brLGeVVlGjsv7HZ0GdSElne0Ts.jpg'
 release_date: '2015-11-19'
 watch_date: '2026-07-12'
 point: 8.4

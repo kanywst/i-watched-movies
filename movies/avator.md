@@ -5,7 +5,7 @@ tags:
   - 'Epic'
   - 'Sci-fi'
 national: 'USA'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/9/95/Avatar_Fire_and_Ash_poster.jpeg'
+cover_image: 'https://image.tmdb.org/t/p/original/bRBeSHfGHwkEpImlhxPmOcUsaeg.jpg'
 release_date: '2025-12-19'
 watch_date: '2025-12-21'
 point: 8.2

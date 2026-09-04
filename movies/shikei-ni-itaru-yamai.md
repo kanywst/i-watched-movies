@@ -6,7 +6,7 @@ tags:
   - 'Suspense'
   - 'Mystery'
 national: 'Japan'
-cover_image: 'https://media.eiga.com/images/movie/95557/photo/1ebf7479ef1dcdf2/640.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/jojUziZi1e6fAhcSCC4d5quGzoC.jpg'
 release_date: '2022-05-06'
 watch_date: '2026-07-13'
 point: 8.4

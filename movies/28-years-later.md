@@ -4,7 +4,7 @@ published: true
 tags:
   - 'Horror'
 national: 'UK'
-cover_image: 'https://upload.wikimedia.org/wikipedia/en/3/38/28_Years_Later_film_poster.jpg'
+cover_image: 'https://image.tmdb.org/t/p/original/n5FygjEppOvac6yEaowi26nTyw3.jpg'
 release_date: '2025-06-20'
 watch_date: '2025-06-22'
 point: 8.5
