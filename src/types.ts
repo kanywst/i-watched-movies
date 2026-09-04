@@ -3,6 +3,9 @@ export interface Movie {
   title: string;
   published: boolean;
   seen?: boolean;
+  // Started but not finished (a long series, mostly). Takes precedence over `published`
+  // and `seen`, so an entry carries it only while it is actually being watched.
+  watching?: boolean;
   tags: string[];
   national?: string;
   cover_image: string;
@@ -19,7 +22,7 @@ export interface Movie {
   checked?: string;
 }
 
-export type View = 'watched' | 'watchlist' | 'seen' | 'history' | 'stats';
+export type View = 'watched' | 'watching' | 'watchlist' | 'seen' | 'history' | 'stats';
 
 export type SortKey =
   | 'watch_date_desc'

@@ -18,7 +18,9 @@ import {
  * view needs, this one is the derived analysis only the Stats view pulls in.
  *
  * Every function here is pure and takes the already-filtered movie list, so "watched" means
- * `published && !seen` (rated films) and "watchlist" means `!published && !seen`.
+ * the rated films and "watchlist" the queued ones, as split by `src/partition.ts`. An
+ * in-progress series is in neither list: it carries no score yet, and recommending
+ * something already being watched would be noise.
  */
 
 const DAY_MS = 86_400_000;

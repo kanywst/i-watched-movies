@@ -16,12 +16,14 @@ export const ALL_MOVIES = moviesData as Movie[];
 const PARTITIONS = partitionMovies(ALL_MOVIES);
 
 export const WATCHED_MOVIES = PARTITIONS.watched;
+export const WATCHING_MOVIES = PARTITIONS.watching;
 export const WATCHLIST_MOVIES = PARTITIONS.watchlist;
 export const SEEN_MOVIES = PARTITIONS.seen;
 export const HISTORY_MOVIES = PARTITIONS.history;
 
 export const HISTORY_COUNT = countLogged(HISTORY_MOVIES);
 export const SEEN_GENRE_COUNT = countGenres(SEEN_MOVIES);
+export const WATCHING_GENRE_COUNT = countGenres(WATCHING_MOVIES);
 
 /**
  * Tab badge counts. History counts entries with a usable watch_date rather than the raw list
@@ -30,6 +32,7 @@ export const SEEN_GENRE_COUNT = countGenres(SEEN_MOVIES);
  */
 export const TAB_COUNTS: Record<View, number> = {
   watched: WATCHED_MOVIES.length,
+  watching: WATCHING_MOVIES.length,
   watchlist: WATCHLIST_MOVIES.length,
   seen: SEEN_MOVIES.length,
   history: HISTORY_COUNT,

@@ -29,6 +29,7 @@ impression: 'Loved it'`,
       title: 'Test',
       published: true,
       seen: false,
+      watching: false,
       tags: ['A', 'B'],
       national: 'Japan',
       cover_image: 'https://example.com/c.png',
@@ -99,6 +100,17 @@ checked: '2026-07'`),
     const movie = parseMovie(md(`title: 'Seen It'\npublished: false\nseen: true`), 's');
     expect(movie.seen).toBe(true);
     expect(movie.published).toBe(false);
+  });
+
+  it('defaults watching to false when omitted', () => {
+    expect(parseMovie(md(`title: 'T'`), 'p').watching).toBe(false);
+  });
+
+  it('parses watching: true for a series still being watched', () => {
+    const movie = parseMovie(md(`title: 'VIVANT'\npublished: false\nwatching: true`), 'v');
+    expect(movie.watching).toBe(true);
+    expect(movie.published).toBe(false);
+    expect(movie.seen).toBe(false);
   });
 
   it('defaults missing scalar fields', () => {

@@ -23,6 +23,8 @@ import {
   SEEN_MOVIES,
   TAB_COUNTS,
   WATCHED_MOVIES,
+  WATCHING_GENRE_COUNT,
+  WATCHING_MOVIES,
   WATCHLIST_MOVIES,
 } from './collections';
 import { useDocumentMetadata } from './useDocumentMetadata';
@@ -94,9 +96,10 @@ const App: React.FC = () => {
   // A `null` source is a view that renders its own panel rather than the grid.
   const viewMovies =
     spec.source === 'watched' ? WATCHED_MOVIES
-      : spec.source === 'watchlist' ? WATCHLIST_MOVIES
-        : spec.source === 'seen' ? SEEN_MOVIES
-          : EMPTY_MOVIES;
+      : spec.source === 'watching' ? WATCHING_MOVIES
+        : spec.source === 'watchlist' ? WATCHLIST_MOVIES
+          : spec.source === 'seen' ? SEEN_MOVIES
+            : EMPTY_MOVIES;
 
   const allTags = useMemo(() => {
     const tags = new Set<string>();
@@ -131,6 +134,11 @@ const App: React.FC = () => {
           { value: stats.total, label: 'Collected', size: 'lg' },
           { value: stats.averagePoint.toFixed(1), label: 'Avg Score' },
           { value: stats.thisYearCount, label: String(stats.currentYear) },
+        ];
+      case 'watching':
+        return [
+          { value: WATCHING_MOVIES.length, label: 'In Progress', size: 'lg' },
+          { value: WATCHING_GENRE_COUNT, label: 'Genres' },
         ];
       case 'seen':
         return [
@@ -236,7 +244,9 @@ const App: React.FC = () => {
       </header>
 
       {/* View Toggle */}
-      <div className="flex gap-1 mb-6 p-1 rounded-full w-fit bg-stone-100 border border-stone-200 dark:bg-white/5 dark:border-white/5">
+      {/* Wraps rather than overflowing: six tabs are wider than a phone viewport, and a
+          horizontal overflow here scrolls the whole page. */}
+      <div className="flex flex-wrap gap-1 mb-6 p-1 rounded-3xl md:rounded-full w-fit max-w-full bg-stone-100 border border-stone-200 dark:bg-white/5 dark:border-white/5">
         {VIEW_SPECS.map(s => (
           <ViewTab
             key={s.key}
@@ -292,9 +302,11 @@ const App: React.FC = () => {
               <p className="text-lg">
                 {view === 'watchlist' && WATCHLIST_MOVIES.length === 0
                   ? 'No movies on your watchlist yet.'
-                  : view === 'seen' && SEEN_MOVIES.length === 0
-                    ? 'Nothing here yet. This is for films you have seen but do not rate.'
-                    : 'No movies found matching your criteria.'}
+                  : view === 'watching' && WATCHING_MOVIES.length === 0
+                    ? 'Nothing in progress. This is for series still being watched.'
+                    : view === 'seen' && SEEN_MOVIES.length === 0
+                      ? 'Nothing here yet. This is for films you have seen but do not rate.'
+                      : 'No movies found matching your criteria.'}
               </p>
             </div>
           )}

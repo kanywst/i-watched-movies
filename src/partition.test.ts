@@ -22,32 +22,53 @@ const unrated = make({ id: 'unrated', published: false, seen: true });
 // A `seen` entry that also carries published: true has been watched either way; the seen
 // flag is what decides which section it lands in.
 const seenPublished = make({ id: 'seen-published', published: true, seen: true });
+const inProgress = make({ id: 'in-progress', published: false, seen: false, watching: true, watch_date: '' });
 
-const all = [rated, queued, unrated, seenPublished];
+const all = [rated, queued, unrated, seenPublished, inProgress];
 
 describe('partitionMovies', () => {
-  it('splits the diary into its three states', () => {
+  it('splits the diary into its four states', () => {
     const p = partitionMovies(all);
     expect(p.watched.map(m => m.id)).toEqual(['rated']);
+    expect(p.watching.map(m => m.id)).toEqual(['in-progress']);
     expect(p.watchlist.map(m => m.id)).toEqual(['queued']);
     expect(p.seen.map(m => m.id)).toEqual(['unrated', 'seen-published']);
   });
 
-  it('keeps watched, watchlist and seen mutually exclusive and exhaustive', () => {
+  it('keeps the four states mutually exclusive and exhaustive', () => {
     const p = partitionMovies(all);
-    const ids = [...p.watched, ...p.watchlist, ...p.seen].map(m => m.id);
+    const ids = [...p.watched, ...p.watching, ...p.watchlist, ...p.seen].map(m => m.id);
     expect(new Set(ids).size).toBe(ids.length);
     expect(ids.sort()).toEqual(all.map(m => m.id).sort());
   });
 
-  it('history spans everything watched and excludes the watchlist', () => {
+  // `watching` wins over the other flags, so a stale published/seen left on an entry that
+  // is being rewatched cannot pull it back into two tabs at once.
+  it('files a watching entry under In Progress whatever else it carries', () => {
+    const p = partitionMovies([
+      make({ id: 'rewatch', published: true, seen: true, watching: true }),
+    ]);
+    expect(p.watching.map(m => m.id)).toEqual(['rewatch']);
+    expect(p.watched).toEqual([]);
+    expect(p.seen).toEqual([]);
+    expect(p.history).toEqual([]);
+  });
+
+  it('history spans everything watched through, excluding the watchlist and in-progress', () => {
     const p = partitionMovies(all);
     expect(p.history.map(m => m.id).sort()).toEqual(['rated', 'seen-published', 'unrated']);
     expect(p.history).not.toContain(queued);
+    expect(p.history).not.toContain(inProgress);
   });
 
   it('returns empty lists for an empty diary', () => {
-    expect(partitionMovies([])).toEqual({ watched: [], watchlist: [], seen: [], history: [] });
+    expect(partitionMovies([])).toEqual({
+      watched: [],
+      watching: [],
+      watchlist: [],
+      seen: [],
+      history: [],
+    });
   });
 });
 
