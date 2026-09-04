@@ -1,6 +1,7 @@
 ---
 title: '今、私たちの学校は...'
 published: false
+watching: true
 tags:
   - 'Horror'
   - 'Thriller'
