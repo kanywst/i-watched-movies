@@ -123,6 +123,15 @@ describe('buildMovie', () => {
     const { movie } = buildMovie(parseIssueBody(sample));
     expect(movie.seen).toBe(false);
     expect(movie.published).toBe(true);
+    expect(movie.watching).toBe(false);
+  });
+
+  it('sets watching=true and published=false when List is In Progress', () => {
+    const body = sample.replace('### List\n\nWatched', '### List\n\nIn Progress');
+    const { movie } = buildMovie(parseIssueBody(body));
+    expect(movie.watching).toBe(true);
+    expect(movie.published).toBe(false);
+    expect(movie.seen).toBe(false);
   });
 
   it('parses Streaming into an array and Availability checked into a month', () => {
@@ -278,6 +287,17 @@ Netflix, Disney+
     expect(seenOut).toContain('published: false');
     expect(seenOut).toContain('seen: true');
   });
+
+  it('omits watching for a normal entry but emits it for an In Progress entry', () => {
+    const watched = formatFile(buildMovie(parseIssueBody(sample)).movie);
+    expect(watched).not.toContain('watching:');
+
+    const body = sample.replace('### List\n\nWatched', '### List\n\nIn Progress');
+    const out = formatFile(buildMovie(parseIssueBody(body)).movie);
+    expect(out).toContain('published: false');
+    expect(out).toContain('watching: true');
+    expect(out).not.toContain('seen:');
+  });
 });
 
 describe('readExisting', () => {
@@ -417,6 +437,29 @@ describe('mergeMovie', () => {
     // A blank streaming/checked from the issue keeps the last known availability.
     expect(merged.streaming).toEqual(['Netflix']);
     expect(merged.checked).toBe('2026-06');
+  });
+
+  it('clears watching when an in-progress series is re-filed as watched', () => {
+    const inProgress = { ...existing, watching: true };
+    const merged = mergeMovie(inProgress, {
+      title: 'Mov',
+      published: true,
+      seen: false,
+      watching: false,
+      tags: [],
+      national: '',
+      cover_image: '',
+      release_date: '',
+      watch_date: '2026-05-12',
+      point: 8.5,
+      ...noStreaming,
+      summary: '',
+      impression: '',
+      body: '',
+    });
+    expect(merged.watching).toBe(false);
+    expect(merged.published).toBe(true);
+    expect(formatFile(merged)).not.toContain('watching:');
   });
 
   it('lets the issue overwrite non-empty fields when re-submitted with new values', () => {

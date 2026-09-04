@@ -32,6 +32,7 @@ export function parseMovie(fileContent, id) {
     title: data.title || 'Untitled',
     published: data.published ?? true,
     seen: data.seen ?? false,
+    watching: data.watching ?? false,
     tags: data.tags || [],
     national: data.national || null,
     cover_image: data.cover_image || '',

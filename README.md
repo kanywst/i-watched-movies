@@ -6,9 +6,10 @@ Live: <https://i-watched-movies.kanywst12.workers.dev/> · [RSS](https://i-watch
 
 ## Views
 
-Five tabs, each linkable through `?view=`. Filters, search, sort and the open film are mirrored to the query string too.
+Six tabs, each linkable through `?view=`. Filters, search, sort and the open film are mirrored to the query string too.
 
 - **Watched** (`?view=watched`): the rated grid, with rank badges on the top 3 by score and NEW badges on the 2 most recent
+- **In Progress** (`?view=watching`): `watching: true`, started but not finished, mostly long series. No score yet, and kept out of the History heatmap and the watchlist ranking
 - **Watchlist** (`?view=watchlist`): `published: false`, films not seen yet. `watch_date` is legitimately empty here
 - **Seen** (`?view=seen`): `seen: true`, watched but deliberately left unrated, so it never skews the average
 - **History** (`?view=history`): a contribution-graph heatmap of the last 53 weeks, plus streaks and films per month
@@ -27,6 +28,7 @@ Two paths.
 title: 'Title'
 published: true              # false = lives on the Watchlist tab instead
 seen: true                   # optional, watched but unrated: own tab, no score
+watching: true               # optional, started but not finished: own tab, wins over the two above
 tags: ['Sci-Fi', 'Action']
 national: 'Japan'            # optional, shows a flag emoji
 cover_image: 'https://...'

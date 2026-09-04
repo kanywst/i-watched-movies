@@ -18,9 +18,10 @@ body:
     id: list
     attributes:
       label: List
-      description: 'Where to add this entry. Seen = watched but left unrated (its own section, no score).'
+      description: 'Where to add this entry. Seen = watched but left unrated (its own section, no score). In Progress = started but not finished, e.g. a long series.'
       options:
         - Watched
+        - In Progress
         - Watchlist
         - Seen
       default: 0

@@ -1,12 +1,12 @@
-import { Activity, Bookmark, ChartColumn, Check, Eye } from 'lucide-react';
+import { Activity, Bookmark, ChartColumn, Check, Eye, Play } from 'lucide-react';
 import type React from 'react';
 import type { View } from './types';
 
 /**
- * The five top-level views, as data. Previously the same five-way branch was written three
- * times in App.tsx (once to pick the grid's source list, once for the header counters, once
- * for the tab strip), so adding a view meant finding all three. The tab strip and the source
- * list now read off this table; the counters read off a switch that the compiler checks for
+ * The top-level views, as data. Previously the same n-way branch was written three times in
+ * App.tsx (once to pick the grid's source list, once for the header counters, once for the
+ * tab strip), so adding a view meant finding all three. The tab strip and the source list
+ * now read off this table; the counters read off a switch that the compiler checks for
  * exhaustiveness against `View`.
  */
 export interface ViewSpec {
@@ -17,7 +17,7 @@ export interface ViewSpec {
    * Which movie list the filter bar and grid operate on. `null` for the views that render
    * their own panel instead (History, Stats), which is also what suppresses the filter bar.
    */
-  source: 'watched' | 'watchlist' | 'seen' | null;
+  source: 'watched' | 'watching' | 'watchlist' | 'seen' | null;
   /**
    * Whether the tab shows a count. Stats has none because its figure would only repeat the
    * Watched tab's.
@@ -27,6 +27,7 @@ export interface ViewSpec {
 
 export const VIEW_SPECS: ViewSpec[] = [
   { key: 'watched', label: 'Watched', icon: Eye, source: 'watched', showCount: true },
+  { key: 'watching', label: 'In Progress', icon: Play, source: 'watching', showCount: true },
   { key: 'watchlist', label: 'Watchlist', icon: Bookmark, source: 'watchlist', showCount: true },
   { key: 'seen', label: 'Seen', icon: Check, source: 'seen', showCount: true },
   { key: 'history', label: 'History', icon: Activity, source: null, showCount: true },
