@@ -14,3 +14,4 @@ public/feed.xml
 GEMINI.md
 CLAUDE.md
 .claude/
+.playwright-mcp/

@@ -1,8 +1,19 @@
 import React, { useEffect, useRef } from 'react';
 import { X, Calendar, Film, Star, Quote } from 'lucide-react';
 import { Movie } from '../types';
-import { format } from 'date-fns';
+// Intl rather than date-fns `format(d, 'MMMM d, yyyy')`, which produces the same string but
+// only by shipping the token parser and the en-US locale. The modal is mounted from the
+// entry chunk (it has to be there the instant a card is clicked, and the View Transition
+// needs it in the same commit), so an import here is an import everyone pays for. UTC to
+// match the midnight-UTC ISO strings parseMovie writes.
+const LONG_DATE = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
 import { StreamingBadges } from './StreamingBadges';
+import { tmdbResize, tmdbSrcSet } from '../tmdbImage';
 
 interface MovieDetailModalProps {
   movie: Movie | null;
@@ -66,7 +77,7 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({ movie, onClo
 
   const formatDate = (value: string): string | null => {
     const d = new Date(value);
-    return Number.isNaN(d.getTime()) ? null : format(d, 'MMMM d, yyyy');
+    return Number.isNaN(d.getTime()) ? null : LONG_DATE.format(d);
   };
   const releasedLabel = movie.release_date ? formatDate(movie.release_date) : null;
   const watchedLabel = movie.watch_date ? formatDate(movie.watch_date) : null;
@@ -98,15 +109,21 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({ movie, onClo
           style={posterStyle}
           className="w-full md:w-2/5 h-64 md:h-auto relative shrink-0 bg-stone-100 dark:bg-stone-950"
         >
-          <div className="absolute inset-0 overflow-hidden">
+          {/* Same split as the card: a throwaway width behind blur-3xl, and a poster sized
+              for the panel it fills (2/5 of a max-w-4xl dialog, so ~360px, w780 covering a
+              2x display) rather than the 2000x3000 original. */}
+          <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
             <img
-              src={movie.cover_image}
+              src={tmdbResize(movie.cover_image, 'w154')}
               alt=""
+              decoding="async"
               className="w-full h-full object-cover blur-3xl scale-125 opacity-40 grayscale-[0.3]"
             />
           </div>
           <img
-            src={movie.cover_image}
+            src={tmdbResize(movie.cover_image, 'w780')}
+            srcSet={tmdbSrcSet(movie.cover_image, ['w342', 'w500', 'w780'])}
+            sizes="(min-width: 768px) 40vw, 100vw"
             alt={movie.title}
             className="relative z-10 w-full h-full object-contain md:object-cover p-4 md:p-0"
           />

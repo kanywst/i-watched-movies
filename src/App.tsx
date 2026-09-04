@@ -1,20 +1,17 @@
-import React, { useMemo } from 'react';
+import React, { Suspense, lazy, useCallback, useMemo } from 'react';
 import { flushSync } from 'react-dom';
 import { Movie, SortKey, View } from './types';
 import { MovieCard } from './components/MovieCard';
 import { FilterBar } from './components/FilterBar';
 import { MovieDetailModal } from './components/MovieDetailModal';
-import { ActivityHeatmap } from './components/ActivityHeatmap';
-import { TastePanel } from './components/TastePanel';
 import { Stat, type StatProps } from './components/ui/Stat';
 import { Film, Sun, Moon } from 'lucide-react';
 import { clsx } from 'clsx';
 import { CONFIG } from './config';
-import { NEW_LIMIT, RANK_LIMIT, RECOMMENDATION_LIMIT, SORT_OPTIONS } from './constants';
+import { MAX_STAGGER_INDEX, NEW_LIMIT, RANK_LIMIT, SORT_OPTIONS } from './constants';
 import { sortMovies } from './sortMovies';
 import { computeStats, computeWatchlistStats } from './stats';
 import { computeActivity } from './activity';
-import { computeScoringHabits, computeTasteProfile, recommendWatchlist } from './taste';
 import {
   ALL_MOVIES,
   HISTORY_COUNT,
@@ -22,11 +19,23 @@ import {
   SEEN_GENRE_COUNT,
   SEEN_MOVIES,
   TAB_COUNTS,
+  WATCHED_GENRE_COUNT,
   WATCHED_MOVIES,
   WATCHING_GENRE_COUNT,
   WATCHING_MOVIES,
   WATCHLIST_MOVIES,
 } from './collections';
+
+// The History and Stats panels are the two views the grid never needs, and between them
+// they carry the heatmap, the whole of taste.ts and date-fns. Splitting them out keeps the
+// entry chunk to what the default view actually renders; both are named exports, hence the
+// unwrapping .then.
+const ActivityHeatmap = lazy(() =>
+  import('./components/ActivityHeatmap').then(m => ({ default: m.ActivityHeatmap })),
+);
+const TastePanel = lazy(() =>
+  import('./components/TastePanel').then(m => ({ default: m.TastePanel })),
+);
 import { useDocumentMetadata } from './useDocumentMetadata';
 import { urlParams, useUrlState } from './useUrlState';
 import { useTheme } from './useTheme';
@@ -79,18 +88,6 @@ const App: React.FC = () => {
   const stats = useMemo(() => computeStats(WATCHED_MOVIES), []);
   const watchlistStats = useMemo(() => computeWatchlistStats(WATCHLIST_MOVIES), []);
   const activity = useMemo(() => computeActivity(HISTORY_MOVIES), []);
-
-  // Taste analysis reads the rated films only: `seen` entries carry no score and watchlist
-  // entries have not been watched, so neither can say anything about how kt rates things.
-  const tasteProfile = useMemo(() => computeTasteProfile(WATCHED_MOVIES), []);
-  const scoringHabits = useMemo(
-    () => computeScoringHabits(WATCHED_MOVIES, tasteProfile),
-    [tasteProfile],
-  );
-  const recommendations = useMemo(
-    () => recommendWatchlist(WATCHLIST_MOVIES, WATCHED_MOVIES, tasteProfile, RECOMMENDATION_LIMIT),
-    [tasteProfile],
-  );
 
   const spec = viewSpec(view);
   // A `null` source is a view that renders its own panel rather than the grid.
@@ -150,11 +147,15 @@ const App: React.FC = () => {
           { value: HISTORY_COUNT, label: 'Logged', size: 'lg' },
           { value: activity.total, label: 'Last 12 Mo' },
         ];
+      // Deliberately read off `stats` rather than the taste profile: the profile's `total`
+      // and `baseline` are the same count and mean over the same list, and its `genres` has
+      // one entry per distinct tag, so the header needs none of taste.ts and the module can
+      // stay behind the lazy TastePanel boundary.
       case 'stats':
         return [
-          { value: tasteProfile.total, label: 'Rated', size: 'lg' },
-          { value: tasteProfile.baseline.toFixed(1), label: 'Average' },
-          { value: tasteProfile.genres.length, label: 'Genres' },
+          { value: stats.total, label: 'Rated', size: 'lg' },
+          { value: stats.averagePoint.toFixed(1), label: 'Average' },
+          { value: WATCHED_GENRE_COUNT, label: 'Genres' },
         ];
       case 'watchlist':
         return [
@@ -163,7 +164,7 @@ const App: React.FC = () => {
           { value: watchlistStats.genres, label: 'Genres' },
         ];
     }
-  }, [view, stats, activity, tasteProfile, watchlistStats]);
+  }, [view, stats, activity, watchlistStats]);
 
   const filteredMovies = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -195,10 +196,18 @@ const App: React.FC = () => {
     setUrlState({ view: next, tags: [] });
   };
 
-  const openMovie = (movie: Movie) =>
-    withViewTransition(() => setUrlState({ selected: movie.id }, { history: 'push' }));
-  const closeMovie = () =>
-    withViewTransition(() => setUrlState({ selected: '' }, { history: 'push' }));
+  // Stable identities: MovieCard is memoized, and a fresh onClick closure on every render
+  // would defeat that for all ~185 cards on each keystroke in the search box. `setUrlState`
+  // is itself stable (useCallback with no deps in useUrlState).
+  const openMovie = useCallback(
+    (movie: Movie) =>
+      withViewTransition(() => setUrlState({ selected: movie.id }, { history: 'push' })),
+    [setUrlState],
+  );
+  const closeMovie = useCallback(
+    () => withViewTransition(() => setUrlState({ selected: '' }, { history: 'push' })),
+    [setUrlState],
+  );
 
   const [theme, toggleTheme] = useTheme();
 
@@ -260,14 +269,17 @@ const App: React.FC = () => {
       </div>
 
       {view === 'history' ? (
-        <ActivityHeatmap summary={activity} onOpenMovie={openMovie} />
+        <Suspense fallback={<PanelFallback />}>
+          <ActivityHeatmap summary={activity} onOpenMovie={openMovie} />
+        </Suspense>
       ) : view === 'stats' ? (
-        <TastePanel
-          profile={tasteProfile}
-          habits={scoringHabits}
-          recommendations={recommendations}
-          onOpenMovie={openMovie}
-        />
+        <Suspense fallback={<PanelFallback />}>
+          <TastePanel
+            watched={WATCHED_MOVIES}
+            watchlist={WATCHLIST_MOVIES}
+            onOpenMovie={openMovie}
+          />
+        </Suspense>
       ) : (
         <>
           {/* Filters */}
@@ -288,7 +300,11 @@ const App: React.FC = () => {
               <MovieCard
                 key={movie.id}
                 movie={movie}
-                index={index}
+                // Clamped here rather than inside the card so the prop itself is stable:
+                // past the first dozen cards every card gets the same value, so filtering
+                // the grid does not invalidate the memo for the long tail just because the
+                // positions shifted.
+                staggerIndex={Math.min(index, MAX_STAGGER_INDEX)}
                 rank={getRank(movie.id)}
                 isNew={view === 'watched' && newMovieIds.has(movie.id)}
                 isSelected={movie.id === urlState.selected}
@@ -334,6 +350,17 @@ const App: React.FC = () => {
     </div>
   );
 };
+
+/**
+ * Placeholder while a lazily-loaded panel arrives. Sized to roughly the height of the panel
+ * it stands in for, so switching to History or Stats does not collapse the page and bounce
+ * the footer up before the chunk lands.
+ */
+const PanelFallback: React.FC = () => (
+  <div className="py-32 text-center text-stone-400 dark:text-stone-600" aria-busy="true">
+    <p className="text-sm">Loading…</p>
+  </div>
+);
 
 interface ViewTabProps {
   active: boolean;
