@@ -20,10 +20,16 @@ interface MovieCardProps {
   rank?: number;
   isNew?: boolean;
   isSelected?: boolean;
+  /**
+   * True only for the card currently being handed to or from the modal. The poster's
+   * view-transition-name is set from this rather than unconditionally, so the browser
+   * snapshots one element pair per transition instead of one for every card in the grid.
+   */
+  hasTransitionName?: boolean;
   onClick: (movie: Movie) => void;
 }
 
-const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, isNew, isSelected, onClick }) => {
+const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, isNew, isSelected, hasTransitionName, onClick }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isPortrait, setIsPortrait] = useState(true);
@@ -52,12 +58,11 @@ const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, is
     const d = new Date(movie.watch_date);
     return Number.isNaN(d.getTime()) ? 'N/A' : String(d.getUTCFullYear());
   })();
-  // When this card's modal is open, the modal owns the shared poster name.
-  // Keeping it here too would make two live elements share one
-  // view-transition-name, which aborts the transition.
-  const posterStyle: React.CSSProperties = isSelected
-    ? {}
-    : { viewTransitionName: `poster-${movie.id}` };
+  // When this card's modal is open, the modal owns the shared poster name. Keeping it here
+  // too would make two live elements share one view-transition-name, which aborts the
+  // transition.
+  const posterStyle: React.CSSProperties =
+    hasTransitionName && !isSelected ? { viewTransitionName: `poster-${movie.id}` } : {};
 
   return (
     <div
