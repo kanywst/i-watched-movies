@@ -24,6 +24,11 @@ name: Deploy
 on:
   push:
     branches: [main]
+  # verify-deploy.yml's self-heal needs this. Its retrigger is an empty commit pushed with
+  # GITHUB_TOKEN, and GitHub does not start `on: push` runs for those, so once this workflow
+  # is the deploy path that commit would nudge nothing. Dispatch reaches it directly. Also
+  # gives you a Run workflow button for a manual redeploy.
+  workflow_dispatch:
 
 # Last push wins. Cancelling an in-flight deploy is safe: wrangler uploads a new version and
 # then activates it, so an aborted run never half-publishes. This is also the property the
