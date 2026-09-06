@@ -17,10 +17,6 @@ concurrency:
 jobs:
   review:
     runs-on: ubuntu-latest
-    # Advisory, not a gate. A reviewer that cannot reach the API (expired key, empty
-    # credit balance, provider outage) says nothing about the change under review, so it
-    # must not be what blocks a merge. Read the job log when the review is missing.
-    continue-on-error: true
     # Dependabot bumps and the issue-to-movie bot both open PRs that are content or
     # lockfile only, and the movie bot squash-merges its own PR inside the same job, so
     # reviewing either just burns tokens on something nobody reads.
@@ -41,8 +37,23 @@ jobs:
         with:
           fetch-depth: 1
 
+      # Advisory, not a gate. A reviewer that cannot finish (expired token, empty credit
+      # balance, provider outage, or the agent itself returning is_error) says nothing
+      # about the change under review, so it must not be what blocks a merge.
+      #
+      # This has to sit on the step, not on the job. `continue-on-error` at job level only
+      # stops the *workflow run* from failing; the job's own check run still reports a
+      # failure, which is what put a red "Claude code review / review — Failing" on PR #638
+      # after a transient is_error with no comments posted. On the step, the job itself
+      # concludes successfully and the failure shows up as an annotation instead.
+      #
+      # Deliberately not retried. The one failure seen so far cleared on a manual re-run,
+      # but an automatic second attempt would double the cost of the common hard failure
+      # (no credit), and a first attempt that dies *after* posting some inline comments
+      # would duplicate them. Re-run the job by hand when a review is missing.
       - uses: anthropics/claude-code-action@v1
         if: steps.key.outputs.present == 'true'
+        continue-on-error: true
         with:
           # `claude setup-token` issues an OAuth token (sk-ant-oat01-...) that runs on the
           # Claude subscription. It is not an API key and is rejected by the x-api-key
