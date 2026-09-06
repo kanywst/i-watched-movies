@@ -1,0 +1,110 @@
+name: Verify deploy
+
+# Cloudflare deploys this repo through its GitHub integration, and that integration drops
+# builds when pushes land close together. Merging two PRs five seconds apart produced one
+# build for the first and none for the second, leaving main undeployed for fifteen minutes
+# with nothing anywhere reporting it; filing a batch of movie issues does the same, because
+# each bot merge is its own push. The failure is silent, and the only symptom is the site
+# still showing yesterday's numbers.
+#
+# So check it. Build the same artefacts CF would, take the content-hashed name of the
+# movies-data chunk (it changes whenever any entry changes, which is most pushes here) and
+# poll the live site until that exact filename appears.
+
+on:
+  push:
+    branches: [main]
+
+# Never runs against its own retrigger commit, so one push can cost at most one retry.
+concurrency:
+  group: verify-deploy
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+env:
+  SITE_URL: https://i-watched-movies.edgebox12.workers.dev/
+  # A normal deploy is live about three minutes after the push, so ten is already well past
+  # "slow" and into "never coming". Waiting longer would only hold a runner open; the
+  # retrigger below is what covers the case where it really was just stuck.
+  POLL_ATTEMPTS: '20'
+  POLL_INTERVAL: '30'
+
+jobs:
+  verify:
+    if: "!contains(github.event.head_commit.message, '[deploy-retrigger]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Build and read the expected chunk name
+        id: expected
+        run: |
+          npm run build
+          CHUNK=$(basename "$(ls dist/assets/movies-data-*.js)")
+          echo "chunk=$CHUNK" >> "$GITHUB_OUTPUT"
+          echo "Expecting $CHUNK to appear at $SITE_URL"
+
+      - name: Wait for the deploy
+        id: poll
+        env:
+          CHUNK: ${{ steps.expected.outputs.chunk }}
+        run: |
+          for i in $(seq 1 "$POLL_ATTEMPTS"); do
+            # Cache-bust so an edge copy of the old HTML cannot answer for the new one.
+            if curl -fsSL --max-time 20 "${SITE_URL}?ci=${GITHUB_SHA}-${i}" | grep -q "$CHUNK"; then
+              echo "live after $(( (i - 1) * POLL_INTERVAL ))s"
+              echo "deployed=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep "$POLL_INTERVAL"
+          done
+          echo "deployed=false" >> "$GITHUB_OUTPUT"
+
+      # A newer push supersedes this one: its chunk is the one that should go live, so this
+      # job having "failed" to see its own is correct, not a stalled deploy. Checked before
+      # anything is written, since the concurrency group only cancels queued runs.
+      - name: Check whether main moved on
+        id: head
+        if: steps.poll.outputs.deployed != 'true'
+        run: |
+          git fetch -q origin main
+          if [ "$(git rev-parse origin/main)" != "$GITHUB_SHA" ]; then
+            echo "superseded=true" >> "$GITHUB_OUTPUT"
+            echo "main has moved past $GITHUB_SHA; a later push owns the deploy."
+          else
+            echo "superseded=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Best effort. An empty commit is what shook the integration loose by hand, and it
+      # cannot loop: the job skips commits carrying [deploy-retrigger], and a push made with
+      # GITHUB_TOKEN does not start a workflow run in the first place. Whether CF's own app
+      # reacts to a token push is not something this repo can prove, so the failure below is
+      # the part that actually has to be reliable.
+      - name: Retrigger the build
+        if: steps.poll.outputs.deployed != 'true' && steps.head.outputs.superseded != 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit --allow-empty -m "chore: retrigger the Cloudflare production build [deploy-retrigger]"
+          git push origin HEAD:main
+
+      - name: Report a stalled deploy
+        if: steps.poll.outputs.deployed != 'true' && steps.head.outputs.superseded != 'true'
+        env:
+          CHUNK: ${{ steps.expected.outputs.chunk }}
+        run: |
+          echo "::error::$SITE_URL never served $CHUNK after $(( POLL_ATTEMPTS * POLL_INTERVAL ))s."
+          echo "Cloudflare skipped the build for $GITHUB_SHA. An empty retrigger commit was"
+          echo "pushed; if the site is still stale, check the Workers Builds dashboard."
+          exit 1
