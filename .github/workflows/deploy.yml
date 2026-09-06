@@ -1,0 +1,85 @@
+name: Deploy
+
+# The alternative to Cloudflare's GitHub integration, which drops builds when pushes land
+# close together (see verify-deploy.yml for what that looks like and how it is caught).
+# Deploying from here instead makes the relationship one push, one deploy, decided by this
+# repo rather than by an integration whose queue nobody can see.
+#
+# INERT UNTIL YOU OPT IN. Both secrets have to exist before this does anything, so merging
+# it changes nothing on its own. To switch over:
+#
+#   1. Cloudflare dashboard > My Profile > API Tokens > Create Token > Custom token.
+#      Permission: Account > Workers Scripts > Edit. Scope it to this account only.
+#   2. gh secret set CLOUDFLARE_API_TOKEN     (paste the token)
+#      gh secret set CLOUDFLARE_ACCOUNT_ID    (the ID is in the dashboard URL, and in the
+#                                              Workers Builds links in older PR checks)
+#   3. Turn OFF the GitHub integration for this Worker in the Cloudflare dashboard
+#      (Workers & Pages > i-watched-movies > Settings > Build). Leaving both on is not
+#      dangerous, since an assets deploy is atomic and the two would upload the same
+#      artefact, but it doubles the builds and makes it ambiguous which one is live.
+#
+# Until step 2 is done the job checks for the secrets, finds nothing and exits green, the
+# same pattern claude-code-review.yml uses for its token.
+
+on:
+  push:
+    branches: [main]
+  # verify-deploy.yml's self-heal needs this. Its retrigger is an empty commit pushed with
+  # GITHUB_TOKEN, and GitHub does not start `on: push` runs for those, so once this workflow
+  # is the deploy path that commit would nudge nothing. Dispatch reaches it directly. Also
+  # gives you a Run workflow button for a manual redeploy.
+  workflow_dispatch:
+
+# Last push wins. Cancelling an in-flight deploy is safe: wrangler uploads a new version and
+# then activates it, so an aborted run never half-publishes. This is also the property the
+# CF integration was missing, where a burst of movie-issue merges could leave the newest
+# commit unbuilt.
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for credentials
+        id: creds
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "No Cloudflare credentials set; leaving the deploy to the dashboard integration."
+          fi
+
+      - uses: actions/checkout@v7
+        if: steps.creds.outputs.present == 'true'
+
+      - uses: actions/setup-node@v7
+        if: steps.creds.outputs.present == 'true'
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install and build
+        if: steps.creds.outputs.present == 'true'
+        run: |
+          npm ci
+          npm run build
+
+      # wrangler.jsonc declares dist/ as the asset directory, so `deploy` (the action's
+      # default command) uploads what the build just produced. wranglerVersion is pinned
+      # because the action otherwise resolves whatever is latest at run time, and this is
+      # the one dependency in the repo Dependabot cannot see.
+      - uses: cloudflare/wrangler-action@v4
+        if: steps.creds.outputs.present == 'true'
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.129.0'

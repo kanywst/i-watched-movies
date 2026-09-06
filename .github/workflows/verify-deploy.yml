@@ -22,6 +22,8 @@ concurrency:
 
 permissions:
   contents: write
+  # To dispatch deploy.yml when that is the active deploy path.
+  actions: write
 
 env:
   SITE_URL: https://i-watched-movies.edgebox12.workers.dev/
@@ -86,18 +88,28 @@ jobs:
             echo "superseded=false" >> "$GITHUB_OUTPUT"
           fi
 
-      # Best effort. An empty commit is what shook the integration loose by hand, and it
-      # cannot loop: the job skips commits carrying [deploy-retrigger], and a push made with
-      # GITHUB_TOKEN does not start a workflow run in the first place. Whether CF's own app
-      # reacts to a token push is not something this repo can prove, so the failure below is
-      # the part that actually has to be reliable.
+      # Best effort, and it has to cover both deploy paths, because the thing that reaches
+      # one does not reach the other.
+      #
+      # An empty commit is what shook the dashboard integration loose by hand, so that is
+      # the nudge for the integration. It cannot loop: this job skips commits carrying
+      # [deploy-retrigger], and a push made with GITHUB_TOKEN does not start a workflow run
+      # at all. That same rule is exactly why the commit is useless against deploy.yml,
+      # which is `on: push` and would never see it, so that one is dispatched directly.
+      # Whichever path is inactive no-ops: deploy.yml exits green without the Cloudflare
+      # secrets, and the integration ignores a dispatch it never hears about.
+      #
+      # The failure below is the part that has to be reliable regardless.
       - name: Retrigger the build
         if: steps.poll.outputs.deployed != 'true' && steps.head.outputs.superseded != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit --allow-empty -m "chore: retrigger the Cloudflare production build [deploy-retrigger]"
           git push origin HEAD:main
+          gh workflow run deploy.yml --ref main || echo "deploy.yml dispatch failed; the empty commit above is the fallback."
 
       - name: Report a stalled deploy
         if: steps.poll.outputs.deployed != 'true' && steps.head.outputs.superseded != 'true'
