@@ -204,6 +204,11 @@ const App: React.FC = () => {
     return sortMovies(filtered, sort);
   }, [viewMovies, search, sort, selectedTags]);
 
+  const clearFilters = useCallback(
+    () => setUrlState({ search: '', tags: [] }),
+    [setUrlState],
+  );
+
   const toggleTag = (tag: string) => {
     const next = selectedTags.includes(tag)
       ? selectedTags.filter((t: string) => t !== tag)
@@ -353,17 +358,13 @@ const App: React.FC = () => {
           </div>
 
           {filteredMovies.length === 0 && (
-            <div className="py-32 text-center text-stone-500">
-              <p className="text-lg">
-                {view === 'watchlist' && WATCHLIST_MOVIES.length === 0
-                  ? 'No movies on your watchlist yet.'
-                  : view === 'watching' && WATCHING_MOVIES.length === 0
-                    ? 'Nothing in progress. This is for series still being watched.'
-                    : view === 'seen' && SEEN_MOVIES.length === 0
-                      ? 'Nothing here yet. This is for films you have seen but do not rate.'
-                      : 'No movies found matching your criteria.'}
-              </p>
-            </div>
+            <EmptyGrid
+              view={view}
+              search={search}
+              tagCount={selectedTags.length}
+              total={viewMovies.length}
+              onClearFilters={clearFilters}
+            />
           )}
         </>
       )}
@@ -402,6 +403,68 @@ const PanelFallback: React.FC = () => (
     <p className="text-sm">Loading…</p>
   </div>
 );
+
+/**
+ * What the grid says when it has nothing to draw.
+ *
+ * Two different situations were sharing one line of copy. A filter that matched nothing is
+ * recoverable and the reader is the one holding the filter, so it says what was searched,
+ * how much is behind it, and offers the way back in a button. A section that is genuinely
+ * empty is not a failure at all, so it explains what the section is for instead of
+ * reporting an absence. The old wording, "No movies found matching your criteria", did
+ * neither: it described the reader's search in the software's vocabulary and left them on a
+ * dead end.
+ */
+interface EmptyGridProps {
+  view: View;
+  search: string;
+  tagCount: number;
+  /** Size of the unfiltered list for this view, which is what "show all" would restore. */
+  total: number;
+  onClearFilters: () => void;
+}
+
+const EMPTY_SECTION: Partial<Record<View, string>> = {
+  watchlist: 'Nothing queued to watch.',
+  watching: 'Nothing in progress. Series being watched right now live here.',
+  seen: 'Nothing here. This is for films watched but left unrated.',
+  watched: 'Nothing rated yet.',
+};
+
+const EmptyGrid: React.FC<EmptyGridProps> = ({ view, search, tagCount, total, onClearFilters }) => {
+  // `total > 0` is load-bearing, not belt-and-braces. switchView clears the tags but keeps
+  // the search term, so a search can be carried onto a tab whose unfiltered list is empty
+  // (In Progress, the moment the last series is finished). Without this the filtered branch
+  // wins and offers "Show all 0", which is both nonsense and a lie: clearing the filter
+  // would show nothing either. With nothing behind the filter, the section's own message is
+  // the honest one.
+  const filtered = total > 0 && (search.trim() !== '' || tagCount > 0);
+
+  if (!filtered) {
+    return (
+      <div className="py-28 text-center text-stone-500 dark:text-stone-400">
+        <p className="text-base">{EMPTY_SECTION[view] ?? 'Nothing here.'}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="py-28 flex flex-col items-center gap-4 text-center">
+      <p className="text-base text-stone-500 dark:text-stone-400">
+        {search.trim() !== ''
+          ? <>No match for &ldquo;<span className="text-stone-800 dark:text-stone-200">{search.trim()}</span>&rdquo;{tagCount > 0 && ' in the selected genres'}.</>
+          : 'No film carries every selected genre.'}
+      </p>
+      <button
+        type="button"
+        onClick={onClearFilters}
+        className="text-sm px-4 py-2 rounded-full transition-colors bg-stone-900 text-stone-50 hover:bg-stone-700 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-300"
+      >
+        Show all {total}
+      </button>
+    </div>
+  );
+};
 
 interface ViewTabProps {
   active: boolean;

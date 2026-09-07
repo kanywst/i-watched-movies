@@ -47,7 +47,7 @@ export const TastePanel: React.FC<TastePanelProps> = ({ watched, watchlist, onOp
   if (profile.total === 0) {
     return (
       <div className="py-32 text-center text-stone-500">
-        <p className="text-lg">Nothing rated yet, so there is no taste to read.</p>
+        <p className="text-base">Nothing rated yet. Scores are what this panel reads.</p>
       </div>
     );
   }
