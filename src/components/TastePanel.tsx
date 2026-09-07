@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Compass, Gauge, Sparkles, TrendingDown, TrendingUp } from 'lucide-react';
 import { clsx } from 'clsx';
 import type { Movie } from '../types';
+import { tmdbResize } from '../tmdbImage';
 import { Stat } from './ui/Stat';
 import type { Affinity, ScoringHabits } from '../taste';
 import { computeScoringHabits, computeTasteProfile, recommendWatchlist } from '../taste';
@@ -65,18 +66,18 @@ export const TastePanel: React.FC<TastePanelProps> = ({ watched, watchlist, onOp
       >
         <div className="flex flex-wrap gap-x-10 gap-y-4 mb-8">
           {topGenre && (
-            <Stat value={topGenre.key} label={`Most watched · ${topGenre.count} films`} />
+            <Stat value={topGenre.key} label={`most watched, ${topGenre.count} films`} />
           )}
-          {lift && <Stat value={signed(lift.delta)} label={`Rated highest · ${lift.key}`} />}
+          {lift && <Stat value={signed(lift.delta)} label={`rated highest, ${lift.key}`} />}
           {/* Both read the same release-to-watch gaps, so neither means anything when no
               film carries both dates. */}
           {profile.medianLagDays !== null && (
             <>
               <Stat
                 value={formatLag(profile.medianLagDays)}
-                label="Median wait after release"
+                label="median wait after release"
               />
-              <Stat value={pct(profile.newReleaseShare)} label="Caught on release" />
+              <Stat value={pct(profile.newReleaseShare)} label="caught on release" />
             </>
           )}
         </div>
@@ -105,16 +106,16 @@ export const TastePanel: React.FC<TastePanelProps> = ({ watched, watchlist, onOp
         note={`How the 0-10 scale actually gets used across ${profile.total} rated films.`}
       >
         <div className="flex flex-wrap gap-x-10 gap-y-4 mb-8">
-          <Stat value={fmt(profile.median)} label="Median score" />
-          <Stat value={fmt(profile.spread)} label="Spread (σ)" />
+          <Stat value={fmt(profile.median)} label="median score" />
+          <Stat value={fmt(profile.spread)} label="spread (σ)" />
           <Stat
             value={pct(habits.concentration)}
-            label={`Within ±${SCORE_BUCKET_STEP} of average`}
+            label={`within ±${SCORE_BUCKET_STEP} of average`}
           />
           {habits.drift && (
             <Stat
               value={signed(habits.drift.delta)}
-              label="Recent half vs older half"
+              label="recent half vs older half"
               icon={habits.drift.delta >= 0 ? TrendingUp : TrendingDown}
             />
           )}
@@ -200,16 +201,17 @@ export const TastePanel: React.FC<TastePanelProps> = ({ watched, watchlist, onOp
                     {index + 1}
                   </span>
                   <img
-                    src={rec.movie.cover_image}
+                    src={tmdbResize(rec.movie.cover_image, 'w92')}
                     alt=""
                     loading="lazy"
+                    decoding="async"
                     className="w-10 h-14 object-cover rounded-sm bg-stone-100 dark:bg-dark-surface shrink-0"
                   />
                   <span className="flex flex-col gap-1 min-w-0 flex-1">
                     <span className="text-sm font-medium leading-tight text-stone-800 dark:text-stone-200 line-clamp-1">
                       {rec.movie.title}
                     </span>
-                    <span className="flex flex-wrap gap-1.5 text-[10px] uppercase tracking-wider text-stone-500">
+                    <span className="flex flex-wrap gap-x-2 gap-y-0.5 text-[11px] text-stone-500">
                       {rec.reasons.length > 0 ? (
                         rec.reasons.map(r => (
                           <span key={r.key} className="whitespace-nowrap">
@@ -225,9 +227,7 @@ export const TastePanel: React.FC<TastePanelProps> = ({ watched, watchlist, onOp
                     <span className="block text-lg font-light tabular-nums text-stone-800 dark:text-stone-200">
                       {fmt(rec.predicted)}
                     </span>
-                    <span className="block text-[10px] uppercase tracking-wider text-stone-400">
-                      Predicted
-                    </span>
+                    <span className="block text-[11px] text-stone-400">predicted</span>
                   </span>
                 </button>
               </li>
@@ -257,9 +257,10 @@ const Section: React.FC<SectionProps> = ({ icon: Icon, title, note, children }) 
   <section aria-label={title}>
     <div className="flex items-center gap-2 mb-1">
       <Icon className="w-4 h-4 text-stone-400" />
-      <h2 className="text-sm font-medium uppercase tracking-[0.2em] text-stone-700 dark:text-stone-300">
-        {title}
-      </h2>
+      {/* Was uppercase with 0.2em tracking, the same eyebrow treatment the masthead used to
+          carry and the only place on the site still doing it. A section heading identifies a
+          section; it does not need to shout. */}
+      <h2 className="text-sm font-semibold text-stone-800 dark:text-stone-200">{title}</h2>
     </div>
     <p className="text-xs text-stone-500 mb-8">{note}</p>
     {children}
@@ -267,9 +268,7 @@ const Section: React.FC<SectionProps> = ({ icon: Icon, title, note, children }) 
 );
 
 const Label: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="text-xs font-medium uppercase tracking-wider text-stone-500 dark:text-stone-400">
-    {children}
-  </div>
+  <div className="text-xs font-medium text-stone-500 dark:text-stone-400">{children}</div>
 );
 
 const Strong: React.FC<{ children: React.ReactNode }> = ({ children }) => (

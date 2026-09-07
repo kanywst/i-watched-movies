@@ -369,16 +369,18 @@ const App: React.FC = () => {
       )}
 
       {/* Footer */}
-      <footer className="mt-32 py-12 border-t flex justify-between items-center text-sm border-stone-200 text-stone-500 dark:border-white/5 dark:text-stone-500">
-        <div className="flex items-center gap-2">
-          <p>© {new Date().getFullYear()} The Movies {CONFIG.USER_NAME} Watched</p>
-          <img
-            src={`https://github.com/${CONFIG.USER_NAME}.png`}
-            alt={CONFIG.USER_NAME}
-            className="w-5 h-5 rounded-full border border-stone-200 dark:border-white/10"
-          />
-        </div>
-        <p className="opacity-50">Minimalist Cinema Tracker</p>
+      {/* "Minimalist Cinema Tracker" used to sit on the right. It described the software
+          rather than the diary, to a reader who is already looking at it, and the 20px
+          avatar beside the copyright was the same illegible thumbnail the masthead dropped.
+          What is actually useful here is the feed. */}
+      <footer className="mt-24 py-10 border-t flex flex-wrap justify-between items-center gap-3 text-sm border-stone-200 text-stone-500 dark:border-white/5 dark:text-stone-500">
+        <p>© {new Date().getFullYear()} The Movies {CONFIG.USER_NAME} Watched</p>
+        <a
+          href="./feed.xml"
+          className="transition-colors hover:text-stone-800 dark:hover:text-stone-300"
+        >
+          RSS
+        </a>
       </footer>
 
       {/* Detail Modal */}
