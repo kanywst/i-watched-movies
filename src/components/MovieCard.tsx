@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Star, Image as ImageIcon, Medal, Award, Crown, Sparkles } from 'lucide-react';
+import { Image as ImageIcon, Medal, Award, Crown, Sparkles } from 'lucide-react';
 import { Movie } from '../types';
 import { clsx } from 'clsx';
 import { COUNTRY_FLAGS } from '../constants';
 import { StreamingBadges } from './StreamingBadges';
+import { isWatched } from '../partition';
 import { tmdbResize, tmdbSrcSet } from '../tmdbImage';
 
 // The grid is 2 / 3 / 4 / 5 columns inside a max-w-7xl container, so a card is about
@@ -49,15 +50,24 @@ const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, is
 
   const rankStyle = rank ? getRankBadge(rank) : null;
   const displayFlag = movie.national ? COUNTRY_FLAGS[movie.national] : null;
-  // getUTCFullYear rather than date-fns `format(d, 'yyyy')`: this runs once per card in the
-  // grid, and `format` pulls the whole token parser and the en-US locale in for what is one
-  // field read. UTC rather than local because parseMovie writes midnight-UTC ISO strings, so
-  // reading them locally shows the previous year for an early-January date west of UTC.
-  const watchYear = (() => {
-    if (!movie.watch_date) return 'N/A';
-    const d = new Date(movie.watch_date);
-    return Number.isNaN(d.getTime()) ? 'N/A' : String(d.getUTCFullYear());
+  // Only a rated entry has a score worth printing. isWatched is the same rule the grid was
+  // partitioned with, so a card can never disagree with the tab it is sitting under.
+  const hasScore = isWatched(movie);
+  // The year the film was watched, falling back to the year it came out. Watchlist and
+  // in-progress entries have no watch_date, and printing "N/A" under a poster tells the
+  // reader nothing; the release year is the fact that is actually known about them.
+  const year = (() => {
+    for (const iso of [movie.watch_date, movie.release_date]) {
+      if (!iso) continue;
+      const d = new Date(iso);
+      if (!Number.isNaN(d.getTime())) return String(d.getUTCFullYear());
+    }
+    return null;
   })();
+  // getUTCFullYear rather than date-fns `format(d, 'yyyy')`: this runs once per card in the
+  // grid, and `format` pulls the whole token parser and the en-US locale in for one field
+  // read. UTC rather than local because parseMovie writes midnight-UTC ISO strings, so
+  // reading them locally shows the previous year for an early-January date west of UTC.
   // When this card's modal is open, the modal owns the shared poster name. Keeping it here
   // too would make two live elements share one view-transition-name, which aborts the
   // transition.
@@ -75,33 +85,35 @@ const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, is
       }}
       role="button"
       tabIndex={0}
-      aria-label={`${movie.title}${movie.published ? `, rated ${movie.point} out of 10` : ''}`}
+      aria-label={`${movie.title}${hasScore ? `, rated ${movie.point} out of 10` : ''}`}
       className="card-enter group relative flex flex-col bg-transparent cursor-pointer rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-stone-400 focus-visible:ring-offset-stone-50 dark:focus-visible:ring-stone-300 dark:focus-visible:ring-offset-stone-950"
       style={{ '--card-index': staggerIndex } as React.CSSProperties}
     >
-      {/* Rank Badge - Floating */}
-      {rankStyle && (
-        <div className={clsx(
-          'absolute -top-3 -left-3 z-40 w-8 h-8 rounded-full flex items-center justify-center shadow-xl border border-white/10',
-          rankStyle.bg,
-        )}>
-          <rankStyle.icon className={clsx('w-4 h-4', rankStyle.color)} />
-        </div>
-      )}
-
-      {/* NEW Badge - Floating Top Right */}
-      {isNew && (
-        <div className="absolute -top-3 -right-3 z-40 px-2 py-1 bg-rose-500/90 backdrop-blur-md shadow-lg border border-white/10 rounded-full flex items-center gap-1">
-          <Sparkles className="w-3 h-3 text-white" />
-          <span className="text-[10px] font-bold text-white tracking-wider">NEW</span>
-        </div>
-      )}
-
       {/* Image Container */}
       <div
         style={posterStyle}
         className="aspect-[2/3] w-full overflow-hidden relative rounded-lg shadow-sm transition-all duration-500 group-hover:shadow-2xl bg-stone-100 border border-stone-200 group-hover:border-stone-300 dark:bg-dark-card dark:border-white/5 dark:group-hover:border-white/20"
       >
+        {/* Badges sit inside the poster frame. Hung outside it on negative offsets they were
+            clipped by the top of the scroll container on the first row and collided with the
+            neighbouring card's artwork everywhere else. Rank goes left, score right, so the
+            two never meet. */}
+        {rankStyle && (
+          <div className={clsx(
+            'absolute top-2 left-2 z-40 w-7 h-7 rounded-full flex items-center justify-center shadow-lg border border-white/10',
+            rankStyle.bg,
+          )}>
+            <rankStyle.icon className={clsx('w-3.5 h-3.5', rankStyle.color)} />
+          </div>
+        )}
+
+        {isNew && (
+          <div className="absolute bottom-2 left-2 z-40 px-2 py-0.5 bg-rose-500/90 backdrop-blur-md shadow-lg border border-white/10 rounded-full flex items-center gap-1">
+            <Sparkles className="w-2.5 h-2.5 text-white" />
+            <span className="text-[10px] font-semibold text-white tracking-wide">NEW</span>
+          </div>
+        )}
+
         {/* Loading Skeleton */}
         {!isLoaded && !isError && (
           <div className="absolute inset-0 z-20 flex items-center justify-center animate-pulse bg-stone-100 dark:bg-dark-card">
@@ -152,46 +164,42 @@ const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, is
         )}
 
         {/* Rating Overlay (Always Visible) */}
-        <div className="absolute top-2 right-2 z-30 flex items-center gap-1 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-xs font-medium text-white shadow-lg border border-white/10 transition-transform duration-300 group-hover:scale-105 tabular-nums">
-          <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-          <span>{movie.point}</span>
-        </div>
+        {/* Posters are printed to the edge of the frame, so the frame's own border sits
+            behind them and does nothing. This hairline rides on top, which is the only thing
+            separating a white-bordered poster from a light background. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-30 rounded-lg ring-1 ring-inset ring-black/10 dark:ring-white/10"
+        />
+
+        {/* The score, once. It used to print here and again under the title, and it carried
+            a star, which reads as "out of five" on a scale that goes to ten. Suppressed
+            entirely where there is no score to show: a watchlist or in-progress entry has
+            point 0, and a card announcing "0" says something false about a film nobody has
+            rated yet. */}
+        {hasScore && (
+          <div className="absolute top-2 right-2 z-30 bg-black/65 backdrop-blur-md px-2 py-0.5 rounded text-sm font-medium text-white shadow-lg border border-white/10 tabular-nums">
+            {movie.point}
+          </div>
+        )}
       </div>
 
       {/* Content - Minimalist below card */}
-      <div className="pt-4 flex flex-col gap-1">
-        <h2 className="text-base font-semibold leading-tight transition-colors line-clamp-1 text-stone-800 group-hover:text-stone-950 dark:text-stone-200 dark:group-hover:text-white">
+      <div className="pt-3 flex flex-col gap-1">
+        <h2 className="text-sm font-medium leading-snug transition-colors line-clamp-1 text-stone-800 group-hover:text-stone-950 dark:text-stone-200 dark:group-hover:text-white">
           {movie.title}
         </h2>
 
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-xs text-stone-500">
-            <span className="tabular-nums">{watchYear}</span>
-
-            {displayFlag && (
-              <>
-                <span className="w-0.5 h-0.5 rounded-full bg-stone-500"></span>
-                <span className="text-sm filter grayscale-[0.3] hover:grayscale-0 transition-all" title={movie.national}>{displayFlag}</span>
-              </>
-            )}
-
-            <span className="w-0.5 h-0.5 rounded-full bg-stone-500"></span>
-            <div className="flex items-center gap-1 text-stone-400 tabular-nums">
-              <Star className="h-3 w-3 fill-stone-400 text-stone-400 dark:fill-stone-600 dark:text-stone-600" />
-              <span>{movie.point}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap gap-1 mt-1 opacity-60 group-hover:opacity-100 transition-opacity">
-          {movie.tags.slice(0, 3).map((tag) => (
-            <span
-              key={tag}
-              className="text-[10px] text-stone-500 uppercase tracking-wider"
-            >
-              {tag}
-            </span>
-          ))}
+        {/* Year and country, separated by space rather than a middle dot, and no longer
+            trailed by a second copy of the score. The all-caps genre strings that sat below
+            this are gone: they repeated what the filter row above the grid already offers,
+            in the lowest-contrast type on the page, over the artwork the grid exists to
+            show. */}
+        <div className="flex items-center gap-2 text-xs text-stone-500 dark:text-stone-400">
+          {year && <span className="tabular-nums">{year}</span>}
+          {displayFlag && (
+            <span className="text-sm leading-none" title={movie.national}>{displayFlag}</span>
+          )}
         </div>
 
         <StreamingBadges movie={movie} variant="card" />

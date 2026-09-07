@@ -1,6 +1,10 @@
 import React, { useEffect, useRef } from 'react';
-import { X, Calendar, Film, Star, Quote } from 'lucide-react';
+import { X, Quote } from 'lucide-react';
 import { Movie } from '../types';
+import { StreamingBadges } from './StreamingBadges';
+import { isWatched } from '../partition';
+import { tmdbResize, tmdbSrcSet } from '../tmdbImage';
+
 // Intl rather than date-fns `format(d, 'MMMM d, yyyy')`, which produces the same string but
 // only by shipping the token parser and the en-US locale. The modal is mounted from the
 // entry chunk (it has to be there the instant a card is clicked, and the View Transition
@@ -12,8 +16,6 @@ const LONG_DATE = new Intl.DateTimeFormat('en-US', {
   day: 'numeric',
   timeZone: 'UTC',
 });
-import { StreamingBadges } from './StreamingBadges';
-import { tmdbResize, tmdbSrcSet } from '../tmdbImage';
 
 interface MovieDetailModalProps {
   movie: Movie | null;
@@ -99,7 +101,10 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({ movie, onClo
           ref={closeButtonRef}
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-4 right-4 z-50 p-2 rounded-full bg-black/20 hover:bg-black/40 text-white transition-colors backdrop-blur-md border border-white/10"
+          // Opaque enough to read on both surfaces it can land on: the dark poster at the
+          // top of the mobile layout, and the white info panel it now shares a line with on
+          // desktop, where bg-black/20 left a white glyph on pale grey.
+          className="absolute top-4 right-4 z-50 p-2 rounded-full bg-black/55 hover:bg-black/75 text-white transition-colors backdrop-blur-md border border-white/15"
         >
           <X className="w-5 h-5" />
         </button>
@@ -133,6 +138,23 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({ movie, onClo
         {/* Info Section */}
         <div className="flex-1 p-8 md:p-12 flex flex-col gap-8 relative bg-white dark:bg-stone-900">
           <div>
+            {/* The score, set as the largest thing in the dialog. Everything else here comes
+                from TMDB and is true of the film for everyone; this number is the only piece
+                of the page that is the diarist's, and it was previously an inline run of
+                body text reading "8.8/10" behind a star, on a scale that goes to ten. The
+                denominator stays small under a rule: it is context, not a second figure. */}
+            {isWatched(movie) && (
+              <div className="mb-6 inline-flex flex-col items-start leading-none">
+                <span className="text-6xl md:text-7xl font-light tabular-nums tracking-tight text-stone-900 dark:text-stone-100">
+                  {movie.point}
+                </span>
+                <span aria-hidden="true" className="mt-2.5 w-full border-t border-stone-300 dark:border-stone-700" />
+                <span className="mt-1.5 text-sm tabular-nums text-stone-400 dark:text-stone-500">
+                  <span className="sr-only">out of </span>10
+                </span>
+              </div>
+            )}
+
             <div className="flex flex-wrap gap-2 mb-4">
               {movie.tags.map((tag) => (
                 <span
@@ -148,26 +170,20 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({ movie, onClo
               {movie.title}
             </h2>
 
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-stone-500">
+            <dl className="flex flex-wrap items-baseline gap-x-6 gap-y-1 text-sm text-stone-500 dark:text-stone-400">
               {releasedLabel && (
-                <div className="flex items-center gap-1.5">
-                  <Film className="w-4 h-4" />
-                  <span className="tabular-nums">Released: {releasedLabel}</span>
+                <div className="flex items-baseline gap-1.5">
+                  <dt>Released</dt>
+                  <dd className="tabular-nums text-stone-700 dark:text-stone-300">{releasedLabel}</dd>
                 </div>
               )}
               {watchedLabel && (
-                <div className="flex items-center gap-1.5">
-                  <Calendar className="w-4 h-4" />
-                  <span className="tabular-nums">Watched: {watchedLabel}</span>
+                <div className="flex items-baseline gap-1.5">
+                  <dt>Watched</dt>
+                  <dd className="tabular-nums text-stone-700 dark:text-stone-300">{watchedLabel}</dd>
                 </div>
               )}
-              {movie.published && (
-                <div className="flex items-center gap-1 font-medium tabular-nums text-stone-700 dark:text-stone-300">
-                  <Star className="w-4 h-4 fill-stone-700 dark:fill-stone-300" />
-                  <span>{movie.point}/10</span>
-                </div>
-              )}
-            </div>
+            </dl>
 
             <StreamingBadges movie={movie} variant="detail" />
           </div>
