@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Search, SlidersHorizontal, ArrowUpDown, X } from 'lucide-react';
+import { Search, SlidersHorizontal, ArrowUpDown, ChevronDown, X } from 'lucide-react';
 import { clsx } from 'clsx';
 import { SORT_OPTIONS } from '../constants';
 import type { SortKey } from '../types';
@@ -26,6 +26,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   allTags,
 }) => {
   const [tagQuery, setTagQuery] = useState('');
+  const [tagsOpen, setTagsOpen] = useState(false);
 
   const visibleTags = useMemo(() => {
     if (!tagQuery) return allTags;
@@ -34,7 +35,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   }, [allTags, tagQuery]);
 
   return (
-    <div className="flex flex-col gap-6 mb-12">
+    <div className="flex flex-col gap-4 mb-8">
       <div className="flex flex-col md:flex-row gap-4">
         {/* Search */}
         <div className="relative flex-1 group">
@@ -75,50 +76,72 @@ export const FilterBar: React.FC<FilterBarProps> = ({
         </div>
       </div>
 
-      {/* Tags */}
+      {/* Genres.
+          Closed by default. Open, this is twenty-one pills over two rows, and it sat between
+          the reader and the first poster on every view whether or not they were filtering by
+          genre. Whatever is currently selected stays visible in the toggle, so collapsing it
+          never hides an active filter. */}
       {allTags.length > 0 && (
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-3 flex-wrap">
-            <div className="text-xs font-medium text-stone-500 flex items-center gap-1.5 uppercase tracking-wider">
+            <button
+              type="button"
+              onClick={() => setTagsOpen(o => !o)}
+              aria-expanded={tagsOpen}
+              aria-controls="genre-filter"
+              className="flex items-center gap-1.5 text-xs transition-colors text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-200"
+            >
               <SlidersHorizontal className="h-3.5 w-3.5" />
-              <span>Filter</span>
-            </div>
-            <input
-              type="text"
-              value={tagQuery}
-              onChange={(e) => setTagQuery(e.target.value)}
-              placeholder={`Search ${allTags.length} tags...`}
-              className="flex-1 min-w-[160px] max-w-xs bg-transparent border-b py-1.5 px-2 text-xs focus:outline-none transition-colors rounded-none border-stone-300 text-stone-800 placeholder-stone-400 focus:border-stone-500 dark:border-stone-800 dark:text-stone-200 dark:placeholder-stone-600"
-            />
+              <span>
+                {selectedTags.length > 0 ? selectedTags.join(', ') : `Filter by genre (${allTags.length})`}
+              </span>
+              <ChevronDown className={clsx('h-3.5 w-3.5 transition-transform', tagsOpen && 'rotate-180')} />
+            </button>
             {selectedTags.length > 0 && (
               <button
                 onClick={clearTags}
                 className="text-xs transition-colors flex items-center gap-1 text-stone-400 hover:text-stone-700 dark:text-stone-500 dark:hover:text-stone-200"
               >
                 <X className="h-3 w-3" />
-                <span>Clear ({selectedTags.length})</span>
+                <span>Clear</span>
               </button>
             )}
           </div>
-          <div className="flex flex-wrap gap-2">
-            {visibleTags.map((tag) => (
-              <button
-                key={tag}
-                onClick={() => toggleTag(tag)}
-                className={clsx(
-                  'px-3 py-1 text-xs transition-all duration-200 border rounded-full',
-                  selectedTags.includes(tag)
-                    ? 'font-medium shadow-sm bg-stone-900 border-stone-900 text-stone-50 dark:bg-stone-100 dark:border-stone-100 dark:text-stone-900'
-                    : 'bg-transparent border-stone-300 text-stone-600 hover:border-stone-400 hover:text-stone-900 dark:border-stone-800 dark:text-stone-500 dark:hover:border-stone-600 dark:hover:text-stone-300',
+
+          {tagsOpen && (
+            <div id="genre-filter" className="flex flex-col gap-3">
+              <input
+                type="text"
+                value={tagQuery}
+                onChange={(e) => setTagQuery(e.target.value)}
+                placeholder={`Search ${allTags.length} genres...`}
+                aria-label="Search genres"
+                className="min-w-[160px] max-w-xs bg-transparent border-b py-1.5 px-2 text-xs focus:outline-none transition-colors rounded-none border-stone-300 text-stone-800 placeholder-stone-400 focus:border-stone-500 dark:border-stone-800 dark:text-stone-200 dark:placeholder-stone-600"
+              />
+              <div className="flex flex-wrap gap-2">
+                {visibleTags.map((tag) => (
+                  <button
+                    key={tag}
+                    onClick={() => toggleTag(tag)}
+                    aria-pressed={selectedTags.includes(tag)}
+                    className={clsx(
+                      'px-3 py-1 text-xs transition-colors border rounded-full',
+                      selectedTags.includes(tag)
+                        ? 'font-medium bg-stone-900 border-stone-900 text-stone-50 dark:bg-stone-100 dark:border-stone-100 dark:text-stone-900'
+                        : 'bg-transparent border-stone-300 text-stone-600 hover:border-stone-400 hover:text-stone-900 dark:border-stone-800 dark:text-stone-500 dark:hover:border-stone-600 dark:hover:text-stone-300',
+                    )}
+                  >
+                    {tag}
+                  </button>
+                ))}
+                {visibleTags.length === 0 && (
+                  <span className="text-xs text-stone-500 dark:text-stone-600">
+                    No genre matches &ldquo;{tagQuery}&rdquo;
+                  </span>
                 )}
-              >
-                {tag}
-              </button>
-            ))}
-            {visibleTags.length === 0 && (
-              <span className="text-xs italic text-stone-500 dark:text-stone-600">No tags match "{tagQuery}"</span>
-            )}
-          </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

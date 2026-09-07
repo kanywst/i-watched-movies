@@ -4,8 +4,7 @@ import { Movie, SortKey, View } from './types';
 import { MovieCard } from './components/MovieCard';
 import { FilterBar } from './components/FilterBar';
 import { MovieDetailModal } from './components/MovieDetailModal';
-import { Stat, type StatProps } from './components/ui/Stat';
-import { Film, Sun, Moon } from 'lucide-react';
+import { Sun, Moon } from 'lucide-react';
 import { clsx } from 'clsx';
 import { CONFIG } from './config';
 import { MAX_STAGGER_INDEX, NEW_LIMIT, RANK_LIMIT, SORT_OPTIONS } from './constants';
@@ -14,7 +13,6 @@ import { computeStats, computeWatchlistStats } from './stats';
 import { computeActivity } from './activity';
 import {
   ALL_MOVIES,
-  HISTORY_COUNT,
   HISTORY_MOVIES,
   SEEN_GENRE_COUNT,
   SEEN_MOVIES,
@@ -45,6 +43,12 @@ import { DEFAULT_VIEW, VIEW_SPECS, isView, viewSpec } from './views';
 // allTags/filteredMovies memos.
 const EMPTY_MOVIES: Movie[] = [];
 const SORT_VALUES: SortKey[] = SORT_OPTIONS.map(o => o.value);
+
+/** A figure and its unit in the masthead. Rendered inline, so no size or alignment. */
+interface HeaderStat {
+  value: React.ReactNode;
+  label: string;
+}
 
 const URL_SPECS = {
   view: urlParams.string('watched'),
@@ -148,44 +152,38 @@ const App: React.FC = () => {
 
   // One row of counters per view. Data, not JSX, so adding a view means adding a case here
   // rather than another near-identical block of markup.
-  const headerStats: StatProps[] = useMemo(() => {
+  //
+  // The list's own size is deliberately absent from every case except Stats: the tab strip
+  // sits directly below the header and already carries it as a badge, so a lead figure here
+  // was printing the same number twice within a couple of centimetres. Stats is the one tab
+  // with no badge (its figure would only repeat Watched's), so it states the count itself.
+  const headerStats: HeaderStat[] = useMemo(() => {
     switch (view) {
       case 'watched':
         return [
-          { value: stats.total, label: 'Collected', size: 'lg' },
-          { value: stats.averagePoint.toFixed(1), label: 'Avg Score' },
-          { value: stats.thisYearCount, label: String(stats.currentYear) },
+          { value: stats.averagePoint.toFixed(1), label: 'avg score' },
+          { value: stats.thisYearCount, label: `in ${stats.currentYear}` },
         ];
       case 'watching':
-        return [
-          { value: WATCHING_MOVIES.length, label: 'In Progress', size: 'lg' },
-          { value: WATCHING_GENRE_COUNT, label: 'Genres' },
-        ];
+        return [{ value: WATCHING_GENRE_COUNT, label: 'genres' }];
       case 'seen':
-        return [
-          { value: SEEN_MOVIES.length, label: 'Seen', size: 'lg' },
-          { value: SEEN_GENRE_COUNT, label: 'Genres' },
-        ];
+        return [{ value: SEEN_GENRE_COUNT, label: 'genres' }];
       case 'history':
-        return [
-          { value: HISTORY_COUNT, label: 'Logged', size: 'lg' },
-          { value: activity.total, label: 'Last 12 Mo' },
-        ];
+        return [{ value: activity.total, label: 'in the last year' }];
       // Deliberately read off `stats` rather than the taste profile: the profile's `total`
       // and `baseline` are the same count and mean over the same list, and its `genres` has
       // one entry per distinct tag, so the header needs none of taste.ts and the module can
       // stay behind the lazy TastePanel boundary.
       case 'stats':
         return [
-          { value: stats.total, label: 'Rated', size: 'lg' },
-          { value: stats.averagePoint.toFixed(1), label: 'Average' },
-          { value: WATCHED_GENRE_COUNT, label: 'Genres' },
+          { value: stats.total, label: 'rated' },
+          { value: stats.averagePoint.toFixed(1), label: 'average' },
+          { value: WATCHED_GENRE_COUNT, label: 'genres' },
         ];
       case 'watchlist':
         return [
-          { value: WATCHLIST_MOVIES.length, label: 'On Watchlist', size: 'lg' },
-          { value: watchlistStats.upcoming, label: 'Upcoming' },
-          { value: watchlistStats.genres, label: 'Genres' },
+          { value: watchlistStats.upcoming, label: 'upcoming' },
+          { value: watchlistStats.genres, label: 'genres' },
         ];
     }
   }, [view, stats, activity, watchlistStats]);
@@ -256,42 +254,39 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen p-6 md:p-12 max-w-7xl mx-auto">
-      <button
-        type="button"
-        onClick={toggleTheme}
-        aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-        className="fixed top-4 right-4 z-30 p-2.5 rounded-full backdrop-blur-md transition-colors bg-stone-100 text-stone-700 border border-stone-200 hover:bg-stone-200 dark:bg-white/5 dark:text-stone-300 dark:border-white/10 dark:hover:bg-white/10"
-      >
-        {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-      </button>
-      {/* Header */}
-      <header className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-stone-200 dark:border-white/5 pb-8">
-        <div>
-          <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 rounded-lg bg-stone-100 border border-stone-200 text-stone-700 dark:bg-white/5 dark:border-white/5 dark:text-stone-200">
-              <Film className="h-5 w-5" />
-            </div>
-            <span className="text-xs font-medium tracking-[0.2em] text-stone-500 dark:text-stone-400 uppercase">Personal Archives</span>
-          </div>
-          <div className="flex items-center gap-6">
-            <img
-              src={`https://github.com/${CONFIG.USER_NAME}.png`}
-              alt={CONFIG.USER_NAME}
-              className="w-16 h-16 md:w-28 md:h-28 rounded-full border-2 border-stone-200 dark:border-white/10"
-            />
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight text-stone-900 dark:text-stone-100">
-              The Movies <br className="hidden md:block" />
-              <span className="text-stone-900 dark:text-stone-100">{CONFIG.USER_NAME}</span>
-              <span className="ml-3 text-stone-400 dark:text-stone-500">Watched</span>
-            </h1>
-          </div>
-        </div>
+      {/* Header. One line on purpose. This is a wall of film posters, and the posters are
+          the content; the previous masthead (an eyebrow label, a 112px avatar and a 60px
+          two-line display heading over a row of 48px counters) pushed the first poster
+          633px down a 600px viewport, so the page opened on chrome and no films at all. */}
+      <header className="mb-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-b border-stone-200 dark:border-white/5 pb-5">
+        <h1 className="text-lg md:text-xl font-semibold tracking-tight text-stone-900 dark:text-stone-100">
+          The Movies {CONFIG.USER_NAME} Watched
+        </h1>
 
-        {/* Stats. The lead figure of each group is `lg`, its siblings `md`. */}
-        <div className="flex items-end gap-8">
-          {headerStats.map(s => (
-            <Stat key={s.label} {...s} align="end" size={s.size ?? 'md'} />
-          ))}
+        <div className="flex items-center gap-5 sm:gap-7">
+          {/* Figure and caption sit on one baseline rather than stacking, which is what lets
+              the counters share the title's line instead of owning a band of their own. */}
+          <dl className="flex items-baseline gap-x-5 sm:gap-x-7">
+            {headerStats.map(s => (
+              <div key={s.label} className="flex items-baseline gap-1.5">
+                <dd className="text-lg font-medium tabular-nums text-stone-900 dark:text-stone-100">
+                  {s.value}
+                </dd>
+                <dt className="text-xs text-stone-500 dark:text-stone-400">{s.label}</dt>
+              </div>
+            ))}
+          </dl>
+
+          {/* In the header rather than floating over the page. Fixed at top-right it
+              overlapped this very row, and a theme switch is a thing you reach for once. */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            className="p-2 rounded-full transition-colors text-stone-500 hover:bg-stone-100 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-white/5 dark:hover:text-stone-200"
+          >
+            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
         </div>
       </header>
 
