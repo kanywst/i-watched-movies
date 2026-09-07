@@ -14,8 +14,24 @@ const escape = (s) =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&apos;');
 
+/**
+ * What both feeds publish: films actually watched through and rated.
+ *
+ * `!m.watching` is not redundant. src/partition.ts makes `watching` win over `published`
+ * and `seen` — an unfinished series is neither on the watchlist any more nor watched yet —
+ * and there is a test pinning that an entry carrying both lands under In Progress. Reading
+ * bare `m.published` here would have the feeds disagree with the site about the same file:
+ * the grid would file it as in progress while the RSS and the JSON-LD announced it as
+ * watched, with whatever stale score it was carrying.
+ *
+ * The issue pipeline cannot currently produce that combination (the List dropdown is
+ * exclusive), but a hand-edited frontmatter can, and this is the fourth place that has to
+ * agree on the shape after parse-movie.js, types.ts and build-movie-from-issue.js.
+ */
+const isPublished = (m) => m.published && !m.watching;
+
 export function buildJsonLd(movies) {
-  const watched = movies.filter(m => m.published);
+  const watched = movies.filter(isPublished);
   return {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
@@ -52,7 +68,7 @@ export function buildJsonLd(movies) {
 
 export function buildRssFeed(movies, now = new Date()) {
   const items = movies
-    .filter(m => m.published && m.watch_date)
+    .filter(m => isPublished(m) && m.watch_date)
     .slice(0, FEED_LIMIT)
     .map((m) => `    <item>
       <title>${escape(m.title)}</title>
