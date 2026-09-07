@@ -6,8 +6,15 @@ import { FilterBar } from './components/FilterBar';
 import { MovieDetailModal } from './components/MovieDetailModal';
 import { Sun, Moon } from 'lucide-react';
 import { clsx } from 'clsx';
-import { CONFIG } from './config';
-import { MAX_STAGGER_INDEX, NEW_LIMIT, RANK_LIMIT, SORT_OPTIONS } from './constants';
+import { CONFIG, PROFILE_URL, avatarUrl } from './config';
+import {
+  MASTHEAD_POSTER_COUNT,
+  MAX_STAGGER_INDEX,
+  NEW_LIMIT,
+  RANK_LIMIT,
+  SORT_OPTIONS,
+} from './constants';
+import { tmdbResize } from './tmdbImage';
 import { sortMovies } from './sortMovies';
 import { computeStats, computeWatchlistStats } from './stats';
 import { computeActivity } from './activity';
@@ -105,12 +112,22 @@ const App: React.FC = () => {
 
   useDocumentMetadata(
     `The Movies ${CONFIG.USER_NAME} Watched`,
-    `https://github.com/${CONFIG.USER_NAME}.png`,
+    avatarUrl(460),
   );
 
   const selectedMovie: Movie | null = useMemo(
     () => ALL_MOVIES.find(m => m.id === urlState.selected) ?? null,
     [urlState.selected],
+  );
+
+  // Masthead backdrop. Read off the full watched list, not the current view, so filtering
+  // or switching tabs does not reshuffle the header behind you.
+  const bandPosters = useMemo(
+    () =>
+      WATCHED_MOVIES.filter(m => m.cover_image)
+        .sort((a, b) => b.point - a.point)
+        .slice(0, MASTHEAD_POSTER_COUNT),
+    [],
   );
 
   const stats = useMemo(() => computeStats(WATCHED_MOVIES), []);
@@ -259,25 +276,63 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen p-6 md:p-12 max-w-7xl mx-auto">
-      {/* Header. One line on purpose. This is a wall of film posters, and the posters are
-          the content; the previous masthead (an eyebrow label, a 112px avatar and a 60px
-          two-line display heading over a row of 48px counters) pushed the first poster
-          633px down a 600px viewport, so the page opened on chrome and no films at all. */}
-      <header className="mb-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-b border-stone-200 dark:border-white/5 pb-5">
-        <h1 className="text-lg md:text-xl font-semibold tracking-tight text-stone-900 dark:text-stone-100">
-          The Movies {CONFIG.USER_NAME} Watched
-        </h1>
+      {/* Header. One band, not a masthead block: a past version (eyebrow label, 112px
+          avatar, 60px two-line heading, 48px counter row) pushed the first poster 633px
+          down a 600px viewport, so the page opened on chrome and no films. */}
+      <header className="relative mb-6 overflow-hidden rounded-xl">
+        {bandPosters.length > 0 && (
+          <div aria-hidden className="absolute inset-0 flex">
+            {bandPosters.map(m => (
+              <img
+                key={m.id}
+                src={tmdbResize(m.cover_image, 'w185')}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                /* Focus above centre: a poster's title block sits in its lower third, and
+                   a centred crop would tile eight competing wordmarks behind ours. */
+                className="min-w-0 flex-1 h-full object-cover object-[center_30%]"
+              />
+            ))}
+          </div>
+        )}
+        <div aria-hidden className="masthead-scrim absolute inset-0" />
 
-        <div className="flex items-center gap-5 sm:gap-7">
-          {/* Figure and caption sit on one baseline rather than stacking, which is what lets
-              the counters share the title's line instead of owning a band of their own. */}
-          <dl className="flex items-baseline gap-x-5 sm:gap-x-7">
+        {/* Not `justify-between`: at 1280px that leaves a void down the middle. The
+            counters follow the title; only the theme switch is pushed out, via `ml-auto`. */}
+        <div className="relative flex flex-wrap items-center gap-x-5 gap-y-3 px-4 py-4 sm:px-5">
+          {/* White hairline, not an accent: the avatar is an illustration on a near-white
+              ground and needs an edge against the artwork behind it. */}
+          <a
+            href={PROFILE_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="shrink-0 rounded-full shadow-[0_0_0_2px_rgba(255,255,255,0.9)] transition-opacity hover:opacity-85"
+          >
+            {/* width/height reserve the space before the picture lands. GitHub's `?size=`
+                is the square edge, so 92 is the 2x asset. */}
+            <img
+              src={avatarUrl(46)}
+              srcSet={`${avatarUrl(46)} 1x, ${avatarUrl(92)} 2x`}
+              width={46}
+              height={46}
+              alt={`${CONFIG.USER_NAME} on GitHub`}
+              className="block h-[46px] w-[46px] rounded-full"
+            />
+          </a>
+          {/* The one coloured word on the page. */}
+          <h1 className="font-wordmark font-extrabold leading-[1.15] sm:leading-none tracking-[-0.025em] text-[19px] sm:text-[26px] md:text-[30px] text-stone-50">
+            The Movies{' '}
+            <span style={{ color: 'var(--accent-a)' }}>{CONFIG.USER_NAME}</span> Watched
+          </h1>
+
+          <dl className="flex flex-wrap items-baseline gap-x-5 gap-y-1 sm:gap-x-6">
             {headerStats.map(s => (
-              <div key={s.label} className="flex items-baseline gap-1.5">
-                <dd className="text-lg font-medium tabular-nums text-stone-900 dark:text-stone-100">
+              <div key={s.label} className="flex items-baseline gap-1.5 whitespace-nowrap">
+                <dd className="text-[15px] font-semibold tabular-nums text-stone-50">
                   {s.value}
                 </dd>
-                <dt className="text-xs text-stone-500 dark:text-stone-400">{s.label}</dt>
+                <dt className="text-xs text-stone-300">{s.label}</dt>
               </div>
             ))}
           </dl>
@@ -288,7 +343,7 @@ const App: React.FC = () => {
             type="button"
             onClick={toggleTheme}
             aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-            className="p-2 rounded-full transition-colors text-stone-500 hover:bg-stone-100 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-white/5 dark:hover:text-stone-200"
+            className="ml-auto p-2 rounded-full transition-colors text-stone-300 hover:bg-white/10 hover:text-stone-50"
           >
             {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>

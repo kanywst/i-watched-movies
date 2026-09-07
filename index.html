@@ -33,12 +33,17 @@
     <meta name="twitter:image" content="https://github.com/kanywst.png" />
 
     <link rel="alternate" type="application/rss+xml" title="The Movies kanywst Watched" href="./feed.xml" />
-    <!-- No webfont on purpose. Inter used to be pulled from Google Fonts here, but nothing
-         ever set font-family to it: Tailwind's default --font-sans is the system stack, so
-         every Inter face stayed `unloaded`, document.fonts.check('16px Inter') was false and
-         fonts.gstatic.com was never even hit. All it did was put a render-blocking
-         cross-origin stylesheet in front of the first paint. To actually use Inter, set
-         --font-sans in the @theme block in src/index.css and add the link back. -->
+    <!-- Masthead only: `--font-wordmark` in src/index.css, used on the <h1> in App.tsx and
+         nowhere else. Everything else stays on Tailwind's default --font-sans.
+         Inter used to be linked here but nothing ever set font-family to it, so every face
+         stayed `unloaded` and it only cost a render-blocking stylesheet. If the
+         font-wordmark utility goes, delete this link too. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&display=swap"
+    />
     <!-- Every poster in the grid comes from here, so pay the DNS + TLS handshake in
          parallel with the JS rather than when the first card mounts. -->
     <link rel="preconnect" href="https://image.tmdb.org" crossorigin>

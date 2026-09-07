@@ -11,11 +11,49 @@
   --color-dark-muted: #a8a29e; /* Stone 400 - Warm muted text */
   --color-accent-primary: #e7e5e4; /* Stone 200 */
   --color-accent-subtle: #44403c; /* Stone 700 */
+
+  /* Masthead only; loaded by the link in index.html. The fallback is a normal-width
+     grotesque so the display=swap hand-off changes letterforms, not the line's length. */
+  --font-wordmark: "Bricolage Grotesque", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 /* Custom base styles. Light is the default; `.dark` flips to the warm dark palette. */
 body {
   @apply antialiased bg-stone-50 text-stone-900 selection:bg-stone-300/60 dark:bg-dark-bg dark:text-dark-text dark:selection:bg-stone-700/50;
+}
+
+/* The masthead's one saturated colour, on the user's name in the title. One value for both
+   themes because the band it sits on is dark in both (6.2:1 there). */
+:root {
+  --accent-a: #ff4d97;
+}
+
+/* Scrim over the posters tiled behind the masthead. Two things here are load-bearing:
+   - Flat to 55%, not a ramp from 0%. Anything under the title must be fully opaque, or the
+     posters' own lettering ghosts through behind ours. 0.985 is what the brightest poster
+     in the set needs; retune against real artwork, not a swatch.
+   - Dark in light mode too, which is why the header's text is light in both themes. A pale
+     scrim needs 0.86 for dark text, and at 0.86 the posters are a grey smear. */
+.masthead-scrim {
+  background: linear-gradient(
+    90deg,
+    rgba(12, 10, 9, 0.985) 0%,
+    rgba(12, 10, 9, 0.985) 55%,
+    rgba(12, 10, 9, 0.7) 100%
+  );
+}
+
+/* Below `sm` the header wraps to three rows and the text spans the band's full width, so
+   the 55% hand-off would put artwork under the counters. */
+@media (max-width: 639px) {
+  .masthead-scrim {
+    background: linear-gradient(
+      90deg,
+      rgba(12, 10, 9, 0.985) 0%,
+      rgba(12, 10, 9, 0.985) 78%,
+      rgba(12, 10, 9, 0.78) 100%
+    );
+  }
 }
 
 /* Activity heatmap levels (GitHub contribution-graph palette). Driven by CSS vars so
