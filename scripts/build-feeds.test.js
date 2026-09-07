@@ -68,3 +68,32 @@ describe('buildRssFeed', () => {
     expect(xml).toContain('&quot;quoted&quot;');
   });
 });
+
+/**
+ * src/partition.ts makes `watching` beat `published`, and a test there pins that an entry
+ * carrying both is filed under In Progress rather than Watched. The feeds are the fourth
+ * reader of that shape, so they have to agree: an unfinished series must not be announced
+ * as watched, with whatever score it happens to be carrying, while the site shows it as in
+ * progress.
+ */
+describe('an in-progress entry is in neither feed', () => {
+  const inProgress = movie({ id: 'series', title: 'Series', published: false, watching: true });
+
+  it('is left out of the JSON-LD', () => {
+    const ld = buildJsonLd([movie({ id: 'a' }), inProgress]);
+    expect(ld.mainEntity.numberOfItems).toBe(1);
+    expect(ld.mainEntity.itemListElement.map(e => e.item.name)).toEqual(['A']);
+  });
+
+  it('is left out of the RSS feed', () => {
+    const xml = buildRssFeed([movie({ id: 'a' }), inProgress]);
+    expect(xml).toContain('<title>A</title>');
+    expect(xml).not.toContain('<title>Series</title>');
+  });
+
+  it('stays out even when a stale published: true is left on it', () => {
+    const stale = movie({ id: 'rewatch', title: 'Rewatch', published: true, watching: true });
+    expect(buildJsonLd([stale]).mainEntity.numberOfItems).toBe(0);
+    expect(buildRssFeed([stale])).not.toContain('<title>Rewatch</title>');
+  });
+});
