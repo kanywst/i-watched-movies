@@ -4,6 +4,7 @@ import { Flame, Trophy, CalendarCheck, Clapperboard } from 'lucide-react';
 import type { Movie } from '../types';
 import type { ActivityDay, ActivitySummary } from '../activity';
 import { Stat } from './ui/Stat';
+import { tmdbResize } from '../tmdbImage';
 
 interface ActivityHeatmapProps {
   summary: ActivitySummary;
@@ -109,15 +110,15 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ summary, onOpe
     <section aria-label="Viewing history" className="mb-10">
       {/* Summary stats */}
       <div className="flex flex-wrap gap-x-10 gap-y-4 mb-8">
-        <Stat icon={Clapperboard} value={total} label="In the last year" />
-        <Stat icon={CalendarCheck} value={activeDays} label="Active days" />
-        <Stat icon={Flame} value={currentStreak} label="Current streak" suffix="d" />
-        <Stat icon={Trophy} value={longestStreak} label="Longest streak" suffix="d" />
+        <Stat icon={Clapperboard} value={total} label="in the last year" />
+        <Stat icon={CalendarCheck} value={activeDays} label="active days" />
+        <Stat icon={Flame} value={currentStreak} label="current streak" suffix="d" />
+        <Stat icon={Trophy} value={longestStreak} label="longest streak" suffix="d" />
         {busiestDay && (
           <Stat
             icon={Clapperboard}
             value={busiestDay.count}
-            label={`Busiest · ${format(parseIso(busiestDay.date), 'MMM d')}`}
+            label={`busiest, ${format(parseIso(busiestDay.date), 'MMM d')}`}
           />
         )}
       </div>
@@ -223,8 +224,10 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ summary, onOpe
                       className="flex items-center gap-2 w-full text-left rounded-sm hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-400"
                     >
                       <img
-                        src={m.cover_image}
+                        src={tmdbResize(m.cover_image, 'w92')}
                         alt=""
+                        loading="lazy"
+                        decoding="async"
                         className="w-6 h-9 object-cover rounded-sm bg-stone-100 dark:bg-dark-surface shrink-0"
                       />
                       <span className="text-sm leading-tight line-clamp-2">{m.title}</span>
@@ -252,10 +255,10 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ summary, onOpe
 
       {/* Monthly bars */}
       <div className="mt-10">
-        <div className="text-xs font-medium uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-3">
+        <div className="text-xs font-medium text-stone-500 dark:text-stone-400 mb-3">
           Films per month
         </div>
-        <div className="flex items-end gap-2 h-28">
+        <div className="flex items-end gap-2 h-28 border-b border-stone-200 dark:border-white/10">
           {monthly.map(m => (
             <div
               key={m.key}

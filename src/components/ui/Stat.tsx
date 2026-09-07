@@ -49,8 +49,10 @@ export const Stat: React.FC<StatProps> = ({
         {suffix && <span className="text-base text-stone-400">{suffix}</span>}
       </span>
     </div>
-    <div className="text-xs font-medium uppercase tracking-wider text-stone-500 dark:text-stone-400">
-      {label}
-    </div>
+    {/* Sentence case, untracked. This caption is a unit attached to a figure, and setting it
+        as a tracked-out all-caps run made it compete with the number it belongs to. It also
+        put the site at odds with itself: the masthead prints "50 in the last year" and the
+        History panel a few centimetres below printed "IN THE LAST YEAR" for the same value. */}
+    <div className="text-xs text-stone-500 dark:text-stone-400">{label}</div>
   </div>
 );
