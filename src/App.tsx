@@ -432,7 +432,13 @@ const EMPTY_SECTION: Partial<Record<View, string>> = {
 };
 
 const EmptyGrid: React.FC<EmptyGridProps> = ({ view, search, tagCount, total, onClearFilters }) => {
-  const filtered = search.trim() !== '' || tagCount > 0;
+  // `total > 0` is load-bearing, not belt-and-braces. switchView clears the tags but keeps
+  // the search term, so a search can be carried onto a tab whose unfiltered list is empty
+  // (In Progress, the moment the last series is finished). Without this the filtered branch
+  // wins and offers "Show all 0", which is both nonsense and a lie: clearing the filter
+  // would show nothing either. With nothing behind the filter, the section's own message is
+  // the honest one.
+  const filtered = total > 0 && (search.trim() !== '' || tagCount > 0);
 
   if (!filtered) {
     return (
