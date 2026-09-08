@@ -107,8 +107,14 @@ const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, is
           </div>
         )}
 
+        {/* The masthead accent, not rose-500: the two sat on screen together on the Watched
+            grid as near-identical but unequal pinks. The darkened `-solid` rather than the
+            bright accent because this is a fill under white text. */}
         {isNew && (
-          <div className="absolute bottom-2 left-2 z-40 px-2 py-0.5 bg-rose-500/90 backdrop-blur-md shadow-lg border border-white/10 rounded-full flex items-center gap-1">
+          <div
+            className="absolute bottom-2 left-2 z-40 px-2 py-0.5 backdrop-blur-md shadow-lg border border-white/10 rounded-full flex items-center gap-1"
+            style={{ backgroundColor: 'var(--accent-a-solid)' }}
+          >
             <Sparkles className="w-2.5 h-2.5 text-white" />
             <span className="text-[10px] font-semibold text-white tracking-wide">NEW</span>
           </div>
