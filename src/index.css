@@ -23,9 +23,12 @@ body {
 }
 
 /* The masthead's one saturated colour, on the user's name in the title. One value for both
-   themes because the band it sits on is dark in both (6.2:1 there). */
+   themes because the band it sits on is dark in both (6.2:1 there).
+   `-solid` is the same hue darkened for use as a fill behind white text, where #ff4d97 only
+   reaches 3.1:1. Anything filled with the accent wants this one, not the bright one. */
 :root {
   --accent-a: #ff4d97;
+  --accent-a-solid: #d61f6d; /* white on this: 4.9:1 */
 }
 
 /* Scrim over the posters tiled behind the masthead. Two things here are load-bearing:
