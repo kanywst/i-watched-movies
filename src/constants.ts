@@ -8,6 +8,10 @@ import huluLogo from './assets/streaming/hulu.svg';
 export const RANK_LIMIT = 3;
 export const NEW_LIMIT = 2;
 
+// Posters tiled behind the masthead, highest-rated first. Eight fills the band at desktop
+// width while each tile still reads as a poster; below `sm` they are ~40px and are texture.
+export const MASTHEAD_POSTER_COUNT = 8;
+
 // Card grid entrance stagger (`.card-enter` in src/index.css) is 50ms per card index. The
 // watchlist is ~185 cards, so uncapped the last one starts 9.2s after the grid appears and,
 // because the animation is `both`-filled, sits invisible until it does. Past the first
