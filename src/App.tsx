@@ -278,7 +278,9 @@ const App: React.FC = () => {
     <div className="min-h-screen p-6 md:p-12 max-w-7xl mx-auto">
       {/* Header. One band, not a masthead block: a past version (eyebrow label, 112px
           avatar, 60px two-line heading, 48px counter row) pushed the first poster 633px
-          down a 600px viewport, so the page opened on chrome and no films. */}
+          down a 600px viewport, so the page opened on chrome and no films. The band is
+          ~160px, twice its first size: at 78px the tiled posters read as noise rather
+          than artwork. Everything still sits on one row, which is what keeps it cheap. */}
       <header className="relative mb-6 overflow-hidden rounded-xl">
         {bandPosters.length > 0 && (
           <div aria-hidden className="absolute inset-0 flex">
@@ -300,7 +302,7 @@ const App: React.FC = () => {
 
         {/* Not `justify-between`: at 1280px that leaves a void down the middle. The
             counters follow the title; only the theme switch is pushed out, via `ml-auto`. */}
-        <div className="relative flex flex-wrap items-center gap-x-5 gap-y-3 px-4 py-4 sm:px-5">
+        <div className="relative flex flex-wrap items-center gap-x-5 gap-y-3 px-5 py-8 sm:px-7 sm:py-12">
           {/* White hairline, not an accent: the avatar is an illustration on a near-white
               ground and needs an edge against the artwork behind it. */}
           <a
@@ -312,16 +314,16 @@ const App: React.FC = () => {
             {/* width/height reserve the space before the picture lands. GitHub's `?size=`
                 is the square edge, so 92 is the 2x asset. */}
             <img
-              src={avatarUrl(46)}
-              srcSet={`${avatarUrl(46)} 1x, ${avatarUrl(92)} 2x`}
-              width={46}
-              height={46}
+              src={avatarUrl(60)}
+              srcSet={`${avatarUrl(60)} 1x, ${avatarUrl(120)} 2x`}
+              width={60}
+              height={60}
               alt={`${CONFIG.USER_NAME} on GitHub`}
-              className="block h-[46px] w-[46px] rounded-full"
+              className="block h-[60px] w-[60px] rounded-full"
             />
           </a>
           {/* The one coloured word on the page. */}
-          <h1 className="font-wordmark font-extrabold leading-[1.15] sm:leading-none tracking-[-0.025em] text-[19px] sm:text-[26px] md:text-[30px] text-stone-50">
+          <h1 className="font-wordmark font-extrabold leading-[1.15] sm:leading-none tracking-[-0.025em] text-[22px] sm:text-[32px] md:text-[38px] text-stone-50">
             The Movies{' '}
             <span style={{ color: 'var(--accent-a)' }}>{CONFIG.USER_NAME}</span> Watched
           </h1>
@@ -329,7 +331,7 @@ const App: React.FC = () => {
           <dl className="flex flex-wrap items-baseline gap-x-5 gap-y-1 sm:gap-x-6">
             {headerStats.map(s => (
               <div key={s.label} className="flex items-baseline gap-1.5 whitespace-nowrap">
-                <dd className="text-[15px] font-semibold tabular-nums text-stone-50">
+                <dd className="text-[17px] font-semibold tabular-nums text-stone-50">
                   {s.value}
                 </dd>
                 <dt className="text-xs text-stone-300">{s.label}</dt>
