@@ -1,6 +1,7 @@
 ---
 title: 'エスター ファースト・キル'
 published: false
+seen: true
 tags:
   - 'Horror'
   - 'Thriller'
@@ -16,4 +17,4 @@ summary: 'The prequel: the woman behind Esther escapes an institution and takes 
 summary_ja: '前日譚。エスターの中身である女が施設から脱走し、失踪した富裕層の娘に成り代わる。その家族の側にも秘密がある。'
 ---
 
-The midpoint twist is the reason this one gets recommended over the original.
+Watched, left unrated.
