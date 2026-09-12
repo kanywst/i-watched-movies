@@ -146,6 +146,16 @@ describe('buildMovie', () => {
     expect(movie.watching).toBe(true);
     expect(movie.published).toBe(false);
     expect(movie.seen).toBe(false);
+    expect(movie.dropped).toBe(false);
+  });
+
+  it('sets dropped=true and published=false when List is Dropped', () => {
+    const body = sample.replace('### List\n\nWatched', '### List\n\nDropped');
+    const { movie } = buildMovie(parseIssueBody(body));
+    expect(movie.dropped).toBe(true);
+    expect(movie.published).toBe(false);
+    expect(movie.seen).toBe(false);
+    expect(movie.watching).toBe(false);
   });
 
   it('parses Streaming into an array and Availability checked into a month', () => {
@@ -318,6 +328,18 @@ Netflix, Disney+
     expect(out).toContain('watching: true');
     expect(out).not.toContain('seen:');
   });
+
+  it('omits dropped for a normal entry but emits it for a Dropped entry', () => {
+    const watched = formatFile(buildMovie(parseIssueBody(sample)).movie);
+    expect(watched).not.toContain('dropped:');
+
+    const body = sample.replace('### List\n\nWatched', '### List\n\nDropped');
+    const out = formatFile(buildMovie(parseIssueBody(body)).movie);
+    expect(out).toContain('published: false');
+    expect(out).toContain('dropped: true');
+    expect(out).not.toContain('watching:');
+    expect(out).not.toContain('seen:');
+  });
 });
 
 describe('readExisting', () => {
@@ -483,6 +505,30 @@ describe('mergeMovie', () => {
     expect(merged.watching).toBe(false);
     expect(merged.published).toBe(true);
     expect(formatFile(merged)).not.toContain('watching:');
+  });
+
+  it('clears dropped when an abandoned film is picked back up and finished', () => {
+    const abandoned = { ...existing, dropped: true };
+    const merged = mergeMovie(abandoned, {
+      title: 'Mov',
+      published: true,
+      seen: false,
+      watching: false,
+      dropped: false,
+      tags: [],
+      national: '',
+      cover_image: '',
+      release_date: '',
+      watch_date: '2026-05-12',
+      point: 8.5,
+      ...noStreaming,
+      summary: '',
+      impression: '',
+      body: '',
+    });
+    expect(merged.dropped).toBe(false);
+    expect(merged.published).toBe(true);
+    expect(formatFile(merged)).not.toContain('dropped:');
   });
 
   it('lets the issue overwrite non-empty fields when re-submitted with new values', () => {

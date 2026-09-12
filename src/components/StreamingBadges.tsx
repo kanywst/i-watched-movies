@@ -67,11 +67,12 @@ const ServicePill: React.FC<{
   );
 };
 
-// Availability badges for a watchlist or in-progress entry. Renders nothing for watched or
-// seen films (where "where can I stream this" is not the question) or when no known service
-// is set, mirroring how COUNTRY_FLAGS silently renders no flag for an unmapped country.
+// Availability badges for a watchlist or in-progress entry. Renders nothing for watched,
+// seen or dropped films (where "where can I stream this" is not the question) or when no
+// known service is set, mirroring how COUNTRY_FLAGS silently renders no flag for an
+// unmapped country.
 export const StreamingBadges: React.FC<StreamingBadgesProps> = ({ movie, variant = 'card' }) => {
-  if (movie.published || movie.seen) return null;
+  if (movie.published || movie.seen || movie.dropped) return null;
 
   const services = (movie.streaming ?? []).filter((key) => STREAMING_SERVICES[key]);
   if (services.length === 0) return null;

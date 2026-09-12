@@ -23,21 +23,24 @@ const unrated = make({ id: 'unrated', published: false, seen: true });
 // flag is what decides which section it lands in.
 const seenPublished = make({ id: 'seen-published', published: true, seen: true });
 const inProgress = make({ id: 'in-progress', published: false, seen: false, watching: true, watch_date: '' });
+const abandoned = make({ id: 'abandoned', published: false, seen: false, dropped: true, watch_date: '' });
 
-const all = [rated, queued, unrated, seenPublished, inProgress];
+const all = [rated, queued, unrated, seenPublished, inProgress, abandoned];
 
 describe('partitionMovies', () => {
-  it('splits the diary into its four states', () => {
+  it('splits the diary into its five states', () => {
     const p = partitionMovies(all);
     expect(p.watched.map(m => m.id)).toEqual(['rated']);
     expect(p.watching.map(m => m.id)).toEqual(['in-progress']);
     expect(p.watchlist.map(m => m.id)).toEqual(['queued']);
     expect(p.seen.map(m => m.id)).toEqual(['unrated', 'seen-published']);
+    expect(p.dropped.map(m => m.id)).toEqual(['abandoned']);
   });
 
-  it('keeps the four states mutually exclusive and exhaustive', () => {
+  it('keeps the five states mutually exclusive and exhaustive', () => {
     const p = partitionMovies(all);
-    const ids = [...p.watched, ...p.watching, ...p.watchlist, ...p.seen].map(m => m.id);
+    const ids = [...p.watched, ...p.watching, ...p.watchlist, ...p.seen, ...p.dropped]
+      .map(m => m.id);
     expect(new Set(ids).size).toBe(ids.length);
     expect(ids.sort()).toEqual(all.map(m => m.id).sort());
   });
@@ -54,11 +57,25 @@ describe('partitionMovies', () => {
     expect(p.history).toEqual([]);
   });
 
+  // `dropped` wins over `watching` in turn: giving up is what ends a viewing that was in
+  // progress, and the issue pipeline re-files the same entry rather than writing a second.
+  it('files a dropped entry under Dropped whatever else it carries', () => {
+    const p = partitionMovies([
+      make({ id: 'gave-up', published: true, seen: true, watching: true, dropped: true }),
+    ]);
+    expect(p.dropped.map(m => m.id)).toEqual(['gave-up']);
+    expect(p.watched).toEqual([]);
+    expect(p.watching).toEqual([]);
+    expect(p.seen).toEqual([]);
+    expect(p.history).toEqual([]);
+  });
+
   it('history spans everything watched through, excluding the watchlist and in-progress', () => {
     const p = partitionMovies(all);
     expect(p.history.map(m => m.id).sort()).toEqual(['rated', 'seen-published', 'unrated']);
     expect(p.history).not.toContain(queued);
     expect(p.history).not.toContain(inProgress);
+    expect(p.history).not.toContain(abandoned);
   });
 
   it('returns empty lists for an empty diary', () => {
@@ -67,6 +84,7 @@ describe('partitionMovies', () => {
       watching: [],
       watchlist: [],
       seen: [],
+      dropped: [],
       history: [],
     });
   });

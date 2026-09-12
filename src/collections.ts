@@ -19,11 +19,13 @@ export const WATCHED_MOVIES = PARTITIONS.watched;
 export const WATCHING_MOVIES = PARTITIONS.watching;
 export const WATCHLIST_MOVIES = PARTITIONS.watchlist;
 export const SEEN_MOVIES = PARTITIONS.seen;
+export const DROPPED_MOVIES = PARTITIONS.dropped;
 export const HISTORY_MOVIES = PARTITIONS.history;
 
 export const HISTORY_COUNT = countLogged(HISTORY_MOVIES);
 export const SEEN_GENRE_COUNT = countGenres(SEEN_MOVIES);
 export const WATCHING_GENRE_COUNT = countGenres(WATCHING_MOVIES);
+export const DROPPED_GENRE_COUNT = countGenres(DROPPED_MOVIES);
 // The Stats header's "Genres" figure. Equal to `computeTasteProfile(WATCHED_MOVIES).genres
 // .length` (buildAffinities emits one entry per distinct tag), computed here so App can
 // build that header without importing taste.ts, which lives behind the lazy TastePanel.
@@ -39,6 +41,7 @@ export const TAB_COUNTS: Record<View, number> = {
   watching: WATCHING_MOVIES.length,
   watchlist: WATCHLIST_MOVIES.length,
   seen: SEEN_MOVIES.length,
+  dropped: DROPPED_MOVIES.length,
   history: HISTORY_COUNT,
   stats: 0,
 };

@@ -31,6 +31,7 @@ impression: 'Loved it'`,
       published: true,
       seen: false,
       watching: false,
+      dropped: false,
       tags: ['A', 'B'],
       national: 'Japan',
       cover_image: 'https://example.com/c.png',
@@ -118,6 +119,17 @@ checked: '2026-07'`),
     expect(movie.watching).toBe(true);
     expect(movie.published).toBe(false);
     expect(movie.seen).toBe(false);
+  });
+
+  it('defaults dropped to false when omitted', () => {
+    expect(parseMovie(md(`title: 'T'`), 'p').dropped).toBe(false);
+  });
+
+  it('parses dropped: true for an entry given up on partway', () => {
+    const movie = parseMovie(md(`title: 'Gave Up'\npublished: false\ndropped: true`), 'g');
+    expect(movie.dropped).toBe(true);
+    expect(movie.published).toBe(false);
+    expect(movie.watching).toBe(false);
   });
 
   it('defaults missing scalar fields', () => {

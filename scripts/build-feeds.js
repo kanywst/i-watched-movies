@@ -17,18 +17,20 @@ const escape = (s) =>
 /**
  * What both feeds publish: films actually watched through and rated.
  *
- * `!m.watching` is not redundant. src/partition.ts makes `watching` win over `published`
- * and `seen` — an unfinished series is neither on the watchlist any more nor watched yet —
- * and there is a test pinning that an entry carrying both lands under In Progress. Reading
- * bare `m.published` here would have the feeds disagree with the site about the same file:
- * the grid would file it as in progress while the RSS and the JSON-LD announced it as
- * watched, with whatever stale score it was carrying.
+ * The three negated flags are not redundant. This is `isWatched` from src/partition.ts
+ * restated for the build scripts, which cannot import the app's TypeScript: `dropped` and
+ * `watching` each win over `published`, and `seen` files an entry under Seen with no score
+ * shown. Reading bare `m.published` here would have the feeds disagree with the site about
+ * the same file: the grid would file it as in progress, dropped or unrated while the RSS
+ * and the JSON-LD announced it as watched, with whatever stale score it was carrying, and
+ * the JSON-LD would attach an aggregateRating to a film the site deliberately shows none
+ * for.
  *
- * The issue pipeline cannot currently produce that combination (the List dropdown is
+ * The issue pipeline cannot currently produce those combinations (the List dropdown is
  * exclusive), but a hand-edited frontmatter can, and this is the fourth place that has to
  * agree on the shape after parse-movie.js, types.ts and build-movie-from-issue.js.
  */
-const isPublished = (m) => m.published && !m.watching;
+const isPublished = (m) => m.published && !m.seen && !m.watching && !m.dropped;
 
 export function buildJsonLd(movies) {
   const watched = movies.filter(isPublished);

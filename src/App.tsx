@@ -21,6 +21,8 @@ import { computeStats, computeWatchlistStats } from './stats';
 import { computeActivity } from './activity';
 import {
   ALL_MOVIES,
+  DROPPED_GENRE_COUNT,
+  DROPPED_MOVIES,
   HISTORY_MOVIES,
   SEEN_GENRE_COUNT,
   SEEN_MOVIES,
@@ -46,11 +48,22 @@ import { useDocumentMetadata } from './useDocumentMetadata';
 import { urlParams, useUrlState } from './useUrlState';
 import { useTheme } from './useTheme';
 import { useLanguage } from './useLanguage';
-import { DEFAULT_VIEW, VIEW_SPECS, isView, viewSpec } from './views';
+import { DEFAULT_VIEW, VIEW_SPECS, type ViewSpec, isView, viewSpec } from './views';
 
 // Stable empty reference so the History and Stats views don't bust the
 // allTags/filteredMovies memos.
 const EMPTY_MOVIES: Movie[] = [];
+
+// The list each grid view draws from, keyed by `ViewSpec.source`. Keyed rather than a
+// ternary ladder so adding a state is one row, and the Record type makes a source declared
+// in VIEW_SPECS without a list here a compile error.
+const SOURCE_LISTS: Record<NonNullable<ViewSpec['source']>, Movie[]> = {
+  watched: WATCHED_MOVIES,
+  watching: WATCHING_MOVIES,
+  watchlist: WATCHLIST_MOVIES,
+  seen: SEEN_MOVIES,
+  dropped: DROPPED_MOVIES,
+};
 const SORT_VALUES: SortKey[] = SORT_OPTIONS.map(o => o.value);
 
 /** A figure and its unit in the masthead. Rendered inline, so no size or alignment. */
@@ -138,12 +151,7 @@ const App: React.FC = () => {
 
   const spec = viewSpec(view);
   // A `null` source is a view that renders its own panel rather than the grid.
-  const viewMovies =
-    spec.source === 'watched' ? WATCHED_MOVIES
-      : spec.source === 'watching' ? WATCHING_MOVIES
-        : spec.source === 'watchlist' ? WATCHLIST_MOVIES
-          : spec.source === 'seen' ? SEEN_MOVIES
-            : EMPTY_MOVIES;
+  const viewMovies = spec.source ? SOURCE_LISTS[spec.source] : EMPTY_MOVIES;
 
   const allTags = useMemo(() => {
     const tags = new Set<string>();
@@ -187,6 +195,8 @@ const App: React.FC = () => {
         return [{ value: WATCHING_GENRE_COUNT, label: 'genres' }];
       case 'seen':
         return [{ value: SEEN_GENRE_COUNT, label: 'genres' }];
+      case 'dropped':
+        return [{ value: DROPPED_GENRE_COUNT, label: 'genres' }];
       case 'history':
         return [{ value: activity.total, label: 'in the last year' }];
       // Deliberately read off `stats` rather than the taste profile: the profile's `total`
@@ -386,7 +396,7 @@ const App: React.FC = () => {
       </header>
 
       {/* View Toggle */}
-      {/* Wraps rather than overflowing: six tabs are wider than a phone viewport, and a
+      {/* Wraps rather than overflowing: seven tabs are wider than a phone viewport, and a
           horizontal overflow here scrolls the whole page. */}
       <div className="flex flex-wrap gap-1 mb-6 p-1 rounded-3xl md:rounded-full w-fit max-w-full bg-stone-100 border border-stone-200 dark:bg-white/5 dark:border-white/5">
         {VIEW_SPECS.map(s => (
@@ -520,6 +530,7 @@ const EMPTY_SECTION: Partial<Record<View, string>> = {
   watchlist: 'Nothing queued to watch.',
   watching: 'Nothing in progress. Series being watched right now live here.',
   seen: 'Nothing here. This is for films watched but left unrated.',
+  dropped: 'Nothing dropped. Films started and given up on partway live here.',
   watched: 'Nothing rated yet.',
 };
 
