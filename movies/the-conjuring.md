@@ -1,6 +1,7 @@
 ---
 title: '死霊館'
 published: false
+seen: true
 tags:
   - 'Horror'
   - 'Mystery'
@@ -16,4 +17,4 @@ summary: 'A family buys a farmhouse in Rhode Island and calls in two real-life d
 summary_ja: 'ロードアイランドの農家を買った一家が、実在の悪魔研究家夫妻を呼ぶ。その調査記録がそのまま映画の構造になっている。'
 ---
 
-The film that started the franchise. Case-file horror, which is closer to a mystery than to a haunting.
+Watched, left unrated.
