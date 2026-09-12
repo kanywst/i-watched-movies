@@ -14,6 +14,7 @@ release_date: '2017-02-22'
 watch_date: '2026-07-31'
 point: 7.2
 summary: 'A journalist whose son was kidnapped uses lucid-dreaming therapy to re-enter his own memory of the abduction and chase the people behind it, until the reveal recasts who was really involved.'
+summary_ja: '息子を誘拐された記者が、明晰夢の治療で誘拐時の自分の記憶に入り直して犯人を追う。真相は、誰が本当に関わっていたのかを塗り替える。'
 ---
 
 A Korean crime-SF thriller with a black-box reveal. Netflix original.

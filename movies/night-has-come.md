@@ -11,6 +11,7 @@ checked: '2026-08'
 cover_image: 'https://image.tmdb.org/t/p/original/qdolS77C0DXGZmchR6imcy4LiJf.jpg'
 release_date: '2023-12-11'
 summary: 'A school trip turns into a real game of Mafia with a real killer in the room.'
+summary_ja: '修学旅行が本物の人狼ゲームになり、その部屋には本物の殺人犯がいる。'
 ---
 
 Logged as seen.

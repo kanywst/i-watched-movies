@@ -14,6 +14,7 @@ release_date: '2022-11-18'
 watch_date: '2026-07-25'
 point: 8.5
 summary: 'A young couple travels to an exclusive island restaurant for a tasting menu, and the celebrity chef serves each course as part of a meticulously planned act of revenge.'
+summary_ja: '若いカップルが孤島の高級レストランのコース料理に出かけ、有名シェフは一皿ずつを綿密に計画した復讐として供する。'
 ---
 
 A tight single-location thriller with a cruel design.

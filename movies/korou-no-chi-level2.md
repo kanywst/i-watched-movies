@@ -16,6 +16,7 @@ checked: '2026-08'
 cover_image: 'https://image.tmdb.org/t/p/original/lK1Ueoiy1fbTJjOdseK3Tu0hT6L.jpg'
 release_date: '2021-08-20'
 summary: 'Three years on, a released convict walks back into Hiroshima and the truce the police built around the gangs comes apart.'
+summary_ja: '三年後、出所した男が広島に戻り、警察が暴力団のあいだに敷いた均衡が壊れていく。'
 ---
 
 Logged as seen.
