@@ -5,6 +5,8 @@ import { clsx } from 'clsx';
 import { COUNTRY_FLAGS } from '../constants';
 import { StreamingBadges } from './StreamingBadges';
 import { isWatched } from '../partition';
+import { RATED_POINTS } from '../collections';
+import { bandOf, type ScoreBand } from '../scoreBand';
 import { tmdbResize, tmdbSrcSet } from '../tmdbImage';
 
 // The grid is 2 / 3 / 4 / 5 columns inside a max-w-7xl container, so a card is about
@@ -13,6 +15,36 @@ import { tmdbResize, tmdbSrcSet } from '../tmdbImage';
 // of downloading the 2000x3000 original for every card.
 const CARD_SIZES =
   '(min-width: 1280px) 220px, (min-width: 1024px) 23vw, (min-width: 768px) 30vw, 45vw';
+
+/**
+ * The score chip, by where the score stands in the diary (src/scoreBand.ts). One ramp of
+ * presence, not a traffic light: the chip gains weight and steps from dark glass to a white
+ * fill to the accent as the score climbs, so a grid reads as a spread at a glance without a
+ * second colour system competing with the accent and the heatmap's greens.
+ *
+ * Nothing here is dimmed to the point of costing legibility. Standing low on this scale is
+ * a real thing to show, but a chip printed over arbitrary artwork has to survive the poster
+ * under it, so the low band recedes by giving up size and weight rather than contrast: it
+ * keeps the same black/65 fill as mid, whose worst case is a pure-white poster behind it
+ * (5.6:1 for stone-200, 7.0:1 for white, against a 4.5:1 floor at these sizes). A lighter
+ * fill read as more recessive and was the wrong trade, since black/55 drops to 3.8:1 there.
+ * The guarantee has to hold for any poster, not for the ones in the diary today.
+ */
+const SCORE_CHIP: Record<ScoreBand, { className: string; style?: React.CSSProperties }> = {
+  low: {
+    className: 'px-1.5 text-[11px] font-normal bg-black/65 text-stone-200 border-white/5',
+  },
+  mid: {
+    className: 'px-2 text-sm font-medium bg-black/65 text-white border-white/10',
+  },
+  high: {
+    className: 'px-2 text-sm font-semibold bg-white/95 text-stone-900 border-black/10',
+  },
+  top: {
+    className: 'px-2 text-[15px] font-bold text-white border-white/25',
+    style: { backgroundColor: 'var(--accent-a-solid)' },
+  },
+};
 
 interface MovieCardProps {
   movie: Movie;
@@ -53,6 +85,7 @@ const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, is
   // Only a rated entry has a score worth printing. isWatched is the same rule the grid was
   // partitioned with, so a card can never disagree with the tab it is sitting under.
   const hasScore = isWatched(movie);
+  const chip = hasScore ? SCORE_CHIP[bandOf(RATED_POINTS, movie.point)] : null;
   // The year the film was watched, falling back to the year it came out. Watchlist and
   // in-progress entries have no watch_date, and printing "N/A" under a poster tells the
   // reader nothing; the release year is the fact that is actually known about them.
@@ -182,9 +215,17 @@ const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, is
             a star, which reads as "out of five" on a scale that goes to ten. Suppressed
             entirely where there is no score to show: a watchlist or in-progress entry has
             point 0, and a card announcing "0" says something false about a film nobody has
-            rated yet. */}
-        {hasScore && (
-          <div className="absolute top-2 right-2 z-30 bg-black/65 backdrop-blur-md px-2 py-0.5 rounded text-sm font-medium text-white shadow-lg border border-white/10 tabular-nums">
+            rated yet. The treatment carries how the number stands against the rest of the
+            diary; the number itself is on screen either way, so the ramp is a second reading
+            of it rather than the only one. */}
+        {chip && (
+          <div
+            style={chip.style}
+            className={clsx(
+              'absolute top-2 right-2 z-30 py-0.5 rounded backdrop-blur-md shadow-lg border tabular-nums',
+              chip.className,
+            )}
+          >
             {movie.point}
           </div>
         )}

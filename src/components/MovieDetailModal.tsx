@@ -5,7 +5,29 @@ import { Language, Movie } from '../types';
 import { LANGUAGE_OPTIONS } from '../constants';
 import { StreamingBadges } from './StreamingBadges';
 import { isWatched } from '../partition';
+import { RATED_POINTS } from '../collections';
+import { bandOf, countRatedBelow, type ScoreBand } from '../scoreBand';
 import { tmdbResize, tmdbSrcSet } from '../tmdbImage';
+
+/**
+ * The score numeral, by where it stands in the diary (src/scoreBand.ts). Only one film is
+ * on screen here, so colour alone would have nothing to be compared against; the standing
+ * is stated in words under the rule and the ink is the echo of it. The top band is the one
+ * place on the page besides the masthead where the accent is spent.
+ *
+ * The numeral renders at 60-72px, which is WCAG large text and so wants 3:1, and the ramp is
+ * floored by that rather than by how quiet the low band could look: stone-400 reaches only
+ * 2.59:1 on the white panel and is unusable here however well it reads as recessive. Against
+ * white / stone-900 the four are 4.79/3.65, 7.64/6.76, 17.5/15.8 and 4.9/5.6. Low needs no
+ * dark variant, since stone-500 clears the floor on both grounds; the accent is the one band
+ * not ordered by contrast, because it separates itself by hue instead.
+ */
+const SCORE_INK: Record<ScoreBand, { className: string; style?: React.CSSProperties }> = {
+  low: { className: 'text-stone-500' },
+  mid: { className: 'text-stone-600 dark:text-stone-400' },
+  high: { className: 'text-stone-900 dark:text-stone-100' },
+  top: { className: '', style: { color: 'var(--accent-a-ink)' } },
+};
 
 // Intl rather than date-fns `format(d, 'MMMM d, yyyy')`, which produces the same string but
 // only by shipping the token parser and the en-US locale. The modal is mounted from the
@@ -90,6 +112,8 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
     const d = new Date(value);
     return Number.isNaN(d.getTime()) ? null : LONG_DATE.format(d);
   };
+  // Read even for an unrated entry, where `point` is 0 and nothing below renders it.
+  const scoreBand = bandOf(RATED_POINTS, movie.point);
   const releasedLabel = movie.release_date ? formatDate(movie.release_date) : null;
   const watchedLabel = movie.watch_date ? formatDate(movie.watch_date) : null;
 
@@ -164,15 +188,41 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
                 of the page that is the diarist's, and it was previously an inline run of
                 body text reading "8.8/10" behind a star, on a scale that goes to ten. The
                 denominator stays small under a rule: it is context, not a second figure. */}
+            {/* The denominator answers "out of what", which is the smaller question. The
+                line under it answers the one a 7.7 actually raises, since a scale nobody
+                else uses only means something against the rest of the diary: half of these
+                ratings sit inside a single point of each other, so the same 7.7 reads as
+                middling here and would read as high almost anywhere else.
+
+                A count of films beaten rather than the percentile the bands are cut on. The
+                sentence claims a strict comparison, and countRatedBelow is the figure that
+                supports one; the percentile splits ties, which is right for a band and would
+                be a false claim in this wording. */}
             {isWatched(movie) && (
-              <div className="mb-6 inline-flex flex-col items-start leading-none">
-                <span className="text-6xl md:text-7xl font-light tabular-nums tracking-tight text-stone-900 dark:text-stone-100">
-                  {movie.point}
-                </span>
-                <span aria-hidden="true" className="mt-2.5 w-full border-t border-stone-300 dark:border-stone-700" />
-                <span className="mt-1.5 text-sm tabular-nums text-stone-400 dark:text-stone-500">
-                  <span className="sr-only">out of </span>10
-                </span>
+              <div className="mb-6">
+                <div className="inline-flex flex-col items-start leading-none">
+                  <span
+                    style={SCORE_INK[scoreBand].style}
+                    className={clsx(
+                      'text-6xl md:text-7xl font-light tabular-nums tracking-tight',
+                      SCORE_INK[scoreBand].className,
+                    )}
+                  >
+                    {movie.point}
+                  </span>
+                  <span aria-hidden="true" className="mt-2.5 w-full border-t border-stone-300 dark:border-stone-700" />
+                  <span className="mt-1.5 text-sm tabular-nums text-stone-400 dark:text-stone-500">
+                    <span className="sr-only">out of </span>10
+                  </span>
+                </div>
+                <p className="mt-3 text-sm text-stone-500 dark:text-stone-400">
+                  Higher than{' '}
+                  <span className="tabular-nums text-stone-700 dark:text-stone-300">
+                    {countRatedBelow(RATED_POINTS, movie.point)}
+                  </span>{' '}
+                  of the {RATED_POINTS.length}{' '}
+                  {RATED_POINTS.length === 1 ? 'film' : 'films'} rated here.
+                </p>
               </div>
             )}
 

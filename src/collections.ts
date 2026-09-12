@@ -1,6 +1,7 @@
 import moviesData from './data/movies.json';
 import type { Movie, View } from './types';
 import { countGenres, countLogged, partitionMovies } from './partition';
+import { buildRatedPoints } from './scoreBand';
 
 /**
  * The diary is a static JSON module baked at build time, so every partition of it is a
@@ -30,6 +31,18 @@ export const DROPPED_GENRE_COUNT = countGenres(DROPPED_MOVIES);
 // .length` (buildAffinities emits one entry per distinct tag), computed here so App can
 // build that header without importing taste.ts, which lives behind the lazy TastePanel.
 export const WATCHED_GENRE_COUNT = countGenres(WATCHED_MOVIES);
+
+/**
+ * Every rated score, ascending, which is the population a card's or the modal's score is
+ * placed against. Not named for the 0-10 scale it is drawn from: this is the distribution,
+ * which is the thing a band is cut out of.
+ *
+ * Built from the whole watched list rather than the current view, on the same rule as the
+ * rank and NEW badges: filtering the grid must not move a film's standing. Imported directly
+ * by the card and the modal instead of threaded down as a prop, since it is a module
+ * constant either way and the modal takes only the movie.
+ */
+export const RATED_POINTS = buildRatedPoints(WATCHED_MOVIES);
 
 /**
  * Tab badge counts. History counts entries with a usable watch_date rather than the raw list
