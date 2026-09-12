@@ -105,6 +105,20 @@ describe('buildMovie', () => {
     expect(movie.impression).toBe('Loved it.');
   });
 
+  it('reads the Japanese summary from its own section', () => {
+    const body = sample.replace(
+      '### Impression',
+      '### Summary (JA)\n\n感染から28年、島に隔離された共同体の話。\n\n### Impression',
+    );
+    const { movie } = buildMovie(parseIssueBody(body));
+    expect(movie.summary_ja).toBe('感染から28年、島に隔離された共同体の話。');
+  });
+
+  it('leaves summary_ja empty when the section is absent', () => {
+    const { movie } = buildMovie(parseIssueBody(sample));
+    expect(movie.summary_ja).toBe('');
+  });
+
   it('sets published=false when List is Watchlist', () => {
     const body = sample.replace('### List\n\nWatched', '### List\n\nWatchlist');
     const { movie } = buildMovie(parseIssueBody(body));
@@ -252,6 +266,12 @@ describe('formatFile', () => {
     expect(out).not.toContain('summary:');
     expect(out).not.toContain('streaming:');
     expect(out).not.toContain('checked:');
+  });
+
+  it('emits summary_ja under summary', () => {
+    const { movie } = buildMovie(parseIssueBody(sample));
+    const out = formatFile({ ...movie, summary: 'English one.', summary_ja: '日本語のほう。' });
+    expect(out).toMatch(/summary: 'English one\.'\nsummary_ja: '日本語のほう。'/);
   });
 
   it('emits streaming as a list and checked as a quoted month', () => {
@@ -403,6 +423,7 @@ describe('mergeMovie', () => {
     streaming: ['Netflix'],
     checked: '2026-06',
     summary: 'old summary',
+    summary_ja: '前の日本語概要',
     impression: '',
     body: 'old body',
   };
@@ -433,6 +454,8 @@ describe('mergeMovie', () => {
     expect(merged.cover_image).toBe('https://example.com/c.jpg');
     expect(merged.release_date).toBe('2026-06-01');
     expect(merged.summary).toBe('old summary');
+    // The Japanese text is optional and rarely re-typed, so a blank one keeps the old.
+    expect(merged.summary_ja).toBe('前の日本語概要');
     expect(merged.body).toBe('old body');
     // A blank streaming/checked from the issue keeps the last known availability.
     expect(merged.streaming).toEqual(['Netflix']);
