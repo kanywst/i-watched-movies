@@ -1,7 +1,7 @@
 ---
 title: '9人の翻訳家 囚われたベストセラー'
 published: false
-seen: true
+dropped: true
 tags:
   - 'Mystery'
   - 'Thriller'
@@ -14,4 +14,4 @@ summary: 'Nine translators are sealed in a bunker to work on a bestseller, and t
 summary_ja: '九人の翻訳家がベストセラーを訳すため地下室に閉じ込められるが、原稿はそれでも流出する。'
 ---
 
-Logged as seen.
+Started and given up on partway.
