@@ -1,6 +1,7 @@
 ---
 title: '地面師たち'
 published: false
+dropped: true
 tags:
   - 'Crime'
   - 'Thriller'
