@@ -214,7 +214,7 @@ const App: React.FC = () => {
         q === '' ||
         movie.title.toLowerCase().includes(q) ||
         (movie.summary?.toLowerCase().includes(q) ?? false) ||
-        (movie.summary_ja?.includes(q) ?? false) ||
+        (movie.summary_ja?.toLowerCase().includes(q) ?? false) ||
         (movie.national?.toLowerCase().includes(q) ?? false) ||
         movie.content.toLowerCase().includes(q) ||
         movie.tags.some(tag => tag.toLowerCase().includes(q));

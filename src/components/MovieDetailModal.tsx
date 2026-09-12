@@ -93,13 +93,17 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
   const releasedLabel = movie.release_date ? formatDate(movie.release_date) : null;
   const watchedLabel = movie.watch_date ? formatDate(movie.watch_date) : null;
 
-  // Per movie, not per site: `summary_ja` is optional, so an entry that has no Japanese
-  // text keeps showing the English one rather than going blank. `lang` on the element
-  // follows the text that actually rendered, which is what screen readers and CJK font
-  // selection read.
-  const useJa = lang === 'ja' && Boolean(movie.summary_ja);
-  const summary = useJa ? movie.summary_ja : movie.summary;
-  const summaryLang = useJa ? 'ja' : 'en';
+  // Per movie, not per site, and the fallback runs both ways: the two fields are
+  // independently optional in `Movie`, so whichever one an entry has is what gets shown
+  // rather than the block going blank in one language. `lang` on the element follows the
+  // text that actually rendered, which is what screen readers and CJK font selection read.
+  const summaryEn = movie.summary || '';
+  const summaryJa = movie.summary_ja || '';
+  const showJa = lang === 'ja' ? Boolean(summaryJa) : !summaryEn && Boolean(summaryJa);
+  const summary = showJa ? summaryJa : summaryEn;
+  const summaryLang = showJa ? 'ja' : 'en';
+  // Only worth offering when there are in fact two texts to switch between.
+  const canSwitchLanguage = Boolean(summaryEn && summaryJa);
 
   return (
     <div
@@ -212,7 +216,7 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
                     header, so from inside an open modal it cannot be reached. The summary
                     is the only thing the language changes, so the control belongs next to
                     it too. Same persisted state either way. */}
-                {movie.summary_ja && (
+                {canSwitchLanguage && (
                   <div
                     role="group"
                     aria-label="Summary language"
