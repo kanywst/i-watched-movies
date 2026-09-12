@@ -1,6 +1,7 @@
 ---
 title: 'マリグナント 狂暴な悪夢'
 published: false
+seen: true
 tags:
   - 'Horror'
   - 'Mystery'
@@ -15,4 +16,4 @@ summary: 'A woman dreams of murders that turn out to be real, and the thing doin
 summary_ja: '殺人の悪夢に苦しむ女が、その殺人が現実に起きていると気づく。殺している何かは、彼女が記憶を持つ前から一緒にいた。'
 ---
 
-James Wan off the leash. The reveal is the whole point, which is the shape of horror that works for kt.
+Watched, left unrated.
