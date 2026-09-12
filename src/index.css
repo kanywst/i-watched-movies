@@ -30,11 +30,11 @@ body {
   --accent-a: #ff4d97;
   --accent-a-solid: #d61f6d; /* white on this: 4.9:1 */
   /* The accent as ink rather than as a fill, for the top-band score in the detail modal.
-     The panel behind it flips with the theme, so the hue has to as well. Measured: the
-     darkened one reaches 4.91:1 on white and the bright one 5.63:1 on stone-900, against
-     3.11:1 and 3.56:1 for the same two swapped round. Both of those do clear the 3:1 the
-     72px numeral needs, so the swap is not illegible; it just spends the entire margin on
-     nothing. */
+     The panel behind it flips with the theme, so the hue has to as well. Measured, each on
+     the ground it is meant for: the darkened one on white is 4.91:1, the bright one on
+     stone-900 is 5.63:1. Swapped round they are 3.56:1 and 3.11:1 respectively, which do
+     still clear the 3:1 a 72px numeral needs, so the swap is not illegible; it just spends
+     the entire margin on nothing. */
   --accent-a-ink: var(--accent-a-solid);
 }
 /* `:root.dark`, not the bare `.dark` the heatmap block below uses. Both this and the rule
