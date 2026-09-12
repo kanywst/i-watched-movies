@@ -12,11 +12,13 @@ export const NEW_LIMIT = 2;
 // width while each tile still reads as a poster; below `sm` they are ~40px and are texture.
 export const MASTHEAD_POSTER_COUNT = 8;
 
-// Card grid entrance stagger (`.card-enter` in src/index.css) is 50ms per card index. The
-// watchlist is ~185 cards, so uncapped the last one starts 9.2s after the grid appears and,
-// because the animation is `both`-filled, sits invisible until it does. Past the first
-// screenful the stagger is not perceptible anyway, so the index feeding the delay is
-// clamped here: 11 gives a 550ms tail, about two full rows on the widest layout.
+// Card grid entrance stagger (`.card-enter` in src/index.css) is 50ms per card index, so
+// uncapped the last card of a grid of N starts N * 50ms after the grid appears and, because
+// the animation is `both`-filled, sits invisible until it does. That was 9.2s when the
+// watchlist held 185; the largest grid is the watchlist at 82 on 2026-09-13, still 4.1s.
+// Past the first screenful the stagger is not perceptible anyway, so the index feeding the
+// delay is clamped here rather than the list being kept short: 11 gives a 550ms tail, about
+// two full rows on the widest layout, whatever the list grows to.
 export const MAX_STAGGER_INDEX = 11;
 
 // How long a filter/search change waits before it is mirrored to the query string
