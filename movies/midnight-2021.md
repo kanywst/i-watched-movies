@@ -1,7 +1,7 @@
 ---
 title: '殺人鬼から逃げる夜'
 published: false
-seen: true
+dropped: true
 tags:
   - 'Thriller'
   - 'Horror'
@@ -14,4 +14,4 @@ summary: 'A deaf woman witnesses a serial killer at work and cannot call for hel
 summary_ja: '耳の聞こえない女性が連続殺人犯の犯行を目撃するが、助けを呼べない。'
 ---
 
-Logged as seen.
+Started and given up on partway.
