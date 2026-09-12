@@ -1,7 +1,7 @@
 ---
 title: '夜になりました～人狼ヲ探セ～'
 published: false
-seen: true
+dropped: true
 tags:
   - 'Thriller'
   - 'Mystery'
@@ -14,4 +14,4 @@ summary: 'A school trip turns into a real game of Mafia with a real killer in th
 summary_ja: '修学旅行が本物の人狼ゲームになり、その部屋には本物の殺人犯がいる。'
 ---
 
-Logged as seen.
+Started and given up on partway.
