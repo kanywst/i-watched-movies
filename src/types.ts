@@ -6,6 +6,9 @@ export interface Movie {
   // Started but not finished (a long series, mostly). Takes precedence over `published`
   // and `seen`, so an entry carries it only while it is actually being watched.
   watching?: boolean;
+  // Started and given up on, never finished. Wins over every other flag, so an entry that
+  // was watched partway and abandoned leaves whatever tab it was in and carries no score.
+  dropped?: boolean;
   tags: string[];
   national?: string;
   cover_image: string;
@@ -28,7 +31,14 @@ export interface Movie {
 /** Which language the movie summaries render in. See `useLanguage`. */
 export type Language = 'en' | 'ja';
 
-export type View = 'watched' | 'watching' | 'watchlist' | 'seen' | 'history' | 'stats';
+export type View =
+  | 'watched'
+  | 'watching'
+  | 'watchlist'
+  | 'seen'
+  | 'dropped'
+  | 'history'
+  | 'stats';
 
 export type SortKey =
   | 'watch_date_desc'

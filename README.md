@@ -6,12 +6,13 @@ Live: <https://i-watched-movies.edgebox12.workers.dev/> · [RSS](https://i-watch
 
 ## Views
 
-Six tabs, each linkable through `?view=`. Filters, search, sort and the open film are mirrored to the query string too.
+Seven tabs, each linkable through `?view=`. Filters, search, sort and the open film are mirrored to the query string too.
 
 - **Watched** (`?view=watched`): the rated grid, with rank badges on the top 3 by score and NEW badges on the 2 most recent
 - **In Progress** (`?view=watching`): `watching: true`, started but not finished, mostly long series. No score yet, and kept out of the History heatmap and the watchlist ranking
 - **Watchlist** (`?view=watchlist`): `published: false`, films not seen yet. `watch_date` is legitimately empty here
-- **Seen** (`?view=seen`): `seen: true`, watched but deliberately left unrated, so it never skews the average
+- **Seen** (`?view=seen`): `seen: true`, watched through but deliberately left unrated, so it never skews the average
+- **Dropped** (`?view=dropped`): `dropped: true`, started and given up on partway. Wins over every other flag, carries no score, and is kept out of the History heatmap and both feeds
 - **History** (`?view=history`): a contribution-graph heatmap of the last 53 weeks, plus streaks and films per month
 - **Stats** (`?view=stats`): taste analysis over the rated films. Genre, country and era affinities as deltas against the personal average, how the 0-10 scale actually gets used, and a watchlist ranking by the score the profile predicts
 
@@ -27,8 +28,9 @@ Two paths.
 ---
 title: 'Title'
 published: true              # false = lives on the Watchlist tab instead
-seen: true                   # optional, watched but unrated: own tab, no score
+seen: true                   # optional, watched through but unrated: own tab, no score
 watching: true               # optional, started but not finished: own tab, wins over the two above
+dropped: true                # optional, started and given up on partway: own tab, wins over all three above
 tags: ['Sci-Fi', 'Action']
 national: 'Japan'            # optional, shows a flag emoji
 cover_image: 'https://...'

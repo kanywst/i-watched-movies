@@ -1,4 +1,4 @@
-import { Activity, Bookmark, ChartColumn, Check, Eye, Play } from 'lucide-react';
+import { Activity, Bookmark, ChartColumn, Check, CircleSlash, Eye, Play } from 'lucide-react';
 import type React from 'react';
 import type { View } from './types';
 
@@ -17,7 +17,7 @@ export interface ViewSpec {
    * Which movie list the filter bar and grid operate on. `null` for the views that render
    * their own panel instead (History, Stats), which is also what suppresses the filter bar.
    */
-  source: 'watched' | 'watching' | 'watchlist' | 'seen' | null;
+  source: 'watched' | 'watching' | 'watchlist' | 'seen' | 'dropped' | null;
   /**
    * Whether the tab shows a count. Stats has none because its figure would only repeat the
    * Watched tab's.
@@ -30,6 +30,7 @@ export const VIEW_SPECS: ViewSpec[] = [
   { key: 'watching', label: 'In Progress', icon: Play, source: 'watching', showCount: true },
   { key: 'watchlist', label: 'Watchlist', icon: Bookmark, source: 'watchlist', showCount: true },
   { key: 'seen', label: 'Seen', icon: Check, source: 'seen', showCount: true },
+  { key: 'dropped', label: 'Dropped', icon: CircleSlash, source: 'dropped', showCount: true },
   { key: 'history', label: 'History', icon: Activity, source: null, showCount: true },
   { key: 'stats', label: 'Stats', icon: ChartColumn, source: null, showCount: false },
 ];

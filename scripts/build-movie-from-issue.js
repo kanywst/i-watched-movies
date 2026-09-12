@@ -92,6 +92,9 @@ export function buildMovie(sections, { issueNumber } = {}) {
   // "In Progress" is started-but-not-finished, mostly a long series. Also unpublished, and
   // flagged so partitionMovies keeps it out of both the Watchlist and the History heatmap.
   const watching = list === 'in progress';
+  // "Dropped" is started-and-given-up-on. Unpublished like the two above, and kept out of
+  // the History heatmap as well: it was never watched through, so it has no watched date.
+  const dropped = list === 'dropped';
   const published = list === 'watched';
 
   const movie = {
@@ -99,6 +102,7 @@ export function buildMovie(sections, { issueNumber } = {}) {
     published,
     seen,
     watching,
+    dropped,
     tags: parseTags(sections['Tags']),
     national: (sections['National'] || '').trim(),
     cover_image: (sections['Cover image URL'] || '').trim(),
@@ -166,6 +170,7 @@ export function readExisting(filePath) {
     published: data.published ?? true,
     seen: data.seen ?? false,
     watching: data.watching ?? false,
+    dropped: data.dropped ?? false,
     tags: Array.isArray(data.tags) ? data.tags.filter(Boolean).map(String) : parseTags(data.tags),
     national: (data.national ?? '').toString().trim(),
     cover_image: (data.cover_image ?? '').toString().trim(),
@@ -189,8 +194,10 @@ export function mergeMovie(existing, incoming) {
     published: incoming.published,
     seen: incoming.seen,
     // Cleared, not OR-ed: re-filing an in-progress series as Watched has to drop the flag,
-    // otherwise it would stay pinned to the In Progress tab forever.
+    // otherwise it would stay pinned to the In Progress tab forever. Same for `dropped`,
+    // which is how an abandoned film is picked back up and finished.
     watching: incoming.watching,
+    dropped: incoming.dropped,
     tags: incoming.tags.length ? incoming.tags : existing.tags,
     national: incoming.national || existing.national,
     cover_image: incoming.cover_image || existing.cover_image,
@@ -216,6 +223,7 @@ export function formatFile(movie) {
   lines.push(`published: ${movie.published}`);
   if (movie.seen) lines.push('seen: true');
   if (movie.watching) lines.push('watching: true');
+  if (movie.dropped) lines.push('dropped: true');
   if (movie.tags.length) {
     lines.push('tags:');
     for (const t of movie.tags) lines.push(`  - ${quote(t)}`);
@@ -272,13 +280,15 @@ function main() {
   emit('title', finalMovie.title);
   emit(
     'list',
-    finalMovie.watching
-      ? 'In Progress'
-      : finalMovie.seen
-        ? 'Seen'
-        : finalMovie.published
-          ? 'Watched'
-          : 'Watchlist',
+    finalMovie.dropped
+      ? 'Dropped'
+      : finalMovie.watching
+        ? 'In Progress'
+        : finalMovie.seen
+          ? 'Seen'
+          : finalMovie.published
+            ? 'Watched'
+            : 'Watchlist',
   );
   emit('watchlist', finalMovie.published ? 'false' : 'true');
   emit('action', action);

@@ -97,3 +97,50 @@ describe('an in-progress entry is in neither feed', () => {
     expect(buildRssFeed([stale])).not.toContain('<title>Rewatch</title>');
   });
 });
+
+/**
+ * The same agreement for `seen`, which src/partition.ts files under Seen with no score
+ * shown. A stale `published: true` left beside it would otherwise have the JSON-LD attach
+ * an aggregateRating to a film the site deliberately rates nowhere.
+ */
+describe('a seen entry is in neither feed', () => {
+  const unrated = movie({ id: 'unrated', title: 'Unrated', published: true, seen: true });
+
+  it('is left out of the JSON-LD, aggregateRating and all', () => {
+    const ld = buildJsonLd([movie({ id: 'a' }), unrated]);
+    expect(ld.mainEntity.numberOfItems).toBe(1);
+    expect(ld.mainEntity.itemListElement.map(e => e.item.name)).toEqual(['A']);
+  });
+
+  it('is left out of the RSS feed', () => {
+    const xml = buildRssFeed([movie({ id: 'a' }), unrated]);
+    expect(xml).toContain('<title>A</title>');
+    expect(xml).not.toContain('<title>Unrated</title>');
+  });
+});
+
+/**
+ * Same agreement for `dropped`, which beats every other flag in src/partition.ts: a film
+ * abandoned partway was never watched through, so it has nothing to announce.
+ */
+describe('a dropped entry is in neither feed', () => {
+  const abandoned = movie({ id: 'gave-up', title: 'Gave Up', published: false, dropped: true });
+
+  it('is left out of the JSON-LD', () => {
+    const ld = buildJsonLd([movie({ id: 'a' }), abandoned]);
+    expect(ld.mainEntity.numberOfItems).toBe(1);
+    expect(ld.mainEntity.itemListElement.map(e => e.item.name)).toEqual(['A']);
+  });
+
+  it('is left out of the RSS feed', () => {
+    const xml = buildRssFeed([movie({ id: 'a' }), abandoned]);
+    expect(xml).toContain('<title>A</title>');
+    expect(xml).not.toContain('<title>Gave Up</title>');
+  });
+
+  it('stays out even when a stale published: true is left on it', () => {
+    const stale = movie({ id: 'quit', title: 'Quit', published: true, dropped: true });
+    expect(buildJsonLd([stale]).mainEntity.numberOfItems).toBe(0);
+    expect(buildRssFeed([stale])).not.toContain('<title>Quit</title>');
+  });
+});

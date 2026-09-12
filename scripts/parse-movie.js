@@ -33,6 +33,7 @@ export function parseMovie(fileContent, id) {
     published: data.published ?? true,
     seen: data.seen ?? false,
     watching: data.watching ?? false,
+    dropped: data.dropped ?? false,
     tags: data.tags || [],
     national: data.national || null,
     cover_image: data.cover_image || '',

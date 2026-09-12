@@ -33,6 +33,7 @@ describe('viewSpec', () => {
     expect(viewSpec('history').source).toBeNull();
     expect(viewSpec('stats').source).toBeNull();
     expect(viewSpec('watched').source).toBe('watched');
+    expect(viewSpec('dropped').source).toBe('dropped');
   });
 
   it('hides the Stats tab count, which would only repeat the Watched tab', () => {
