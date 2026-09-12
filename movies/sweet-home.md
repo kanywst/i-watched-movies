@@ -1,7 +1,7 @@
 ---
 title: 'Sweet Home －俺と世界の絶望－'
 published: false
-seen: true
+dropped: true
 tags:
   - 'Horror'
   - 'Thriller'
@@ -14,4 +14,4 @@ summary: 'Residents of a decaying apartment block barricade in as people turn in
 summary_ja: '老朽マンションの住人たちが、欲望の形をした怪物に変わっていく人々からバリケードを築いて立てこもる。'
 ---
 
-Logged as seen.
+Started and given up on partway.
