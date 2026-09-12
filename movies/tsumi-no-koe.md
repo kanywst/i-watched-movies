@@ -1,6 +1,7 @@
 ---
 title: '罪の声'
 published: false
+dropped: true
 tags:
   - 'Mystery'
   - 'Crime'
