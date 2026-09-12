@@ -51,6 +51,16 @@ export const NEW_RELEASE_WINDOW_DAYS = 90;
 // Below this many rated films, an early-half vs late-half average says nothing.
 export const MIN_DRIFT_SAMPLE = 6;
 
+// Score bands (src/scoreBand.ts), as percentile cuts within the diary's own ratings rather
+// than fixed points on the 0-10 scale. src/scoreBand.ts has the reason; the short version is
+// that the middle half of the diary sits inside a single point, so absolute cuts would put
+// almost every card in one band. These four were chosen against the shape the diary had on
+// 2026-09-12, where they fell at <7.2 / 7.2-7.9 / 8.0-8.4 / 8.5+ and split 56 rated films
+// 13 / 21 / 13 / 9, keeping the loudest treatment rare enough to mean something. Both the
+// boundaries and that split move with every film added, which is the intent: the cuts are
+// percentiles so that they retune themselves.
+export const SCORE_BAND_CUTS = { top: 0.85, high: 0.6, mid: 0.25 } as const;
+
 // Keyed by the value written to a movie's `national` frontmatter. A country with no entry
 // here renders no flag, so the list only has to cover what the diary actually holds plus
 // the production countries the watchlist is reaching into.
