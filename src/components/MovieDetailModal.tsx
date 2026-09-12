@@ -18,9 +18,10 @@ import { tmdbResize, tmdbSrcSet } from '../tmdbImage';
  * The numeral renders at 60-72px, which is WCAG large text and so wants 3:1, and the ramp is
  * floored by that rather than by how quiet the low band could look: stone-400 reaches only
  * 2.59:1 on the white panel and is unusable here however well it reads as recessive. Against
- * white / stone-900 the four are 4.79/3.65, 7.64/6.76, 17.5/15.8 and 4.9/5.6. Low needs no
- * dark variant, since stone-500 clears the floor on both grounds; the accent is the one band
- * not ordered by contrast, because it separates itself by hue instead.
+ * white / stone-900 the four measure 4.79/3.65, 7.64/6.76, 17.49/16.03 and 4.91/5.63. Low
+ * needs no dark variant, since stone-500 clears the floor on both grounds, and stone-400
+ * would collide with mid's dark value. The accent is the one band not ordered by contrast,
+ * because it separates itself by hue instead.
  */
 const SCORE_INK: Record<ScoreBand, { className: string; style?: React.CSSProperties }> = {
   low: { className: 'text-stone-500' },
