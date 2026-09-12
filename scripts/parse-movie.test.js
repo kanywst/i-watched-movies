@@ -19,6 +19,7 @@ release_date: '2025-06-01'
 watch_date: '2026-01-15'
 point: 8.5
 summary: 'A summary'
+summary_ja: '日本語の概要'
 impression: 'Loved it'`,
       ),
       'test-movie',
@@ -37,11 +38,17 @@ impression: 'Loved it'`,
       watch_date: new Date('2026-01-15').toISOString(),
       point: 8.5,
       summary: 'A summary',
+      summary_ja: '日本語の概要',
       impression: 'Loved it',
       streaming: [],
       checked: '',
       content: '\nBody text\n',
     });
+  });
+
+  it('defaults summary_ja to an empty string when the frontmatter omits it', () => {
+    const movie = parseMovie(md(`title: 'T'\nsummary: 'Only English'`), 't');
+    expect(movie.summary_ja).toBe('');
   });
 
   it('parses streaming as an array and checked as a month', () => {

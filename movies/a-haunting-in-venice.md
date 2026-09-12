@@ -11,6 +11,7 @@ release_date: '2023-09-15'
 watch_date: '2026-07-22'
 point: 8.2
 summary: 'A retired Poirot attends a séance in a crumbling Venetian palazzo on Halloween and is pulled into a locked-house murder laced with the supernatural.'
+summary_ja: '引退したポアロがハロウィンの夜、朽ちかけたヴェネツィアの館の交霊会に出席し、超常の混じった密室殺人に引きずり込まれる。'
 ---
 
 The darkest and most thriller-leaning of Branagh''s Poirot films. Disney+ JP (Star).

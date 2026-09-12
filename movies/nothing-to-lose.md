@@ -11,6 +11,7 @@ release_date: '1997-07-18'
 watch_date: '2026-08-09'
 point: 7.2
 summary: 'Steve Oedekerk''s buddy comedy: an ad executive who thinks his wife is sleeping with his boss gets carjacked on the worst night of his life, and the two of them drive off into a revenge robbery neither is qualified to pull off.'
+summary_ja: 'スティーヴ・オーデカークのバディコメディ。妻と上司の浮気を疑う広告マンが人生最悪の夜に車を奪われ、二人ともまるで向いていない復讐強盗へ走り出す。'
 ---
 
 Nick Beam is an advertising executive in Los Angeles who comes home early and sees what he takes to be his wife in bed with his boss, Phillip Barrow. He drives off in a daze and is carjacked at a stoplight by T. Paul, a first-time robber trying to feed his family. Nick, past caring whether he lives, floors the accelerator instead of handing over his wallet, and the terrified thief ends up hostage to his own victim on a drive out into the Arizona desert.

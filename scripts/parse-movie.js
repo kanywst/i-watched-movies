@@ -40,6 +40,7 @@ export function parseMovie(fileContent, id) {
     watch_date: data.watch_date ? new Date(data.watch_date).toISOString() : null,
     point: normalizePoint(data.point),
     summary: data.summary || '',
+    summary_ja: data.summary_ja || '',
     impression: data.impression || '',
     streaming: normalizeStreaming(data.streaming),
     checked: normalizeChecked(data.checked),

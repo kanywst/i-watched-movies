@@ -10,6 +10,7 @@ checked: '2026-09'
 cover_image: 'https://image.tmdb.org/t/p/original/yPJMDxam5HP0DAc1rMk0aNRpSc5.jpg'
 release_date: '2010-12-22'
 summary: 'A Yanbian taxi driver drowning in gambling debt takes a contract killing in Seoul to clear it, and the job goes wrong in every direction at once.'
+summary_ja: '賭博の借金に沈む延辺のタクシー運転手が、帳消しのためにソウルでの殺しを請け負い、仕事はあらゆる方向に同時に狂っていく。'
 ---
 
 Na Hong-jin between The Chaser (8.0) and The Wailing (8.2), and the most physical of the three. No JP subscription service carries it as of 2026-09.

@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { X, Quote } from 'lucide-react';
-import { Movie } from '../types';
+import { clsx } from 'clsx';
+import { Language, Movie } from '../types';
+import { LANGUAGE_OPTIONS } from '../constants';
 import { StreamingBadges } from './StreamingBadges';
 import { isWatched } from '../partition';
 import { tmdbResize, tmdbSrcSet } from '../tmdbImage';
@@ -19,10 +21,17 @@ const LONG_DATE = new Intl.DateTimeFormat('en-US', {
 
 interface MovieDetailModalProps {
   movie: Movie | null;
+  lang: Language;
+  setLanguage: (next: Language) => void;
   onClose: () => void;
 }
 
-export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({ movie, onClose }) => {
+export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
+  movie,
+  lang,
+  setLanguage,
+  onClose,
+}) => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
@@ -83,6 +92,18 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({ movie, onClo
   };
   const releasedLabel = movie.release_date ? formatDate(movie.release_date) : null;
   const watchedLabel = movie.watch_date ? formatDate(movie.watch_date) : null;
+
+  // Per movie, not per site, and the fallback runs both ways: the two fields are
+  // independently optional in `Movie`, so whichever one an entry has is what gets shown
+  // rather than the block going blank in one language. `lang` on the element follows the
+  // text that actually rendered, which is what screen readers and CJK font selection read.
+  const summaryEn = movie.summary || '';
+  const summaryJa = movie.summary_ja || '';
+  const showJa = lang === 'ja' ? Boolean(summaryJa) : !summaryEn && Boolean(summaryJa);
+  const summary = showJa ? summaryJa : summaryEn;
+  const summaryLang = showJa ? 'ja' : 'en';
+  // Only worth offering when there are in fact two texts to switch between.
+  const canSwitchLanguage = Boolean(summaryEn && summaryJa);
 
   return (
     <div
@@ -189,9 +210,43 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({ movie, onClo
           </div>
 
           <div className="space-y-8 overflow-y-auto pr-2 custom-scrollbar">
-            {movie.summary && (
-              <div className="leading-relaxed text-sm md:text-base border-l-2 pl-4 text-stone-600 border-stone-300 dark:text-stone-400 dark:border-stone-800">
-                {movie.summary}
+            {summary && (
+              <div>
+                {/* The masthead carries the same switch, but the overlay sits on top of the
+                    header, so from inside an open modal it cannot be reached. The summary
+                    is the only thing the language changes, so the control belongs next to
+                    it too. Same persisted state either way. */}
+                {canSwitchLanguage && (
+                  <div
+                    role="group"
+                    aria-label="Summary language"
+                    className="flex justify-end gap-1 mb-2 text-[11px] font-semibold"
+                  >
+                    {LANGUAGE_OPTIONS.map(o => (
+                      <button
+                        key={o.value}
+                        type="button"
+                        onClick={() => setLanguage(o.value)}
+                        aria-pressed={lang === o.value}
+                        title={o.title}
+                        className={clsx(
+                          'px-2 py-0.5 rounded-full transition-colors',
+                          lang === o.value
+                            ? 'bg-stone-200 text-stone-900 dark:bg-stone-700 dark:text-stone-100'
+                            : 'text-stone-400 hover:text-stone-700 dark:text-stone-500 dark:hover:text-stone-300',
+                        )}
+                      >
+                        {o.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                <div
+                  lang={summaryLang}
+                  className="leading-relaxed text-sm md:text-base border-l-2 pl-4 text-stone-600 border-stone-300 dark:text-stone-400 dark:border-stone-800"
+                >
+                  {summary}
+                </div>
               </div>
             )}
 

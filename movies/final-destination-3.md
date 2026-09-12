@@ -10,6 +10,7 @@ checked: '2026-08'
 cover_image: 'https://image.tmdb.org/t/p/original/p7ARuNKUGPGvkBiDtIDvAzYzonX.jpg'
 release_date: '2006-02-10'
 summary: 'A rollercoaster premonition, and photographs that show each survivor how they die.'
+summary_ja: 'ジェットコースターの予知と、生存者それぞれの死に方を写した写真。'
 ---
 
 Logged as seen.

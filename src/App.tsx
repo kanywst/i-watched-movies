@@ -8,6 +8,7 @@ import { Sun, Moon } from 'lucide-react';
 import { clsx } from 'clsx';
 import { CONFIG, PROFILE_URL, avatarUrl } from './config';
 import {
+  LANGUAGE_OPTIONS,
   MASTHEAD_POSTER_COUNT,
   MAX_STAGGER_INDEX,
   NEW_LIMIT,
@@ -44,6 +45,7 @@ const TastePanel = lazy(() =>
 import { useDocumentMetadata } from './useDocumentMetadata';
 import { urlParams, useUrlState } from './useUrlState';
 import { useTheme } from './useTheme';
+import { useLanguage } from './useLanguage';
 import { DEFAULT_VIEW, VIEW_SPECS, isView, viewSpec } from './views';
 
 // Stable empty reference so the History and Stats views don't bust the
@@ -212,6 +214,7 @@ const App: React.FC = () => {
         q === '' ||
         movie.title.toLowerCase().includes(q) ||
         (movie.summary?.toLowerCase().includes(q) ?? false) ||
+        (movie.summary_ja?.toLowerCase().includes(q) ?? false) ||
         (movie.national?.toLowerCase().includes(q) ?? false) ||
         movie.content.toLowerCase().includes(q) ||
         movie.tags.some(tag => tag.toLowerCase().includes(q));
@@ -273,6 +276,7 @@ const App: React.FC = () => {
   }, [setUrlState, urlState.selected]);
 
   const [theme, toggleTheme] = useTheme();
+  const [lang, setLanguage] = useLanguage();
 
   return (
     <div className="min-h-screen p-6 md:p-12 max-w-7xl mx-auto">
@@ -339,16 +343,45 @@ const App: React.FC = () => {
             ))}
           </dl>
 
-          {/* In the header rather than floating over the page. Fixed at top-right it
-              overlapped this very row, and a theme switch is a thing you reach for once. */}
-          <button
-            type="button"
-            onClick={toggleTheme}
-            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-            className="ml-auto p-2 rounded-full transition-colors text-stone-300 hover:bg-white/10 hover:text-stone-50"
-          >
-            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-          </button>
+          {/* In the header rather than floating over the page. Fixed at top-right they
+              overlapped this very row, and both are switches you reach for once. */}
+          <div className="ml-auto flex items-center gap-1.5">
+            {/* Both languages are on screen with the active one filled, rather than one
+                button showing the language you would switch to: two letters give no clue
+                whether they name the current state or the action. */}
+            <div
+              role="group"
+              aria-label="Summary language"
+              className="flex items-center rounded-full p-0.5 bg-white/10"
+            >
+              {LANGUAGE_OPTIONS.map(o => (
+                <button
+                  key={o.value}
+                  type="button"
+                  onClick={() => setLanguage(o.value)}
+                  aria-pressed={lang === o.value}
+                  title={o.title}
+                  className={clsx(
+                    'px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide transition-colors',
+                    lang === o.value
+                      ? 'bg-stone-50 text-stone-900'
+                      : 'text-stone-300 hover:text-stone-50',
+                  )}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              className="p-2 rounded-full transition-colors text-stone-300 hover:bg-white/10 hover:text-stone-50"
+            >
+              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -444,6 +477,8 @@ const App: React.FC = () => {
       {/* Detail Modal */}
       <MovieDetailModal
         movie={selectedMovie}
+        lang={lang}
+        setLanguage={setLanguage}
         onClose={closeMovie}
       />
     </div>

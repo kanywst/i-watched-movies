@@ -11,6 +11,7 @@ checked: '2026-08'
 cover_image: 'https://image.tmdb.org/t/p/original/sQckQRt17VaWbo39GIu0TMOiszq.jpg'
 release_date: '2002-11-01'
 summary: 'A courier wakes from a coma into a Britain emptied by a rage virus loose for four weeks.'
+summary_ja: '配達人が昏睡から目覚めると、イギリスは四週間前から野放しのレイジ・ウイルスに空にされていた。'
 ---
 
 The film 28 Years Later (8.5) is answering. Logged as seen.

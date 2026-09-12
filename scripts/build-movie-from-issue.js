@@ -108,6 +108,7 @@ export function buildMovie(sections, { issueNumber } = {}) {
     streaming: parseStreaming(sections['Streaming']),
     checked: parseMonth(sections['Availability checked']),
     summary: (sections['Summary'] || '').trim(),
+    summary_ja: (sections['Summary (JA)'] || '').trim(),
     impression: (sections['Impression'] || '').trim(),
     body: (sections['Body'] || '').trim(),
   };
@@ -176,6 +177,7 @@ export function readExisting(filePath) {
       : parseTags(data.streaming),
     checked: existingMonth(data.checked),
     summary: (data.summary ?? '').toString().trim(),
+    summary_ja: (data.summary_ja ?? '').toString().trim(),
     impression: (data.impression ?? '').toString().trim(),
     body: (content ?? '').trim(),
   };
@@ -198,6 +200,7 @@ export function mergeMovie(existing, incoming) {
     streaming: incoming.streaming.length ? incoming.streaming : existing.streaming,
     checked: incoming.checked || existing.checked,
     summary: incoming.summary || existing.summary,
+    summary_ja: incoming.summary_ja || existing.summary_ja,
     impression: incoming.impression || existing.impression,
     body: incoming.body || existing.body,
   };
@@ -228,6 +231,7 @@ export function formatFile(movie) {
   if (movie.watch_date) lines.push(`watch_date: ${quote(movie.watch_date)}`);
   if (movie.point !== null) lines.push(`point: ${movie.point}`);
   if (movie.summary) lines.push(`summary: ${quote(movie.summary)}`);
+  if (movie.summary_ja) lines.push(`summary_ja: ${quote(movie.summary_ja)}`);
   if (movie.impression) lines.push(`impression: ${quote(movie.impression)}`);
   lines.push('---');
   lines.push('');

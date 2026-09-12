@@ -1,4 +1,4 @@
-import type { SortKey } from './types';
+import type { Language, SortKey } from './types';
 import netflixLogo from './assets/streaming/netflix.svg';
 import disneyPlusLogo from './assets/streaming/disneyplus.svg';
 import primeVideoLogo from './assets/streaming/primevideo.svg';
@@ -145,6 +145,13 @@ export const STREAMING_SERVICES: Record<string, StreamingService> = {
 export function justWatchSearchUrl(title: string): string {
   return `https://www.justwatch.com/jp/検索?q=${encodeURIComponent(title)}`;
 }
+
+// The summary language switch in the masthead. `label` is what the segment reads; `title`
+// is the hover/aria wording, in the language the segment selects.
+export const LANGUAGE_OPTIONS: { value: Language; label: string; title: string }[] = [
+  { value: 'en', label: 'EN', title: 'Summaries in English' },
+  { value: 'ja', label: 'JA', title: '概要を日本語で表示' },
+];
 
 export const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: 'watch_date_desc', label: 'Watch Date (Newest)' },

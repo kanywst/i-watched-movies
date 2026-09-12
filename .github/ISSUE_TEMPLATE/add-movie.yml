@@ -138,6 +138,12 @@ body:
       description: Optional one-liner
 
   - type: textarea
+    id: summary_ja
+    attributes:
+      label: Summary (JA)
+      description: Optional Japanese version of the summary, shown when the site language switch is on JA.
+
+  - type: textarea
     id: impression
     attributes:
       label: Impression

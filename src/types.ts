@@ -14,6 +14,9 @@ export interface Movie {
   point: number;
   content: string;
   summary?: string;
+  // Japanese rendering of `summary`, shown when the language switch is on JA. Optional:
+  // an entry without one falls back to the English `summary`.
+  summary_ja?: string;
   impression?: string;
   // Watchlist-only: streaming services the film was available on when last checked,
   // as keys into STREAMING_SERVICES. `checked` is the YYYY-MM that availability was
@@ -21,6 +24,9 @@ export interface Movie {
   streaming?: string[];
   checked?: string;
 }
+
+/** Which language the movie summaries render in. See `useLanguage`. */
+export type Language = 'en' | 'ja';
 
 export type View = 'watched' | 'watching' | 'watchlist' | 'seen' | 'history' | 'stats';
 
