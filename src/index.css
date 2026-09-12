@@ -30,16 +30,18 @@ body {
   --accent-a: #ff4d97;
   --accent-a-solid: #d61f6d; /* white on this: 4.9:1 */
   /* The accent as ink rather than as a fill, for the top-band score in the detail modal.
-     The panel behind it flips with the theme, so the hue has to as well: the darkened one
-     reaches 4.6:1 on white, the bright one 5.9:1 on stone-900, and each is unreadable on
-     the other ground. */
+     The panel behind it flips with the theme, so the hue has to as well. Measured, each on
+     the ground it is meant for: the darkened one on white is 4.91:1, the bright one on
+     stone-900 is 5.63:1. Swapped round they are 3.56:1 and 3.11:1 respectively, which do
+     still clear the 3:1 a 72px numeral needs, so the swap is not illegible; it just spends
+     the entire margin on nothing. */
   --accent-a-ink: var(--accent-a-solid);
 }
 /* `:root.dark`, not the bare `.dark` the heatmap block below uses. Both this and the rule
    above match <html> at specificity (0,1,0), so with a bare selector nothing but the source
    order of the two blocks decides the winner, and reordering them would silently serve the
    light value in dark mode. That failure would survive a contrast audit (#d61f6d still
-   reaches 3.6:1 on stone-900), so it wants a selector that cannot lose rather than a
+   reaches 3.56:1 on stone-900), so it wants a selector that cannot lose rather than a
    comment asking the next edit not to move anything. */
 :root.dark {
   --accent-a-ink: var(--accent-a);
