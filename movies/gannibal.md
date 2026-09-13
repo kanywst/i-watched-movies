@@ -1,7 +1,6 @@
 ---
 title: 'ガンニバル'
-published: false
-dropped: true
+published: true
 tags:
   - 'Horror'
   - 'Thriller'
@@ -13,6 +12,8 @@ streaming:
 checked: '2026-09'
 cover_image: 'https://image.tmdb.org/t/p/original/AvjCytHUq6AN6rYOFQFATrWbGSR.jpg'
 release_date: '2022-12-28'
+watch_date: '2026-09-06'
+point: 7.3
 seasons:
   - season: 1
     point: 7.3
