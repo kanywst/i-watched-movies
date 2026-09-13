@@ -7,6 +7,7 @@ import { StreamingBadges } from './StreamingBadges';
 import { isWatched } from '../partition';
 import { RATED_POINTS } from '../collections';
 import { bandOf, type ScoreBand } from '../scoreBand';
+import { cardSeasonScore } from '../seasons';
 import { tmdbResize, tmdbSrcSet } from '../tmdbImage';
 
 // The grid is 2 / 3 / 4 / 5 columns inside a max-w-7xl container, so a card is about
@@ -86,6 +87,9 @@ const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, is
   // partitioned with, so a card can never disagree with the tab it is sitting under.
   const hasScore = isWatched(movie);
   const chip = hasScore ? SCORE_CHIP[bandOf(RATED_POINTS, movie.point)] : null;
+  // The fallback for a series watched partway, which has no entry score at all. Only one
+  // season reaches the card; see src/seasons.ts for which and why.
+  const seasonChip = cardSeasonScore(movie, hasScore);
   // The year the film was watched, falling back to the year it came out. Watchlist and
   // in-progress entries have no watch_date, and printing "N/A" under a poster tells the
   // reader nothing; the release year is the fact that is actually known about them.
@@ -118,7 +122,13 @@ const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, is
       }}
       role="button"
       tabIndex={0}
-      aria-label={`${movie.title}${hasScore ? `, rated ${movie.point} out of 10` : ''}`}
+      aria-label={`${movie.title}${
+        hasScore
+          ? `, rated ${movie.point} out of 10`
+          : seasonChip
+            ? `, season ${seasonChip.season} rated ${seasonChip.point} out of 10`
+            : ''
+      }`}
       className="card-enter group relative flex flex-col bg-transparent cursor-pointer rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-stone-400 focus-visible:ring-offset-stone-50 dark:focus-visible:ring-stone-300 dark:focus-visible:ring-offset-stone-950"
       style={{ '--card-index': staggerIndex } as React.CSSProperties}
     >
@@ -227,6 +237,20 @@ const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, is
             )}
           >
             {movie.point}
+          </div>
+        )}
+
+        {/* A season score, for a series with no entry score of its own. Deliberately not on
+            the SCORE_CHIP ramp: that ramp states where a number stands against RATED_POINTS,
+            and season scores are not in that population, so banding one would claim a
+            standing it does not have. It borrows mid's fill and ink instead, which is the
+            pair measured against a pure-white poster (5.6:1 for stone-200, against the 4.5:1
+            floor these sizes want). The season label rides at the same ink for that reason
+            and separates itself by size and weight, not by contrast. */}
+        {seasonChip && (
+          <div className="absolute top-2 right-2 z-30 flex items-baseline gap-1 py-0.5 px-2 rounded backdrop-blur-md shadow-lg border bg-black/65 text-stone-200 border-white/10">
+            <span className="text-[10px] font-normal tabular-nums">S{seasonChip.season}</span>
+            <span className="text-sm font-medium tabular-nums">{seasonChip.point}</span>
           </div>
         )}
       </div>
