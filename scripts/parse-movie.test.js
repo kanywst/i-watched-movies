@@ -38,6 +38,7 @@ impression: 'Loved it'`,
       release_date: new Date('2025-06-01').toISOString(),
       watch_date: new Date('2026-01-15').toISOString(),
       point: 8.5,
+      seasons: [],
       summary: 'A summary',
       summary_ja: '日本語の概要',
       impression: 'Loved it',
@@ -171,6 +172,68 @@ checked: '2026-07'`),
   it('returns content body separately from frontmatter', () => {
     const m = parseMovie(md(`title: 'T'`, 'Hello world'), 'i');
     expect(m.content).toContain('Hello world');
+  });
+
+  it('parses seasons and sorts them by season number', () => {
+    const m = parseMovie(
+      md(`title: 'Series'
+published: false
+dropped: true
+seasons:
+  - season: 2
+    status: 'dropped'
+  - season: 1
+    point: 7.3
+    status: 'watched'
+    watch_date: '2026-08-20'`),
+      's',
+    );
+    expect(m.seasons).toEqual([
+      {
+        season: 1,
+        point: 7.3,
+        status: 'watched',
+        watch_date: new Date('2026-08-20').toISOString(),
+      },
+      { season: 2, point: null, status: 'dropped', watch_date: null },
+    ]);
+  });
+
+  it('leaves an unrated season null rather than 0, which is a real score', () => {
+    const m = parseMovie(md(`title: 'S'\nseasons:\n  - season: 1`), 's');
+    expect(m.seasons[0].point).toBeNull();
+    expect(parseMovie(md(`title: 'S'\nseasons:\n  - season: 1\n    point: 0`), 's').seasons[0].point).toBe(0);
+  });
+
+  it('drops a season with no usable number instead of renumbering it', () => {
+    const m = parseMovie(
+      md(`title: 'S'
+seasons:
+  - status: 'watched'
+  - season: 'two'
+  - season: 3`),
+      's',
+    );
+    expect(m.seasons.map(s => s.season)).toEqual([3]);
+  });
+
+  it('falls back to watched for an unknown season status', () => {
+    const m = parseMovie(md(`title: 'S'\nseasons:\n  - season: 1\n    status: 'abandoned'`), 's');
+    expect(m.seasons[0].status).toBe('watched');
+  });
+
+  it('nulls an unparseable season watch_date rather than throwing', () => {
+    const m = parseMovie(md(`title: 'S'\nseasons:\n  - season: 1\n    watch_date: 'someday'`), 's');
+    expect(m.seasons[0].watch_date).toBeNull();
+  });
+
+  it('defaults seasons to an empty array for an entry without them', () => {
+    expect(parseMovie(md(`title: 'T'`), 'p').seasons).toEqual([]);
+  });
+
+  it('keeps season scores out of the entry point', () => {
+    const m = parseMovie(md(`title: 'S'\ndropped: true\nseasons:\n  - season: 1\n    point: 7.3`), 's');
+    expect(m.point).toBe(0);
   });
 });
 

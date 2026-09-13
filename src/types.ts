@@ -1,3 +1,16 @@
+/** Where a single season of a series entry stands. Mirrors the entry states minus `seen`. */
+export type SeasonStatus = 'watched' | 'watching' | 'dropped';
+
+/** One season of a series entry. See `seasons` on `Movie`. */
+export interface Season {
+  season: number;
+  /** Null when the season carries no score, either unrated or not watched through. */
+  point: number | null;
+  status: SeasonStatus;
+  /** Null for a season still in progress or given up on, same as the entry-level field. */
+  watch_date: string | null;
+}
+
 export interface Movie {
   id: string;
   title: string;
@@ -15,6 +28,11 @@ export interface Movie {
   release_date: string;
   watch_date: string;
   point: number;
+  // Series only: one record per season, so a show watched partway keeps the score for the
+  // part that was watched. Season scores stay out of `point`, RATED_POINTS and the taste
+  // figures, which are all per entry; the entry as a whole is still rated once or not at
+  // all. Empty for a film, and for a series logged without per-season detail.
+  seasons?: Season[];
   content: string;
   summary?: string;
   // Japanese rendering of `summary`, shown when the language switch is on JA. Optional:

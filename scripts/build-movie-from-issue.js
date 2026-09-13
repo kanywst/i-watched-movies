@@ -57,6 +57,77 @@ function parseStreaming(raw) {
   return parseTags(text);
 }
 
+const SEASON_STATUSES = new Set(['watched', 'watching', 'dropped']);
+
+// The Seasons form field is free text, one season per line: the season number first, then
+// any of a score, a status word and a YYYY-MM-DD, in any order and separated by commas or
+// spaces. "1, 7.3, watched, 2026-08-20", "S2 dropped" and "Season 3" all parse.
+//
+// The leading number must be a bare integer, so a line that is only a score ("7.3") is
+// skipped rather than read as season 7. Anything with no leading season number is skipped
+// too: a line the form cannot place is worth losing, a line placed wrongly is not.
+export function parseSeasons(raw) {
+  const out = [];
+  for (const line of String(raw || '').split('\n')) {
+    const head = line.match(/^\s*(?:seasons?\s*|s)?(\d+)(?![\d.])/i);
+    if (!head) continue;
+    const season = {
+      season: Number(head[1]),
+      point: null,
+      status: 'watched',
+      watch_date: '',
+    };
+    for (const token of line.slice(head[0].length).split(/[,\s]+/)) {
+      const t = token.trim();
+      if (!t) continue;
+      if (/^\d{4}-\d{2}-\d{2}$/.test(t)) season.watch_date = t;
+      else if (SEASON_STATUSES.has(t.toLowerCase())) season.status = t.toLowerCase();
+      else if (season.point === null && Number.isFinite(Number(t))) season.point = Number(t);
+    }
+    out.push(season);
+  }
+  return sortSeasons(out);
+}
+
+function sortSeasons(seasons) {
+  return [...seasons].sort((a, b) => a.season - b.season);
+}
+
+function existingSeasons(value) {
+  if (!Array.isArray(value)) return [];
+  return sortSeasons(
+    value
+      .map(raw => {
+        if (!raw || typeof raw !== 'object') return null;
+        const season = Number(raw.season);
+        if (!Number.isFinite(season)) return null;
+        let point = null;
+        if (raw.point !== undefined && raw.point !== null && raw.point !== '') {
+          const n = Number(raw.point);
+          if (Number.isFinite(n)) point = n;
+        }
+        const status = String(raw.status ?? '').trim().toLowerCase();
+        return {
+          season,
+          point,
+          status: SEASON_STATUSES.has(status) ? status : 'watched',
+          watch_date: existingDate(raw.watch_date),
+        };
+      })
+      .filter(Boolean),
+  );
+}
+
+// Merged per season number rather than replaced wholesale, unlike `tags` and `streaming`.
+// A season is logged when it is finished, so the natural issue lists only the new one, and
+// replacing would delete every season already recorded. The cost is that the form cannot
+// remove a season; edit the file for that.
+function mergeSeasons(existing, incoming) {
+  const by = new Map(existing.map(s => [s.season, s]));
+  for (const s of incoming) by.set(s.season, s);
+  return sortSeasons([...by.values()]);
+}
+
 function parsePoint(raw) {
   if (!raw) return null;
   const n = Number(raw);
@@ -109,6 +180,7 @@ export function buildMovie(sections, { issueNumber } = {}) {
     release_date: parseDate(sections['Release date']),
     watch_date: parseDate(sections['Watch date']),
     point: parsePoint(sections['Point']),
+    seasons: parseSeasons(sections['Seasons']),
     streaming: parseStreaming(sections['Streaming']),
     checked: parseMonth(sections['Availability checked']),
     summary: (sections['Summary'] || '').trim(),
@@ -177,6 +249,7 @@ export function readExisting(filePath) {
     release_date: existingDate(data.release_date),
     watch_date: existingDate(data.watch_date),
     point,
+    seasons: existingSeasons(data.seasons),
     streaming: Array.isArray(data.streaming)
       ? data.streaming.filter(Boolean).map(String)
       : parseTags(data.streaming),
@@ -204,6 +277,7 @@ export function mergeMovie(existing, incoming) {
     release_date: incoming.release_date || existing.release_date,
     watch_date: incoming.watch_date || existing.watch_date,
     point: incoming.point !== null ? incoming.point : existing.point,
+    seasons: mergeSeasons(existing.seasons || [], incoming.seasons || []),
     streaming: incoming.streaming.length ? incoming.streaming : existing.streaming,
     checked: incoming.checked || existing.checked,
     summary: incoming.summary || existing.summary,
@@ -238,6 +312,15 @@ export function formatFile(movie) {
   if (movie.release_date) lines.push(`release_date: ${quote(movie.release_date)}`);
   if (movie.watch_date) lines.push(`watch_date: ${quote(movie.watch_date)}`);
   if (movie.point !== null) lines.push(`point: ${movie.point}`);
+  if (movie.seasons && movie.seasons.length) {
+    lines.push('seasons:');
+    for (const s of movie.seasons) {
+      lines.push(`  - season: ${s.season}`);
+      if (s.point !== null) lines.push(`    point: ${s.point}`);
+      lines.push(`    status: ${quote(s.status)}`);
+      if (s.watch_date) lines.push(`    watch_date: ${quote(s.watch_date)}`);
+    }
+  }
   if (movie.summary) lines.push(`summary: ${quote(movie.summary)}`);
   if (movie.summary_ja) lines.push(`summary_ja: ${quote(movie.summary_ja)}`);
   if (movie.impression) lines.push(`impression: ${quote(movie.impression)}`);

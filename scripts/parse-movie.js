@@ -24,6 +24,50 @@ function normalizeChecked(value) {
   return m ? m[0] : '';
 }
 
+const SEASON_STATUSES = new Set(['watched', 'watching', 'dropped']);
+
+function seasonDate(value) {
+  if (!value) return null;
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? null : d.toISOString();
+}
+
+// A series entry can carry a record per season. The season scores are deliberately not
+// folded into the entry's own `point`: an abandoned series is unrated as a whole (point 0,
+// `dropped: true`), and RATED_POINTS is built from entry points, so a season score stays
+// out of the score bands and the taste figures. See `seasons` in src/types.ts.
+//
+// A season without a usable number is dropped rather than renumbered, since its position in
+// the list is not evidence of which season it is. Sorted by number so the file's order does
+// not decide the display order.
+function normalizeSeasons(value) {
+  if (!Array.isArray(value)) return [];
+  return value
+    .map(raw => {
+      if (!raw || typeof raw !== 'object') return null;
+      const season = Number(raw.season);
+      if (!Number.isFinite(season)) return null;
+      const point = normalizeSeasonPoint(raw.point);
+      const status = String(raw.status ?? '').trim().toLowerCase();
+      return {
+        season,
+        point,
+        status: SEASON_STATUSES.has(status) ? status : 'watched',
+        watch_date: seasonDate(raw.watch_date),
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => a.season - b.season);
+}
+
+// Null, not 0: a season watched but left unrated has no score, and 0 is a real score on a
+// scale that starts there. This is why it does not share normalizePoint.
+function normalizeSeasonPoint(value) {
+  if (value === undefined || value === null || value === '') return null;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+}
+
 export function parseMovie(fileContent, id) {
   const { data, content } = matter(fileContent);
 
@@ -40,6 +84,7 @@ export function parseMovie(fileContent, id) {
     release_date: data.release_date ? new Date(data.release_date).toISOString() : null,
     watch_date: data.watch_date ? new Date(data.watch_date).toISOString() : null,
     point: normalizePoint(data.point),
+    seasons: normalizeSeasons(data.seasons),
     summary: data.summary || '',
     summary_ja: data.summary_ja || '',
     impression: data.impression || '',
