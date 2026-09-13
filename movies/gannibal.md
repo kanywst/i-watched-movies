@@ -1,7 +1,7 @@
 ---
 title: 'ガンニバル'
 published: false
-watching: true
+dropped: true
 tags:
   - 'Horror'
   - 'Thriller'
@@ -17,4 +17,4 @@ summary: 'A policeman transferred to an isolated mountain village after an incid
 summary_ja: 'ある事件のあと山奥の集落に赴任した警官が、村を仕切る一族は人を食ってきたのではないかと疑い始める。'
 ---
 
-In progress. Disney+, directed by 片山慎三 from the 二宮正明 manga. A closed village turning on the outsider who noticed, which is the The Wailing (8.2) shape.
+Dropped partway. Disney+, directed by 片山慎三 from the 二宮正明 manga. A closed village turning on the outsider who noticed, which is the The Wailing (8.2) shape.
