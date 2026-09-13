@@ -17,6 +17,7 @@ seasons:
   - season: 1
     point: 7.3
     status: 'watched'
+    watch_date: '2026-09-06'
   - season: 2
     status: 'dropped'
 summary: 'A policeman transferred to an isolated mountain village after an incident starts to suspect the family that runs the place has been eating people.'
