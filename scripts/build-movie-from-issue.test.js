@@ -9,6 +9,7 @@ import {
   formatFile,
   mergeMovie,
   parseIssueBody,
+  parseSeasons,
   readExisting,
   slugify,
 } from './build-movie-from-issue.js';
@@ -430,6 +431,78 @@ describe('readExisting', () => {
     const m = readExisting(file);
     expect(m.release_date).toBe('2024-01-15');
   });
+
+  it('reads seasons back off an existing file', () => {
+    const file = path.join(tmpDir, 'series.md');
+    fs.writeFileSync(
+      file,
+      "---\ntitle: 'S'\npublished: false\ndropped: true\nseasons:\n  - season: 1\n    point: 7.3\n    status: 'watched'\n  - season: 2\n    status: 'dropped'\n---\n\nBody\n",
+    );
+    expect(readExisting(file).seasons).toEqual([
+      { season: 1, point: 7.3, status: 'watched', watch_date: '' },
+      { season: 2, point: null, status: 'dropped', watch_date: '' },
+    ]);
+  });
+});
+
+describe('parseSeasons', () => {
+  it('reads number, score, status and date in any order off one line', () => {
+    expect(parseSeasons('1, 7.3, watched, 2026-08-20')).toEqual([
+      { season: 1, point: 7.3, status: 'watched', watch_date: '2026-08-20' },
+    ]);
+    expect(parseSeasons('2 2026-01-05 dropped 6')).toEqual([
+      { season: 2, point: 6, status: 'dropped', watch_date: '2026-01-05' },
+    ]);
+  });
+
+  it('accepts S and Season prefixes and sorts by number', () => {
+    expect(parseSeasons('Season 3 8\nS1 7.5\n2 7').map(s => s.season)).toEqual([1, 2, 3]);
+  });
+
+  it('defaults a bare season line to watched with no score', () => {
+    expect(parseSeasons('4')).toEqual([
+      { season: 4, point: null, status: 'watched', watch_date: '' },
+    ]);
+  });
+
+  it('skips a line that is only a score rather than reading it as a season number', () => {
+    expect(parseSeasons('7.3')).toEqual([]);
+  });
+
+  it('skips a line with no leading season number', () => {
+    expect(parseSeasons('watched 8.0\n\nnotes about the show')).toEqual([]);
+  });
+
+  it('returns nothing for a blank field', () => {
+    expect(parseSeasons('')).toEqual([]);
+    expect(parseSeasons(undefined)).toEqual([]);
+  });
+
+  it('lands on the movie built from an issue body', () => {
+    const body = `### Title\n\nSeries\n\n### List\n\nDropped\n\n### Seasons\n\n1, 7.3, watched\n2, dropped\n`;
+    const { movie } = buildMovie(parseIssueBody(body));
+    expect(movie.seasons).toEqual([
+      { season: 1, point: 7.3, status: 'watched', watch_date: '' },
+      { season: 2, point: null, status: 'dropped', watch_date: '' },
+    ]);
+  });
+
+  it('writes seasons as a nested frontmatter list, omitting the fields it lacks', () => {
+    const out = formatFile({
+      title: 'S',
+      published: false,
+      dropped: true,
+      tags: [],
+      point: null,
+      seasons: [
+        { season: 1, point: 7.3, status: 'watched', watch_date: '2026-08-20' },
+        { season: 2, point: null, status: 'dropped', watch_date: '' },
+      ],
+    });
+    expect(out).toContain(
+      "seasons:\n  - season: 1\n    point: 7.3\n    status: 'watched'\n    watch_date: '2026-08-20'\n  - season: 2\n    status: 'dropped'\n",
+    );
+  });
 });
 
 describe('mergeMovie', () => {
@@ -574,6 +647,59 @@ describe('mergeMovie', () => {
       body: '',
     });
     expect(merged.point).toBe(7);
+  });
+
+  it('merges seasons by number instead of replacing the recorded list', () => {
+    const series = {
+      ...existing,
+      seasons: [
+        { season: 1, point: 7.3, status: 'watched', watch_date: '2026-08-20' },
+        { season: 2, point: null, status: 'watching', watch_date: '' },
+      ],
+    };
+    const merged = mergeMovie(series, {
+      title: 'Mov',
+      published: false,
+      tags: [],
+      national: '',
+      cover_image: '',
+      release_date: '',
+      watch_date: '',
+      point: null,
+      seasons: [
+        { season: 2, point: 8, status: 'watched', watch_date: '2026-09-01' },
+        { season: 3, point: null, status: 'dropped', watch_date: '' },
+      ],
+      ...noStreaming,
+      summary: '',
+      impression: '',
+      body: '',
+    });
+    // Season 1 was never re-typed and survives; season 2 takes the newer record.
+    expect(merged.seasons).toEqual([
+      { season: 1, point: 7.3, status: 'watched', watch_date: '2026-08-20' },
+      { season: 2, point: 8, status: 'watched', watch_date: '2026-09-01' },
+      { season: 3, point: null, status: 'dropped', watch_date: '' },
+    ]);
+  });
+
+  it('leaves seasons alone for an entry and an issue that have none', () => {
+    const merged = mergeMovie(existing, {
+      title: 'Mov',
+      published: true,
+      tags: [],
+      national: '',
+      cover_image: '',
+      release_date: '',
+      watch_date: '',
+      point: null,
+      ...noStreaming,
+      summary: '',
+      impression: '',
+      body: '',
+    });
+    expect(merged.seasons).toEqual([]);
+    expect(formatFile(merged)).not.toContain('seasons:');
   });
 
   it('accepts a 0 point from the issue', () => {

@@ -50,6 +50,15 @@ body:
       description: 'Score 0-10, half-point steps (e.g. 8.5)'
       placeholder: '8.5'
 
+  - type: textarea
+    id: seasons
+    attributes:
+      label: Seasons
+      description: 'Series only. One season per line: the season number first, then any of a score, a status (watched / watching / dropped) and a YYYY-MM-DD watch date. Seasons already recorded are kept, so list only the ones that changed.'
+      placeholder: |
+        1, 7.3, watched, 2026-08-20
+        2, dropped
+
   - type: input
     id: release_date
     attributes:

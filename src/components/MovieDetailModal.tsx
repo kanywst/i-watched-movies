@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { X, Quote } from 'lucide-react';
 import { clsx } from 'clsx';
-import { Language, Movie } from '../types';
+import { Language, Movie, SeasonStatus } from '../types';
 import { LANGUAGE_OPTIONS } from '../constants';
 import { StreamingBadges } from './StreamingBadges';
 import { isWatched } from '../partition';
@@ -41,6 +41,22 @@ const LONG_DATE = new Intl.DateTimeFormat('en-US', {
   day: 'numeric',
   timeZone: 'UTC',
 });
+
+// The season rows repeat a date per line and sit inside a 2/5-width panel, so they get the
+// abbreviated month. Released / Watched above stay long: there are two of them at most.
+const SHORT_DATE = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+
+/** The wording for a season's state. Presentation only, so it stays out of constants.ts. */
+const SEASON_STATUS_LABEL: Record<SeasonStatus, string> = {
+  watched: 'Watched',
+  watching: 'In progress',
+  dropped: 'Dropped',
+};
 
 interface MovieDetailModalProps {
   movie: Movie | null;
@@ -113,10 +129,15 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
     const d = new Date(value);
     return Number.isNaN(d.getTime()) ? null : LONG_DATE.format(d);
   };
+  const formatShortDate = (value: string): string | null => {
+    const d = new Date(value);
+    return Number.isNaN(d.getTime()) ? null : SHORT_DATE.format(d);
+  };
   // Read even for an unrated entry, where `point` is 0 and nothing below renders it.
   const scoreBand = bandOf(RATED_POINTS, movie.point);
   const releasedLabel = movie.release_date ? formatDate(movie.release_date) : null;
   const watchedLabel = movie.watch_date ? formatDate(movie.watch_date) : null;
+  const seasons = movie.seasons ?? [];
 
   // Per movie, not per site, and the fallback runs both ways: the two fields are
   // independently optional in `Movie`, so whichever one an entry has is what gets shown
@@ -256,6 +277,47 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
                 </div>
               )}
             </dl>
+
+            {/* A series watched partway has no entry score at all, so without this the only
+                record of it would be prose in the body. The numbers are set quietly and
+                without the SCORE_INK ramp on purpose: that ink reads a score against
+                RATED_POINTS, and season scores are deliberately not in that population, so
+                banding them here would claim a standing they do not have. */}
+            {seasons.length > 0 && (
+              <div className="mt-5">
+                <h3 className="text-[11px] font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500">
+                  Seasons
+                </h3>
+                <ul className="mt-2 border-t border-stone-200 divide-y divide-stone-200 dark:border-stone-800 dark:divide-stone-800">
+                  {seasons.map((s) => {
+                    const seasonWatched = s.watch_date ? formatShortDate(s.watch_date) : null;
+                    return (
+                      <li
+                        key={s.season}
+                        className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5 py-1.5 text-sm"
+                      >
+                        <span className="w-14 shrink-0 text-stone-500 dark:text-stone-400">
+                          <span className="sr-only">Season </span>S{s.season}
+                        </span>
+                        {s.point === null ? (
+                          <span className="text-stone-400 dark:text-stone-500">Unrated</span>
+                        ) : (
+                          <span className="tabular-nums font-medium text-stone-900 dark:text-stone-100">
+                            {s.point}
+                          </span>
+                        )}
+                        <span className="ml-auto flex items-baseline gap-3 text-xs text-stone-500 dark:text-stone-400">
+                          {seasonWatched && (
+                            <span className="tabular-nums">{seasonWatched}</span>
+                          )}
+                          <span>{SEASON_STATUS_LABEL[s.status]}</span>
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
 
             <StreamingBadges movie={movie} variant="detail" />
           </div>
