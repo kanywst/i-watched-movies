@@ -1,6 +1,7 @@
 ---
 title: '国民死刑投票'
 published: false
+watching: true
 tags:
   - 'Crime'
   - 'Thriller'
