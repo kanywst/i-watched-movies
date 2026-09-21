@@ -8,6 +8,8 @@ permissions:
   contents: write
   issues: write
   pull-requests: write
+  # To dispatch verify-deploy.yml after the merge.
+  actions: write
 
 jobs:
   build:
@@ -181,6 +183,23 @@ jobs:
             --add-label 'status: merged'
           gh issue comment "$ISSUE" --body "Merged: $PR_URL"
           gh issue close "$ISSUE" --reason completed || true
+
+      # The merge above moved main, and Cloudflare's integration drops builds when pushes
+      # land close together, which a batch of movie issues does by construction. That is
+      # what verify-deploy.yml watches for, but it is `on: push` and the merge was made
+      # with GITHUB_TOKEN, so it never hears about this push. Dispatch it by hand.
+      #
+      # Best effort: a missed check is worse than a failed issue, so this never fails the
+      # run. verify-deploy's concurrency group is a single slot with cancel-in-progress,
+      # so a batch collapses to one run watching the final state of main, which is the
+      # right one to watch.
+      - name: Ask verify-deploy to watch this push
+        if: success() && steps.changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run verify-deploy.yml --ref main ||
+            echo "verify-deploy dispatch failed; this push is not being watched."
 
       - name: Report failure on issue
         if: failure()

@@ -14,6 +14,12 @@ name: Verify deploy
 on:
   push:
     branches: [main]
+  # The bot merges movie PRs with GITHUB_TOKEN, and a push made with that token starts no
+  # workflow run, so the `push` trigger above never fires for the one case this workflow
+  # was written for: a batch of movie issues, each merge its own push, which is exactly
+  # how the integration drops builds. movie-from-issue.yml dispatches this after it
+  # merges. Dispatch is the one event GitHub does deliver from GITHUB_TOKEN.
+  workflow_dispatch:
 
 # Never runs against its own retrigger commit, so one push can cost at most one retry.
 concurrency:
@@ -35,7 +41,11 @@ env:
 
 jobs:
   verify:
-    if: "!contains(github.event.head_commit.message, '[deploy-retrigger]')"
+    # head_commit is absent on a dispatch, so spell out which event the guard is about
+    # rather than leaning on contains(null, ...) reading as false.
+    if: >-
+      github.event_name != 'push' ||
+      !contains(github.event.head_commit.message, '[deploy-retrigger]')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
