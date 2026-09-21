@@ -12,6 +12,7 @@ watch_date: '2026-07-25'
 point: 8.8
 summary: 'Detective Benoit Blanc is invited to a tech billionaire''s private-island murder game, and the whole mystery re-runs itself once you learn who was really watching.'
 summary_ja: '名探偵ブノワ・ブランがテック富豪のプライベート島の殺人ゲームに招かれる。誰が本当に見ていたのかが分かると、謎の全体がもう一度上映し直される。'
+added: '2026-07-19T00:40:15+09:00'
 ---
 
 Rian Johnson''s sequel, another stacked reversal. Netflix original. Netflix JP.

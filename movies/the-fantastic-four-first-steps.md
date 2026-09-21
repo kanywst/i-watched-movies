@@ -8,6 +8,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/nf5qaSEvyYSNeFH0YhSs5EsBLX9.jp
 release_date: '2025-07-25'
 watch_date: '2025-07-25'
 point: 5.0
+added: '2026-01-12T19:13:46+09:00'
 ---
 
 On Earth-828 in 1964, the world celebrates the fourth anniversary of astronauts Reed Richards, Sue Storm, Ben Grimm, and Johnny Storm becoming the superhero team known as the Fantastic Four after they gained superhuman abilities from exposure to cosmic rays during a space mission. Since then, the team have become celebrities and fought supervillains, while Reed's inventions have progressed technology and Sue's diplomacy via the Future Foundation has led to demilitarization and peace for much of the world. When Reed and Sue reveal that they are expecting a child, the world prepares for the new arrival and questions whether the child will also have superpowers.

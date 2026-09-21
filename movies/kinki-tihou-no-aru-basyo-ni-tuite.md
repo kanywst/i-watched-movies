@@ -8,6 +8,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/fhKkr22UpULWNemcgCjppTkHXgf.jp
 release_date: '2025-08-08'
 watch_date: '2025-08-08'
 point: 7.3
+added: '2026-01-12T17:35:11+09:00'
 ---
 
 An occult magazine editor has gone missing. Until just before he vanished, he had been investigating numerous unsolved cases and strange phenomena from the past: disappearances of young girls, mass hysteria among junior high students, urban legends, and controversies over live streaming videos from haunted locations. His colleague, editorial staff member Yuuki Ozawa, searches for him alongside occult writer Chihiro Seno. As they investigate, they realize all these mysteries connect to “a certain place in the Kinki region.” Determined to uncover the truth, the two head toward that location as if guided by something, but it was a forbidden place that should never have been found.

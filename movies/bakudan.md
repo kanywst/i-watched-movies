@@ -11,6 +11,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/7d4Gb3R1W6OByg46V5TSCNbbpUW.jp
 release_date: '2025-10-31'
 watch_date: '2025-11-08'
 point: 8.5
+added: '2026-01-12T17:35:11+09:00'
 ---
 
 A middle-aged man of unknown identity, drunk and violent, assaulted a vending machine and its attendant before being taken into police custody. Calling himself “Suzuki Tagosaku,” he claimed to have psychic abilities and warned of bombs planted throughout Tokyo. Soon, explosions occurred in the city as he predicted, and Suzuki declared three more would follow at hourly intervals. Suzuki evaded interrogation with evasive answers while posing cryptic riddles about the bombs, toying with the detectives...

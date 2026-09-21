@@ -75,7 +75,9 @@ interface HeaderStat {
 const URL_SPECS = {
   view: urlParams.string('watched'),
   search: urlParams.string(''),
-  sort: urlParams.string('watch_date_desc'),
+  // Empty rather than a concrete key: an absent `sort` means "whatever this view opens
+  // on", which is per view (see ViewSpec.defaultSort), so the default cannot live here.
+  sort: urlParams.string(''),
   tags: urlParams.stringList(),
   selected: urlParams.string(''),
 };
@@ -118,7 +120,8 @@ const App: React.FC = () => {
   // Which card, if any, currently owns the shared poster view-transition-name.
   const [transitioningId, setTransitioningId] = React.useState('');
   const view: View = isView(urlState.view) ? urlState.view : DEFAULT_VIEW;
-  const sort: SortKey = isSort(urlState.sort) ? urlState.sort : 'watch_date_desc';
+  const spec = viewSpec(view);
+  const sort: SortKey = isSort(urlState.sort) ? urlState.sort : spec.defaultSort;
   const search = urlState.search;
   const selectedTags = urlState.tags;
 
@@ -149,7 +152,6 @@ const App: React.FC = () => {
   const watchlistStats = useMemo(() => computeWatchlistStats(WATCHLIST_MOVIES), []);
   const activity = useMemo(() => computeActivity(HISTORY_MOVIES), []);
 
-  const spec = viewSpec(view);
   // A `null` source is a view that renders its own panel rather than the grid.
   const viewMovies = spec.source ? SOURCE_LISTS[spec.source] : EMPTY_MOVIES;
 

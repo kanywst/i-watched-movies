@@ -13,6 +13,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/uhviyknTT5cEQXbn6vWIqfM4vGm.jp
 release_date: '2013-09-20'
 summary: 'Two girls vanish, the only suspect is released, and one father decides police procedure is not going to be enough.'
 summary_ja: '少女二人が消え、唯一の容疑者は釈放される。父親の一人は、警察の手続きでは足りないと決める。'
+added: '2026-08-02T14:25:20Z'
 ---
 
 Villeneuve and Roger Deakins. Sits between the abduction mystery of Forgotten and the moral rot of The Devil All the Time. Not on any of the five tracked JP services as of 2026-08.

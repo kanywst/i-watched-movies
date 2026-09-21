@@ -13,6 +13,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/Ac8ruycRXzgcsndTZFK6ouGA0FA.jp
 release_date: '2020-12-10'
 summary: 'Three friends find Tokyo emptied and are forced into lethal games graded by playing card.'
 summary_ja: '三人の友人が無人の東京に放り出され、トランプの絵柄で難度が決まる命がけのゲームに参加させられる。'
+added: '2026-08-03T13:24:59Z'
 ---
 
 Logged as seen.

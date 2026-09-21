@@ -1,5 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
+import { SORT_OPTIONS } from './constants';
 import { DEFAULT_VIEW, VIEW_SPECS, isView, viewSpec } from './views';
 
 describe('isView', () => {
@@ -39,5 +40,19 @@ describe('viewSpec', () => {
   it('hides the Stats tab count, which would only repeat the Watched tab', () => {
     expect(viewSpec('stats').showCount).toBe(false);
     expect(VIEW_SPECS.filter(s => !s.showCount).map(s => s.key)).toEqual(['stats']);
+  });
+
+  // Watched is the only list whose entries carry a watch_date. Sorting any of the others
+  // by it compared zeroes, so the grid fell through to whatever order glob returned.
+  it('opens the lists with no watch_date on added order', () => {
+    expect(viewSpec('watched').defaultSort).toBe('watch_date_desc');
+    for (const key of ['watchlist', 'watching', 'seen', 'dropped'] as const) {
+      expect(viewSpec(key).defaultSort).toBe('added_desc');
+    }
+  });
+
+  it('gives every view a default sort the dropdown offers', () => {
+    const offered = SORT_OPTIONS.map(o => o.value);
+    for (const spec of VIEW_SPECS) expect(offered).toContain(spec.defaultSort);
   });
 });

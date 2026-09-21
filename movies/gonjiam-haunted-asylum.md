@@ -11,6 +11,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/fNqlsmu2tiI1bXcpU31yjHPkiJz.jp
 release_date: '2018-03-28'
 summary: 'A horror web series livestreams from an abandoned asylum and the producer has rigged the night.'
 summary_ja: 'ホラー系のウェブ番組が廃精神病院から生配信する。その夜、プロデューサーは仕込みを済ませている。'
+added: '2026-08-02T19:01:41Z'
 ---
 
 Logged as seen.

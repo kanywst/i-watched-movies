@@ -106,6 +106,22 @@ describe('buildMovie', () => {
     expect(movie.impression).toBe('Loved it.');
   });
 
+  // The issue form has no field for it: added records when the entry landed, which is the
+  // clock's to say, not the filer's. `now` is injectable only so a test can pin it.
+  it('stamps added from the clock, not from any section', () => {
+    const { movie } = buildMovie(parseIssueBody(sample), {
+      now: new Date('2026-09-21T13:02:16Z'),
+    });
+    expect(movie.added).toBe('2026-09-21T13:02:16.000Z');
+  });
+
+  it('keeps the time of day, so a batch filed in one sitting stays ordered', () => {
+    const at = iso => buildMovie(parseIssueBody(sample), { now: new Date(iso) }).movie.added;
+    const first = at('2026-09-12T14:16:06Z');
+    const second = at('2026-09-12T15:14:25Z');
+    expect(new Date(second).getTime()).toBeGreaterThan(new Date(first).getTime());
+  });
+
   it('reads the Japanese summary from its own section', () => {
     const body = sample.replace(
       '### Impression',
@@ -279,6 +295,18 @@ describe('formatFile', () => {
     expect(out).not.toContain('checked:');
   });
 
+  it('emits added as the last key in the frontmatter', () => {
+    const { movie } = buildMovie(parseIssueBody(sample), {
+      now: new Date('2026-09-21T13:02:16Z'),
+    });
+    expect(formatFile(movie)).toMatch(/added: '2026-09-21T13:02:16\.000Z'\n---\n/);
+  });
+
+  it('omits added when there is no stamp', () => {
+    const { movie } = buildMovie(parseIssueBody(sample));
+    expect(formatFile({ ...movie, added: '' })).not.toContain('added:');
+  });
+
   it('emits summary_ja under summary', () => {
     const { movie } = buildMovie(parseIssueBody(sample));
     const out = formatFile({ ...movie, summary: 'English one.', summary_ja: '日本語のほう。' });
@@ -381,6 +409,25 @@ describe('readExisting', () => {
     expect(m.watch_date).toBe('');
     expect(m.point).toBeNull();
     expect(m.body).toBe('Body text.');
+    expect(m.added).toBe('');
+  });
+
+  it('reads added as a full instant', () => {
+    const file = path.join(tmpDir, 'stamped.md');
+    fs.writeFileSync(file, ['---', "title: 'Mov'", "added: '2026-09-12T15:14:25Z'", '---', ''].join('\n'));
+    expect(readExisting(file).added).toBe('2026-09-12T15:14:25.000Z');
+  });
+
+  it('coerces an unquoted YAML timestamp in added', () => {
+    const file = path.join(tmpDir, 'unquoted.md');
+    fs.writeFileSync(file, ['---', "title: 'Mov'", 'added: 2026-09-12T15:14:25Z', '---', ''].join('\n'));
+    expect(readExisting(file).added).toBe('2026-09-12T15:14:25.000Z');
+  });
+
+  it('reads a malformed added as absent rather than storing a broken stamp', () => {
+    const file = path.join(tmpDir, 'broken.md');
+    fs.writeFileSync(file, ['---', "title: 'Mov'", "added: 'last Tuesday'", '---', ''].join('\n'));
+    expect(readExisting(file).added).toBe('');
   });
 
   it('reads streaming as an array and checked as a month', () => {
@@ -520,6 +567,7 @@ describe('mergeMovie', () => {
     summary: 'old summary',
     summary_ja: '前の日本語概要',
     impression: '',
+    added: '2026-06-01T10:00:00.000Z',
     body: 'old body',
   };
   const noStreaming = { streaming: [], checked: '' };
@@ -555,6 +603,47 @@ describe('mergeMovie', () => {
     // A blank streaming/checked from the issue keeps the last known availability.
     expect(merged.streaming).toEqual(['Netflix']);
     expect(merged.checked).toBe('2026-06');
+  });
+
+  // The one field here where existing wins. Every other value is overwritten or filled in
+  // from the incoming issue; restamping added on a re-file would jump a film the reader
+  // queued months ago to the top of the added order the moment they logged it as watched.
+  it('keeps the original added stamp when the entry is re-filed', () => {
+    const incoming = {
+      title: 'Mov',
+      published: true,
+      tags: [],
+      national: '',
+      cover_image: '',
+      release_date: '',
+      watch_date: '2026-09-21',
+      point: 8.5,
+      ...noStreaming,
+      summary: '',
+      impression: '',
+      added: '2026-09-21T13:02:16.000Z',
+      body: '',
+    };
+    expect(mergeMovie(existing, incoming).added).toBe('2026-06-01T10:00:00.000Z');
+  });
+
+  it('takes the incoming stamp when the existing entry predates the field', () => {
+    const incoming = {
+      title: 'Mov',
+      published: true,
+      tags: [],
+      national: '',
+      cover_image: '',
+      release_date: '',
+      watch_date: '',
+      point: null,
+      ...noStreaming,
+      summary: '',
+      impression: '',
+      added: '2026-09-21T13:02:16.000Z',
+      body: '',
+    };
+    expect(mergeMovie({ ...existing, added: '' }, incoming).added).toBe('2026-09-21T13:02:16.000Z');
   });
 
   it('clears watching when an in-progress series is re-filed as watched', () => {

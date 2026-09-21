@@ -44,6 +44,11 @@ export interface Movie {
   // verified, surfaced next to the badges so a stale entry reads as stale.
   streaming?: string[];
   checked?: string;
+  // When the entry first landed in the diary, as a full ISO instant. Machine-set by the
+  // issue automation and never displayed: it exists so the lists with no `watch_date` of
+  // their own (Watchlist, In Progress, Seen, Dropped) have an order that means something.
+  // Full precision because a batch of issues filed in one sitting shares a date.
+  added?: string;
 }
 
 /** Which language the movie summaries render in. See `useLanguage`. */
@@ -61,6 +66,8 @@ export type View =
 export type SortKey =
   | 'watch_date_desc'
   | 'watch_date_asc'
+  | 'added_desc'
+  | 'added_asc'
   | 'release_date_desc'
   | 'release_date_asc'
   | 'point_desc'

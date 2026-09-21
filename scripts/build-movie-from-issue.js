@@ -155,7 +155,12 @@ function existingMonth(value) {
   return parseMonth(value);
 }
 
-export function buildMovie(sections, { issueNumber } = {}) {
+// The stamp behind the `added_desc` sort. It is machine-set rather than a form field
+// because it answers "when did this land in the diary", which the filer cannot restate and
+// should not be able to. Full precision, not YYYY-MM-DD: a batch of issues filed in one
+// sitting shares a date, and a date-only stamp would put that batch back on the arbitrary
+// tie order the sort exists to replace.
+export function buildMovie(sections, { issueNumber, now = new Date() } = {}) {
   const list = (sections['List'] || 'Watched').trim().toLowerCase();
   // "Seen" is watched-but-unrated: not published (no score, kept out of the Watched grid)
   // and flagged so it lands in its own Seen section rather than the Watchlist.
@@ -186,6 +191,7 @@ export function buildMovie(sections, { issueNumber } = {}) {
     summary: (sections['Summary'] || '').trim(),
     summary_ja: (sections['Summary (JA)'] || '').trim(),
     impression: (sections['Impression'] || '').trim(),
+    added: now.toISOString(),
     body: (sections['Body'] || '').trim(),
   };
 
@@ -257,8 +263,20 @@ export function readExisting(filePath) {
     summary: (data.summary ?? '').toString().trim(),
     summary_ja: (data.summary_ja ?? '').toString().trim(),
     impression: (data.impression ?? '').toString().trim(),
+    added: existingStamp(data.added),
     body: (content ?? '').trim(),
   };
+}
+
+// `added` is a full ISO instant. An unquoted one in YAML parses to a Date, so coerce that
+// back; anything unparseable reads as absent rather than being stored as a broken stamp.
+function existingStamp(value) {
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? '' : value.toISOString();
+  }
+  if (!value) return '';
+  const d = new Date(String(value).trim());
+  return Number.isNaN(d.getTime()) ? '' : d.toISOString();
 }
 
 export function mergeMovie(existing, incoming) {
@@ -283,6 +301,10 @@ export function mergeMovie(existing, incoming) {
     summary: incoming.summary || existing.summary,
     summary_ja: incoming.summary_ja || existing.summary_ja,
     impression: incoming.impression || existing.impression,
+    // Existing wins, unlike every other field here: `added` records when the entry first
+    // landed, so re-filing an issue to move a film from the watchlist to watched must not
+    // restamp it to today and jump it to the top of the added order.
+    added: existing.added || incoming.added,
     body: incoming.body || existing.body,
   };
 }
@@ -324,6 +346,7 @@ export function formatFile(movie) {
   if (movie.summary) lines.push(`summary: ${quote(movie.summary)}`);
   if (movie.summary_ja) lines.push(`summary_ja: ${quote(movie.summary_ja)}`);
   if (movie.impression) lines.push(`impression: ${quote(movie.impression)}`);
+  if (movie.added) lines.push(`added: ${quote(movie.added)}`);
   lines.push('---');
   lines.push('');
   if (movie.body) {

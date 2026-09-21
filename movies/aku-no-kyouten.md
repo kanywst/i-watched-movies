@@ -14,6 +14,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/pmf4NbnfOpfsRekqWoTeK1ttwyw.jp
 release_date: '2012-11-10'
 summary: 'A beloved high-school teacher is a functioning psychopath, and one night he decides the simplest fix for his problems is to kill the entire class.'
 summary_ja: '生徒に慕われる高校教師は、社会に適応したサイコパスだった。ある夜、抱えた問題をいちばん簡単に片づける方法はクラス全員を殺すことだと決める。'
+added: '2026-09-04T12:27:25Z'
 ---
 
 The charming-monster film 死刑にいたる病 (8.4) and ヒメアノ〜ル (7.7) both belong to. Miike, so the last act is a slaughter rather than a study.

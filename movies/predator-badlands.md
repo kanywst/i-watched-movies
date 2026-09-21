@@ -9,6 +9,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/pHpq9yNUIo6aDoCXEBzjSolywgz.jp
 release_date: '2025-11-03'
 watch_date: '2025-11-15'
 point: 7.7
+added: '2026-01-12T19:13:46+09:00'
 ---
 
 Dek is a Yautja runt from planet Yautja Prime. Seeking approval from clan leader Njohrr, his father, Dek plans to hunt the Kalisk, the apex predator on the "death planet" Genna feared even by Njohrr. Before Dek can leave, Njohrr arrives and orders Dek's brother Kwei to kill him, deeming him too weak for the clan. Defying the order, Kwei activates his ship to transport Dek to Genna. Dek watches helplessly as Njohrr executes Kwei.

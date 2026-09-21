@@ -8,6 +8,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/t41GV14N1Nt7128bSbwt0gbkv5v.jp
 release_date: '2025-10-24'
 watch_date: '2025-11-09'
 point: 8.0
+added: '2026-01-12T19:13:46+09:00'
 ---
 
 Takuya and Mamoru pose as women on social media, skillfully extracting personal information from men with no family ties to trade in family registers. Raised in harsh environments, they found themselves working for an organization dealing in illegal side jobs before they knew it. Yet they were also ordinary young men who sometimes got into wild shenanigans. Takuya enlists the help of Kajitani, the older brother figure who drew him into the world of illegal business, and tries to escape the underworld alongside Mamoru...

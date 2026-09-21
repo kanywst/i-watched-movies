@@ -90,6 +90,7 @@ export function parseMovie(fileContent, id) {
     impression: data.impression || '',
     streaming: normalizeStreaming(data.streaming),
     checked: normalizeChecked(data.checked),
+    added: data.added ? new Date(data.added).toISOString() : null,
     content,
   };
 }

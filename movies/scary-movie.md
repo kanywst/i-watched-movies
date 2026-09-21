@@ -11,6 +11,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/fVQFPRuw3yWXojYDJvA5EoFjUOY.jp
 release_date: '2000-07-07'
 summary: 'A parody of Scream and the late-90s slasher cycle.'
 summary_ja: '『スクリーム』と90年代末のスラッシャーの潮流のパロディ。'
+added: '2026-08-03T13:24:23Z'
 ---
 
 Logged as seen.

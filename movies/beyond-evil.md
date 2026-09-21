@@ -15,6 +15,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/qvR2V6BlXrJ7VTuhEfnXc4rTJTR.jp
 release_date: '2021-02-19'
 summary: 'Two policemen in a small town each believe the other is behind the killings around them, and both are right that the other is hiding something.'
 summary_ja: '小さな町の警官二人が、身の回りで続く殺人の犯人は互いだと疑い合う。相手が何かを隠しているという点では、どちらも正しい。'
+added: '2026-09-04T12:27:57Z'
 ---
 
 Korean title 괴물. A two-hander where the mystery is what the other man is, which is 死刑にいたる病 (8.4) rather than a procedural.
