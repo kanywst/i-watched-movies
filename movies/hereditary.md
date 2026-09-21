@@ -15,6 +15,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/4GFPuL14eXi66V96xBWY73Y9PfR.jp
 release_date: '2018-06-08'
 summary: 'A family buries its matriarch and finds out what she had been arranging for them.'
 summary_ja: '一家が家長だった祖母を埋葬し、彼女が自分たちのために何を手配していたのかを知る。'
+added: '2026-08-02T19:02:01Z'
 ---
 
 The benchmark of the modern elevated-horror shelf, and a grief film before it is anything else. Closest thing in English to the dread engineering of The Wailing (8.2).

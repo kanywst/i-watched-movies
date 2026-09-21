@@ -10,4 +10,5 @@ cover_image: 'https://image.tmdb.org/t/p/original/2qwdD7CiLLscPZijVbRsCXILQwY.jp
 release_date: '2026-07-02'
 watch_date: '2026-07-06'
 point: 8.5
+added: '2026-07-06T12:03:44Z'
 ---

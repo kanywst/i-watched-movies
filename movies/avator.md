@@ -9,6 +9,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/bRBeSHfGHwkEpImlhxPmOcUsaeg.jp
 release_date: '2025-12-19'
 watch_date: '2025-12-21'
 point: 8.2
+added: '2026-01-12T17:35:11+09:00'
 ---
 
 Shortly after settling in with the Metkayina, Jake Sully and his family grapple with grief over Neteyam's death. Neytiri has developed hatred toward humans. When a fleet of flying merchant ships arrive, Jake and Neytiri decide Spider must leave the Metkayina and return to the human scientist camp, but that the family will accompany him for the trip.

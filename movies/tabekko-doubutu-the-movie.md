@@ -9,6 +9,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/kmHKB2j2zLxyQhVbJC7etNQldnS.jp
 release_date: '2025-05-01'
 watch_date: '2025-08-23'
 point: 5.0
+added: '2026-01-12T19:13:46+09:00'
 ---
 
 In Sweets Land, where sweets and humans live in harmony, the singing and dancing super idols “Eat-a-Lot Animals” are wildly popular. However, Pegasus-chan is captured by the vicious “Cotton Candy Army,” who plot world domination by eliminating all sweets from existence. The Eat-a-Lot Animals, whose only asset is their cuteness and who possess zero combat power, rise up to rescue their precious friend and save Sweets Land...

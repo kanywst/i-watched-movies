@@ -20,7 +20,8 @@ watch_date: '2026-01-15'
 point: 8.5
 summary: 'A summary'
 summary_ja: '日本語の概要'
-impression: 'Loved it'`,
+impression: 'Loved it'
+added: '2026-01-20T04:05:06Z'`,
       ),
       'test-movie',
     );
@@ -44,8 +45,28 @@ impression: 'Loved it'`,
       impression: 'Loved it',
       streaming: [],
       checked: '',
+      added: '2026-01-20T04:05:06.000Z',
       content: '\nBody text\n',
     });
+  });
+
+  // added orders the lists that carry no watch_date, so the precision has to survive the
+  // parse: truncating it to a day would put a batch filed in one sitting back on an
+  // arbitrary order, which is the thing the stamp exists to fix.
+  it('keeps the time of day in added', () => {
+    expect(parseMovie(md(`title: 'T'\nadded: '2026-09-12T15:14:25Z'`), 't').added).toBe(
+      '2026-09-12T15:14:25.000Z',
+    );
+  });
+
+  it('coerces an unquoted YAML timestamp in added', () => {
+    expect(parseMovie(md(`title: 'T'\nadded: 2026-09-12T15:14:25Z`), 't').added).toBe(
+      '2026-09-12T15:14:25.000Z',
+    );
+  });
+
+  it('leaves added null when the frontmatter omits it', () => {
+    expect(parseMovie(md(`title: 'T'`), 't').added).toBeNull();
   });
 
   it('defaults summary_ja to an empty string when the frontmatter omits it', () => {

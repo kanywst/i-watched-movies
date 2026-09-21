@@ -8,6 +8,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/kK1BGkG3KAvWB0WMV1DfOx9yTMZ.jp
 release_date: '2026-01-16'
 watch_date: '2026-01-17'
 point: 7.0
+added: '2026-01-17T19:23:05+09:00'
 ---
 
 Shortly after being rescued, Spike remains in quarantined Britain with charismatic Satanist Sir Lord Jimmy Crystal and his gang, the Fingers. Invited to join the gang, he challenges and kills one of the Fingers and takes his place. He is introduced to Jimmy Ink, who is less enthused about Crystal's violence, and the sadistic Jimmima.

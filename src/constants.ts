@@ -168,6 +168,8 @@ export const LANGUAGE_OPTIONS: { value: Language; label: string; title: string }
 export const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: 'watch_date_desc', label: 'Watch Date (Newest)' },
   { value: 'watch_date_asc', label: 'Watch Date (Oldest)' },
+  { value: 'added_desc', label: 'Added (Newest)' },
+  { value: 'added_asc', label: 'Added (Oldest)' },
   { value: 'point_desc', label: 'Score (High to Low)' },
   { value: 'point_asc', label: 'Score (Low to High)' },
   { value: 'release_date_desc', label: 'Release Date (Newest)' },

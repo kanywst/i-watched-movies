@@ -10,6 +10,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/wobVTa99eW0ht6c1rNNzLkazPtR.jp
 release_date: '2025-09-12'
 watch_date: '2026-06-28'
 point: 7.2
+added: '2026-06-28T11:02:39Z'
 ---
 
 In an alternate 20th century, the United States is a totalitarian military regime following a devastating civil war. The regime has established an annual event, the "Long Walk," which aims to inspire patriotism and work ethic among the destitute, as the country is in the grips of a severe economic depression. Fifty teenage boys, one from each state, are chosen randomly, given water and rations, and must walk hundreds of miles nonstop while escorted by armed soldiers who also broadcast the event. Those who fall below 3 miles per hour or stop walking, receive up to three warnings before being executed. The Walk ends when there is only one survivor remaining, who receives a large cash prize and can have one wish fulfilled. Although the sign-up is technically voluntary, nearly all eligible young men do so every year in the hope of improving their families' lives.

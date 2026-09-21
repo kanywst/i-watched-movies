@@ -9,6 +9,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/tVvpFIoteRHNnoZMhdnwIVwJpCA.jp
 release_date: '2026-02-13'
 watch_date: '2026-02-28'
 point: 6.5
+added: '2026-02-28T19:01:33+09:00'
 ---
 
 In Los Angeles, Mike Davis is an elusive and disciplined jewel thief, carefully planning robberies to avoid violence and DNA evidence while escaping via U.S. Route 101. Intercepting a diamond delivery carrying decoys, he steals $3 million in genuine diamonds, but is shaken after being grazed by an unexpected bullet. He calls off a planned robbery in Santa Barbara, but his fence, Money, enlists volatile young biker Ormon instead.

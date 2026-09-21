@@ -11,6 +11,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/qExufIc4Rw0e4xdVZlhMdmEDGES.jp
 release_date: '2018-10-12'
 summary: 'Seven strangers check into a dead hotel on the California-Nevada state line on one night in 1969, each with a false name and a reason to be there.'
 summary_ja: '1969年のある夜、カリフォルニアとネバダの州境に建つ寂れたホテルに、偽名と事情を抱えた七人が投宿する。'
+added: '2026-09-04T12:27:44Z'
 ---
 
 An ensemble of liars in one location, unpacked chapter by chapter: the Glass Onion (8.8) and The Menu (8.5) shape, played straight. No JP subscription service as of 2026-09.

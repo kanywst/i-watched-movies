@@ -12,6 +12,7 @@ watch_date: '2026-07-20'
 point: 8.2
 summary: 'On a honeymoon cruise down the Nile, Poirot investigates a murder among a party of guests where nearly everyone had a motive.'
 summary_ja: 'ナイルを下る新婚旅行の客船で、ほぼ全員に動機がある殺人をポアロが捜査する。'
+added: '2026-07-19T12:47:29+09:00'
 ---
 
 Branagh''s second Poirot, a classic locked-boat reveal. Disney+ JP (Star).

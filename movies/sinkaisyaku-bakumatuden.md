@@ -9,6 +9,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/Avaj2wXVa9XopNCwEs3e8FvpL51.jp
 release_date: '2025-12-19'
 watch_date: '2025-12-27'
 point: 1.0
+added: '2026-01-12T17:35:11+09:00'
 ---
 
 A work depicting late Edo period patriots like Sakamoto Ryoma and Saigo Takamori with unique humor and interpretation

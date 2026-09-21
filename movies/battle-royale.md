@@ -12,6 +12,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/aLGKAQKgzWpJ6egyWzzC11jXBRJ.jp
 release_date: '2000-12-16'
 summary: 'A junior high class is dropped on an island and told only one may leave.'
 summary_ja: '中学のクラスが島に落とされ、生きて帰れるのは一人だと告げられる。'
+added: '2026-08-03T13:24:50Z'
 ---
 
 Logged as seen.

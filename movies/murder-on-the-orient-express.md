@@ -12,6 +12,7 @@ watch_date: '2026-07-20'
 point: 7.5
 summary: 'Detective Hercule Poirot, stranded on a snowbound luxury train, must find a killer among the passengers before the murderer strikes again.'
 summary_ja: '雪で立ち往生した豪華列車に閉じ込められた名探偵エルキュール・ポアロが、次の犯行が起きる前に乗客のなかの犯人を突き止めなければならない。'
+added: '2026-07-19T12:47:29+09:00'
 ---
 
 Branagh''s all-star Christie whodunit, the definitive twist ending. Disney+ JP (Star).

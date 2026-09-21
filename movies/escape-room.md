@@ -12,6 +12,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/8Ls1tZ6qjGzfGHjBB7ihOnf7f0b.jp
 release_date: '2019-01-04'
 summary: 'Six strangers invited to a $10,000 escape room find the puzzles are lethal and personal.'
 summary_ja: '賞金1万ドルの脱出ゲームに招かれた六人が、その謎解きは命がけで、しかも自分の過去に結びついていると気づく。'
+added: '2026-08-03T13:24:36Z'
 ---
 
 Logged as seen.

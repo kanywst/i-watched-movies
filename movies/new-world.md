@@ -14,6 +14,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/rpHZhV3zkZkaCCENSU4wKY2Hoft.jp
 release_date: '2013-02-21'
 summary: 'An undercover cop eight years inside a crime syndicate is ordered to steer the war over who takes the dead boss''\''''s chair.'
 summary_ja: '犯罪組織に八年潜入した刑事が、死んだボスの椅子を巡る抗争を誘導しろと命じられる。'
+added: '2026-08-02T14:25:15Z'
 ---
 
 The Korean answer to Infernal Affairs, whose whole trilogy is already on this watchlist, and to The Departed. Same undercover-loyalty machine, colder ending.

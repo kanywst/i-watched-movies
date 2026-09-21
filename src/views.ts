@@ -1,6 +1,6 @@
 import { Activity, Bookmark, ChartColumn, Check, CircleSlash, Eye, Play } from 'lucide-react';
 import type React from 'react';
-import type { View } from './types';
+import type { SortKey, View } from './types';
 
 /**
  * The top-level views, as data. Previously the same n-way branch was written three times in
@@ -23,16 +23,24 @@ export interface ViewSpec {
    * Watched tab's.
    */
   showCount: boolean;
+  /**
+   * Which sort the grid opens on when the URL names none. Only Watched has a `watch_date`
+   * to order by; every other list is unwatched or unfinished, so sorting those by watch
+   * date compared zeroes and handed the grid whatever order glob happened to return. They
+   * default to `added_desc` instead, newest entry first. A sort the reader picks is held in
+   * the query string and survives a tab switch, so this is only ever the starting point.
+   */
+  defaultSort: SortKey;
 }
 
 export const VIEW_SPECS: ViewSpec[] = [
-  { key: 'watched', label: 'Watched', icon: Eye, source: 'watched', showCount: true },
-  { key: 'watching', label: 'In Progress', icon: Play, source: 'watching', showCount: true },
-  { key: 'watchlist', label: 'Watchlist', icon: Bookmark, source: 'watchlist', showCount: true },
-  { key: 'seen', label: 'Seen', icon: Check, source: 'seen', showCount: true },
-  { key: 'dropped', label: 'Dropped', icon: CircleSlash, source: 'dropped', showCount: true },
-  { key: 'history', label: 'History', icon: Activity, source: null, showCount: true },
-  { key: 'stats', label: 'Stats', icon: ChartColumn, source: null, showCount: false },
+  { key: 'watched', label: 'Watched', icon: Eye, source: 'watched', showCount: true, defaultSort: 'watch_date_desc' },
+  { key: 'watching', label: 'In Progress', icon: Play, source: 'watching', showCount: true, defaultSort: 'added_desc' },
+  { key: 'watchlist', label: 'Watchlist', icon: Bookmark, source: 'watchlist', showCount: true, defaultSort: 'added_desc' },
+  { key: 'seen', label: 'Seen', icon: Check, source: 'seen', showCount: true, defaultSort: 'added_desc' },
+  { key: 'dropped', label: 'Dropped', icon: CircleSlash, source: 'dropped', showCount: true, defaultSort: 'added_desc' },
+  { key: 'history', label: 'History', icon: Activity, source: null, showCount: true, defaultSort: 'watch_date_desc' },
+  { key: 'stats', label: 'Stats', icon: ChartColumn, source: null, showCount: false, defaultSort: 'watch_date_desc' },
 ];
 
 export const DEFAULT_VIEW: View = 'watched';

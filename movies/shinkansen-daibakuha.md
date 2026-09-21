@@ -13,6 +13,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/2tYBZqzHmnQenBtowLh55oIWsOY.jp
 release_date: '2025-04-23'
 summary: 'A bomb on a Tokyo-bound bullet train detonates if the train drops below 100 kilometres per hour, and the railway staff have to solve it without stopping.'
 summary_ja: '東京行きの新幹線に時速100キロを下回ると爆発する爆弾が仕掛けられる。鉄道員たちは列車を止めないまま解決しなければならない。'
+added: '2026-09-12T14:17:47Z'
 ---
 
 The 2025 Netflix remake of the 1975 original, directed by Higuchi Shinji.

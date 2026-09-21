@@ -15,6 +15,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/7LEI8ulZzO5gy9Ww2NVCrKmHeDZ.jp
 release_date: '2019-07-03'
 summary: 'A grieving woman follows her indifferent boyfriend to a Swedish midsummer festival held once every ninety years.'
 summary_ja: '喪失を抱えた女性が、冷めきった恋人についてスウェーデンの、90年に一度しか開かれない夏至祭へ行く。'
+added: '2026-08-02T19:01:52Z'
 ---
 
 Logged as seen.

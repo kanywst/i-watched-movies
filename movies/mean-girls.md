@@ -11,6 +11,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/2ZkuQXvVhh45uSvkBej4S7Ix1NJ.jp
 release_date: '2004-04-30'
 summary: 'A girl raised in Kenya enters an American high school and is recruited to infiltrate its ruling clique.'
 summary_ja: 'ケニアで育った少女がアメリカの高校に編入し、そこを支配するグループへの潜入を頼まれる。'
+added: '2026-08-03T13:24:17Z'
 ---
 
 Logged as seen.
