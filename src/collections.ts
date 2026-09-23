@@ -52,6 +52,7 @@ export const RATED_POINTS = buildRatedPoints(WATCHED_MOVIES);
  * this cannot be read off the source lists alone.
  */
 export const TAB_COUNTS: Record<View, number> = {
+  top: 0,
   watched: WATCHED_MOVIES.length,
   watching: WATCHING_MOVIES.length,
   watchlist: WATCHLIST_MOVIES.length,

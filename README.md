@@ -8,9 +8,10 @@ The old `i-watched-movies.edgebox12.workers.dev` address 301-redirects here, pat
 
 ## Views
 
-Seven tabs, each linkable through `?view=`. Filters, search, sort and the open film are mirrored to the query string too.
+Eight tabs, each linkable through `?view=`. Filters, search, sort and the open film are mirrored to the query string too.
 
-- **Watched** (`?view=watched`): the rated grid, opened by a podium for the top 3 by score (gold, silver and bronze plinths, with a crown, rays and confetti for first). Ties share a step. The grid repeats the place as a crown / medal / award badge, and NEW marks the 2 most recent. The podium hides under a search or genre filter, since the places are global
+- **Top** (the front page, `?view=top` or no `view` at all): a podium for the top 3 by score, on gold, silver and bronze plinths, with a crown, rays and confetti for first. Ties share a step. A button leads on to the full grid
+- **Watched** (`?view=watched`): the rated grid. The top 3 carry a crown / medal / award badge, and NEW marks the 2 most recent
 - **In Progress** (`?view=watching`): `watching: true`, started but not finished, mostly long series. No score yet, and kept out of the History heatmap and the watchlist ranking
 - **Watchlist** (`?view=watchlist`): `published: false`, films not seen yet. `watch_date` is legitimately empty here
 - **Seen** (`?view=seen`): `seen: true`, watched through but deliberately left unrated, so it never skews the average

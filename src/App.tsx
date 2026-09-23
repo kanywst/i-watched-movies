@@ -5,7 +5,7 @@ import { MovieCard } from './components/MovieCard';
 import { Podium } from './components/Podium';
 import { FilterBar } from './components/FilterBar';
 import { MovieDetailModal } from './components/MovieDetailModal';
-import { Sun, Moon } from 'lucide-react';
+import { ArrowRight, Sun, Moon } from 'lucide-react';
 import { clsx } from 'clsx';
 import { CONFIG, PROFILE_URL, avatarUrl } from './config';
 import {
@@ -75,7 +75,7 @@ interface HeaderStat {
 }
 
 const URL_SPECS = {
-  view: urlParams.string('watched'),
+  view: urlParams.string(DEFAULT_VIEW),
   search: urlParams.string(''),
   // Empty rather than a concrete key: an absent `sort` means "whatever this view opens
   // on", which is per view (see ViewSpec.defaultSort), so the default cannot live here.
@@ -121,10 +121,10 @@ const App: React.FC = () => {
   const [urlState, setUrlState] = useUrlState(URL_SPECS);
   // Which card, if any, currently owns the shared poster view-transition-name.
   const [transitioningId, setTransitioningId] = React.useState('');
-  // Which copy of that poster owns it. A podium film is also in the grid below, and the name
-  // may sit on only one live element at a time, so the card and the podium step both check
-  // this before wearing it. Left alone when the id clears, so closing hands the name back to
-  // the poster the modal was opened from.
+  // Which copy of that poster owns it. The podium (Top) and the grid (every list view) are
+  // never on screen together any more, but a tied film named under a step still morphs from
+  // no poster at all, so the origin is kept rather than inferred from the view. Left alone
+  // when the id clears, so closing hands the name back to the poster it was opened from.
   const [transitionOrigin, setTransitionOrigin] = React.useState<'grid' | 'podium'>('grid');
   const view: View = isView(urlState.view) ? urlState.view : DEFAULT_VIEW;
   const spec = viewSpec(view);
@@ -185,6 +185,11 @@ const App: React.FC = () => {
   // with no badge (its figure would only repeat Watched's), so it states the count itself.
   const headerStats: HeaderStat[] = useMemo(() => {
     switch (view) {
+      case 'top':
+        return [
+          { value: stats.total, label: 'rated' },
+          { value: stats.averagePoint.toFixed(1), label: 'avg score' },
+        ];
       case 'watched':
         return [
           { value: stats.averagePoint.toFixed(1), label: 'avg score' },
@@ -420,7 +425,29 @@ const App: React.FC = () => {
         ))}
       </div>
 
-      {view === 'history' ? (
+      {view === 'top' ? (
+        <section className="flex flex-col items-center">
+          <div className="w-full">
+            <Podium
+              steps={PODIUM}
+              total={WATCHED_MOVIES.length}
+              transitioningId={transitionOrigin === 'podium' ? transitioningId : ''}
+              selectedId={urlState.selected}
+              onOpen={openFromPodium}
+            />
+          </div>
+          {/* The way into everything else. The tab strip above does the same job, but the
+              front page ending on three posters reads as the whole diary without it. */}
+          <button
+            type="button"
+            onClick={() => switchView('watched')}
+            className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors bg-stone-900 text-stone-50 hover:bg-stone-700 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-300"
+          >
+            See all {WATCHED_MOVIES.length} rated films
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </section>
+      ) : view === 'history' ? (
         <Suspense fallback={<PanelFallback />}>
           <ActivityHeatmap summary={activity} onOpenMovie={openMovie} />
         </Suspense>
@@ -445,22 +472,6 @@ const App: React.FC = () => {
             clearTags={() => setUrlState({ tags: [] })}
             allTags={allTags}
           />
-
-          {/* Only on the unfiltered Watched grid. The places are global (a film's rank does
-              not change because the grid is filtered), so under a search or a genre the
-              podium would sit above the results showing films that do not match them. It
-              goes below the filter bar rather than above it for the same reason: typing the
-              first letter of a search hides it, and above the bar that would yank the input
-              out from under the cursor. */}
-          {view === 'watched' && search.trim() === '' && selectedTags.length === 0 && (
-            <Podium
-              steps={PODIUM}
-              total={WATCHED_MOVIES.length}
-              transitioningId={transitionOrigin === 'podium' ? transitioningId : ''}
-              selectedId={urlState.selected}
-              onOpen={openFromPodium}
-            />
-          )}
 
           {/* Grid */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-10">

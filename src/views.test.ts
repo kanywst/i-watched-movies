@@ -31,15 +31,23 @@ describe('viewSpec', () => {
   });
 
   it('gives the panel views no source list, so the grid and filters are suppressed', () => {
+    expect(viewSpec('top').source).toBeNull();
     expect(viewSpec('history').source).toBeNull();
     expect(viewSpec('stats').source).toBeNull();
     expect(viewSpec('watched').source).toBe('watched');
     expect(viewSpec('dropped').source).toBe('dropped');
   });
 
-  it('hides the Stats tab count, which would only repeat the Watched tab', () => {
-    expect(viewSpec('stats').showCount).toBe(false);
-    expect(VIEW_SPECS.filter(s => !s.showCount).map(s => s.key)).toEqual(['stats']);
+  it('hides the Top and Stats tab counts, which would only repeat the Watched tab', () => {
+    expect(VIEW_SPECS.filter(s => !s.showCount).map(s => s.key)).toEqual(['top', 'stats']);
+  });
+
+  // The podium is the front page: a bare URL (no ?view=) and any unknown view land on it,
+  // and it is a panel, so the filter bar and grid stay off it.
+  it('opens on the Top view, first in the tab strip, with no grid', () => {
+    expect(DEFAULT_VIEW).toBe('top');
+    expect(VIEW_SPECS[0].key).toBe('top');
+    expect(viewSpec('top').source).toBeNull();
   });
 
   // Watched is the only list whose entries carry a watch_date. Sorting any of the others
