@@ -1,6 +1,7 @@
 ---
 title: 'Catch Me If You Can'
 published: false
+seen: true
 tags:
   - 'Crime'
   - 'Biographical'
@@ -19,4 +20,4 @@ summary_ja: '家出した10代の少年が、パイロット、医師、弁護�
 added: '2026-09-23T14:31:37.172Z'
 ---
 
-Spielberg's con-artist chase, true story played light, the crowd-pleaser end of the crime lane.
+Logged as seen.
