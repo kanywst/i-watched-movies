@@ -1,8 +1,8 @@
 # i-watched-movies
 
-My personal log of movies I've watched. Each entry is a markdown file in `movies/`. The site reads them at build time and is deployed to Cloudflare Workers.
+My personal log of movies I've watched. Each entry is a markdown file in `movies/`. The site reads them at build time and is deployed to GitHub Pages.
 
-Live: <https://i-watched-movies.edgebox12.workers.dev/> · [RSS](https://i-watched-movies.edgebox12.workers.dev/feed.xml)
+Live: <https://kanywst.github.io/i-watched-movies/> · [RSS](https://kanywst.github.io/i-watched-movies/feed.xml)
 
 ## Views
 
@@ -55,7 +55,7 @@ added: '2026-09-23T13:07:35.977Z'  # when the entry first landed; the issue form
 Free-form notes here.
 ```
 
-Push to `main` and Cloudflare redeploys.
+Push to `main` and `pages.yml` redeploys.
 
 ## Run it locally
 
@@ -93,9 +93,8 @@ Tests cover pure logic only, one file per module (`src/*.test.ts`, `scripts/*.te
 2. `src/config.ts`: set `USER_NAME` to your GitHub handle
 3. `index.html`: replace the `og:*` / `twitter:*` / canonical URLs
 4. `scripts/build-feeds.js`: update `SITE_URL`, `SITE_NAME`, `SITE_DESC`
-5. `wrangler.jsonc`: rename `name` to your project
-6. Replace the contents of `movies/` with your own
-7. Connect the repo to Cloudflare Workers, build command `npm run build`, output `dist`
+5. Replace the contents of `movies/` with your own
+6. Settings > Pages > Source: GitHub Actions. `pages.yml` deploys from there
 
 ## Stack
 
@@ -105,10 +104,8 @@ React 19, Vite 8, Tailwind 4, TypeScript 6, Vitest 5. Animation is browser-nativ
 
 - `ci.yml`: lint + test + audit + build on every PR. The audit runs `--audit-level=high --omit=dev`, so a vulnerability that ships in the bundle fails the build while a build-time-only one does not
 - `claude-code-review.yml`: Claude reviews every non-bot PR. Advisory, never a merge gate. Authenticates with `CLAUDE_CODE_OAUTH_TOKEN` (from `claude setup-token`, so it runs on the subscription rather than on API credit) and no-ops while that secret is unset. The action refuses to run when the PR changes this workflow file, so a PR that edits it cannot test it
-- Cloudflare Workers auto-deploys on push to `main` (via the GitHub integration). Build command `npm run build`, output `dist`. The integration can drop a build when pushes land close together
-- `verify-deploy.yml`: after a push to `main` (or a dispatch from `movie-from-issue.yml`, since bot merges start no push run), polls the live site for the new `movies-data-*.js` chunk for ten minutes, then pushes one empty retrigger commit and fails loudly if it never shows up
-- `deploy.yml`: `wrangler deploy` straight from CI, one push one deploy. Inert until both `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` are set as repo secrets (only the account ID is set as of 2026-09-23), and the dashboard integration should be switched off at the same time. Setup steps are in the workflow's header comment
-- `movie-from-issue.yml`: turns "Add a movie" issues into PRs and squash-merges them in the same job. Mirrors progress into `status:*` labels
+- `pages.yml`: builds and deploys to GitHub Pages on every push to `main`, one push one deploy. Also dispatched by `movie-from-issue.yml` after each merge, because a merge made with `GITHUB_TOKEN` starts no push run
+- `movie-from-issue.yml`: turns "Add a movie" issues into PRs and squash-merges them in the same job, then dispatches `pages.yml`. Mirrors progress into `status:*` labels
 - `sync-labels.yml`: pushes `.github/labels.yml` to the repo's actual labels. Runs on changes to that file or via manual dispatch
 - `dependabot-auto-merge.yml`: auto-merges npm Dependabot PRs after CI. GitHub Actions PRs need manual merge (token can't grant `workflows` scope)
 - `scorecard.yml`: OpenSSF Scorecard, weekly

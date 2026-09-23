@@ -1,7 +1,8 @@
-// The deployed workers.dev hostname. `kanywst12` was never a real subdomain (it does not
-// resolve), so every RSS item link, the feed's channel link and the JSON-LD `url` pointed at
-// a dead host. Keep this in step with the canonical/og:url pair in index.html.
-const SITE_URL = 'https://i-watched-movies.edgebox12.workers.dev/';
+// The deployed GitHub Pages URL (the site moved back from Cloudflare Workers on 2026-09-24;
+// the old workers.dev host now 301s here). Every RSS item link, the feed's channel link and
+// the JSON-LD `url` are built from it, so keep it in step with the canonical/og:url pair in
+// index.html. The trailing slash matters: item links append `?selected=` directly.
+const SITE_URL = 'https://kanywst.github.io/i-watched-movies/';
 const SITE_NAME = 'The Movies kanywst Watched';
 const SITE_DESC = 'A personal archive of movies kanywst has watched, with scores and impressions.';
 const FEED_LIMIT = 20;

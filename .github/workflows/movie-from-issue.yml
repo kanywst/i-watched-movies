@@ -8,7 +8,7 @@ permissions:
   contents: write
   issues: write
   pull-requests: write
-  # To dispatch verify-deploy.yml after the merge.
+  # To dispatch pages.yml after the merge.
   actions: write
 
 jobs:
@@ -226,22 +226,20 @@ jobs:
           gh issue comment "$ISSUE" --body "Merged: $PR_URL"
           gh issue close "$ISSUE" --reason completed || true
 
-      # The merge above moved main, and Cloudflare's integration drops builds when pushes
-      # land close together, which a batch of movie issues does by construction. That is
-      # what verify-deploy.yml watches for, but it is `on: push` and the merge was made
-      # with GITHUB_TOKEN, so it never hears about this push. Dispatch it by hand.
+      # The merge above moved main, but it was made with GITHUB_TOKEN, and a push made with
+      # that token starts no workflow run, so pages.yml never hears about it. Dispatch it by
+      # hand; dispatch is the one event GitHub still delivers from GITHUB_TOKEN.
       #
-      # Best effort: a missed check is worse than a failed issue, so this never fails the
-      # run. verify-deploy's concurrency group is a single slot with cancel-in-progress,
-      # so a batch collapses to one run watching the final state of main, which is the
-      # right one to watch.
-      - name: Ask verify-deploy to watch this push
+      # Best effort: the entry is merged either way and the next push deploys it, so a failed
+      # dispatch never fails the issue. pages.yml's single concurrency slot collapses a batch
+      # of issues into deploys of the latest main.
+      - name: Deploy the merged entry to GitHub Pages
         if: success() && steps.changes.outputs.changed == 'true' && steps.landed.outputs.landed != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh workflow run verify-deploy.yml --ref main ||
-            echo "verify-deploy dispatch failed; this push is not being watched."
+          gh workflow run pages.yml --ref main ||
+            echo "pages dispatch failed; this entry deploys with the next push to main."
 
       - name: Report failure on issue
         if: failure()
