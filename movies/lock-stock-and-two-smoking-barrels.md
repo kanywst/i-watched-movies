@@ -1,6 +1,7 @@
 ---
 title: 'Lock, Stock and Two Smoking Barrels'
 published: false
+seen: true
 tags:
   - 'Crime'
   - 'Comedy'
@@ -15,4 +16,4 @@ summary_ja: 'ロンドンの若者4人がイカサマのカード勝負で大金
 added: '2026-09-23T14:31:44.993Z'
 ---
 
-Guy Ritchie's first film, where the interlocking-plot style of Snatch and The Gentlemen started.
+Logged as seen.
