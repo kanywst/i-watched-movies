@@ -207,23 +207,31 @@ body {
 .medal-shine::after {
   content: '';
   position: absolute;
-  inset: -50% auto -50% -60%;
+  top: -50%;
+  bottom: -50%;
+  left: 0;
   width: 40%;
   background: linear-gradient(100deg, transparent, rgb(255 255 255 / 0.55), transparent);
-  transform: skewX(-20deg);
+  /* The resting position is the parked one, off the left edge, so under reduced motion the
+     band simply never shows. Moved by transform rather than `left` so the sweep stays on the
+     compositor: up to seven of these run at once. 280% of a 40%-wide band is past the far edge. */
+  transform: translateX(-130%) skewX(-20deg);
   animation: medal-shine 4.5s ease-in-out infinite;
   animation-delay: var(--shine-delay, 0s);
   pointer-events: none;
 }
 @keyframes medal-shine {
-  0%, 70% { left: -60%; }
-  100% { left: 130%; }
+  0%, 70% { transform: translateX(-130%) skewX(-20deg); }
+  100% { transform: translateX(280%) skewX(-20deg); }
 }
 
 @keyframes crown-float {
   0%, 100% { transform: translate(-50%, 0) rotate(-6deg); }
   50% { transform: translate(-50%, -4px) rotate(-6deg); }
 }
+/* The centring and tilt live on the element too, not only in the keyframe: reduced motion
+   cuts the animation to one instant iteration, after which the keyframe no longer applies. */
 .crown-float {
+  transform: translate(-50%, 0) rotate(-6deg);
   animation: crown-float 3s ease-in-out infinite;
 }
