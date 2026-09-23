@@ -1,6 +1,6 @@
 import React from 'react';
 import { clsx } from 'clsx';
-import { Crown, Trophy } from 'lucide-react';
+import { Crown, Sparkle, Star, Trophy } from 'lucide-react';
 import type { Movie } from '../types';
 import type { PodiumStep } from '../podium';
 import { PODIUM_TIED_NAMES } from '../constants';
@@ -35,7 +35,7 @@ const SLOT: { order: string; width: string; sizes: string }[] = [
  * every stop of the gradient, 4.70:1 at the worst, well past the 3:1 a 28-56px numeral needs.
  */
 const PLINTH: Record<number, { height: string; numeral: string }> = {
-  1: { height: 'h-20 sm:h-28', numeral: 'text-[40px] sm:text-6xl' },
+  1: { height: 'h-24 sm:h-32', numeral: 'text-[40px] sm:text-6xl' },
   2: { height: 'h-14 sm:h-20', numeral: 'text-[30px] sm:text-5xl' },
   3: { height: 'h-10 sm:h-14', numeral: 'text-[26px] sm:text-4xl' },
 };
@@ -46,6 +46,29 @@ const PLINTH: Record<number, { height: string; numeral: string }> = {
  * a new SLOT could produce, stands on bronze rather than on an undefined class.
  */
 const medalOf = (rank: number) => Math.min(rank, 3);
+
+/**
+ * Confetti over first place. Positions come from the index rather than Math.random so a
+ * render is pure and the burst looks the same every time. Colours are the three metals plus
+ * the masthead accent, so the confetti belongs to this page rather than to a party template.
+ */
+const CONFETTI_COLOURS = ['#fbbf24', '#fde68a', '#f59e0b', '#e2e8f0', '#e8894a', '#ff4d97'];
+const CONFETTI = Array.from({ length: 26 }, (_, i) => ({
+  left: `${(i * 37) % 100}%`,
+  delay: `${((i * 7) % 13) * 0.09}s`,
+  drift: `${((i * 53) % 90) - 45}px`,
+  spin: `${((i * 97) % 540) + 180}deg`,
+  colour: CONFETTI_COLOURS[i % CONFETTI_COLOURS.length],
+  shape: i % 3 === 0 ? 'rounded-full w-1.5 h-1.5' : 'w-1.5 h-2.5 rounded-[1px]',
+}));
+
+/** Sparkles round the crown: pixel offset from the poster's top centre, size, and when each twinkles. */
+const SPARKLES = [
+  { x: '-44px', y: '-6px', size: 'h-3 w-3 sm:h-4 sm:w-4', delay: '0s' },
+  { x: '30px', y: '-14px', size: 'h-2.5 w-2.5 sm:h-3.5 sm:w-3.5', delay: '0.7s' },
+  { x: '40px', y: '14px', size: 'h-2 w-2 sm:h-3 sm:w-3', delay: '1.3s' },
+  { x: '-54px', y: '20px', size: 'h-2 w-2 sm:h-2.5 sm:w-2.5', delay: '1.9s' },
+];
 
 const ORDINAL: Record<number, string> = { 1: 'First', 2: 'Second', 3: 'Third' };
 
@@ -143,7 +166,42 @@ const PodiumPlace: React.FC<PodiumPlaceProps> = ({ step, slot, index, transition
         aria-label={`${place} place, ${lead.title}, rated ${step.point} out of 10`}
         className="group flex flex-col text-left rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-stone-400 focus-visible:ring-offset-stone-50 dark:focus-visible:ring-stone-300 dark:focus-visible:ring-offset-stone-950"
       >
-        <div className="relative">
+        <div className="relative isolate">
+        {isFirst && (
+          <>
+            {/* A slow sunburst behind the winner. Rotated by transform, so it stays on the
+                compositor; under reduced motion it simply stands still. */}
+            <div
+              aria-hidden="true"
+              className="podium-rays pointer-events-none absolute left-1/2 top-1/2 -z-10 aspect-square w-[260%]"
+            />
+            <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 -top-10 z-30 h-0">
+              {CONFETTI.map((c, i) => (
+                <span
+                  key={i}
+                  className={clsx('confetti absolute top-0', c.shape)}
+                  style={{
+                    left: c.left,
+                    backgroundColor: c.colour,
+                    '--confetti-delay': c.delay,
+                    '--confetti-drift': c.drift,
+                    '--confetti-spin': c.spin,
+                  } as React.CSSProperties}
+                />
+              ))}
+            </div>
+            {SPARKLES.map((sp, i) => (
+              <Sparkle
+                key={i}
+                aria-hidden="true"
+                className={clsx('sparkle-twinkle absolute left-1/2 -top-6 sm:-top-8 z-20 text-amber-300', sp.size)}
+                fill="currentColor"
+                strokeWidth={0}
+                style={{ '--sparkle-x': sp.x, '--sparkle-y': sp.y, '--sparkle-delay': sp.delay } as React.CSSProperties}
+              />
+            ))}
+          </>
+        )}
         {isFirst && (
           <Crown
             aria-hidden="true"
@@ -202,14 +260,21 @@ const PodiumPlace: React.FC<PodiumPlaceProps> = ({ step, slot, index, transition
           >
             {lead.title}
           </h3>
-          <span
-            className={clsx(
-              'mt-0.5 font-wordmark tabular-nums font-extrabold text-stone-900 dark:text-stone-50',
-              isFirst ? 'text-xl sm:text-2xl' : 'text-base sm:text-lg',
-            )}
-          >
-            {step.point}
-          </span>
+          {/* First's score sits on a gold pill in the gold ink measured in index.css, so it
+              reads the same on the light and the dark page. */}
+          {isFirst ? (
+            <span
+              className="medal-1 medal-shine relative mt-1.5 inline-flex items-center gap-1 rounded-full px-3 py-1 font-wordmark text-lg sm:text-2xl font-extrabold tabular-nums leading-none"
+              style={{ boxShadow: 'inset 0 1px 0 rgb(255 255 255 / 0.7), 0 6px 20px var(--medal-glow)', '--shine-delay': '2s' } as React.CSSProperties}
+            >
+              <Star aria-hidden="true" className="h-3.5 w-3.5 sm:h-4 sm:w-4" fill="currentColor" strokeWidth={0} />
+              {step.point}
+            </span>
+          ) : (
+            <span className="mt-0.5 font-wordmark tabular-nums font-extrabold text-base sm:text-lg text-stone-900 dark:text-stone-50">
+              {step.point}
+            </span>
+          )}
         </div>
       </button>
 
@@ -246,7 +311,7 @@ const PodiumPlace: React.FC<PodiumPlaceProps> = ({ step, slot, index, transition
         aria-hidden="true"
         className={clsx(
           `medal-${medalOf(step.rank)} medal-shine`,
-          'relative flex justify-center rounded-t-md pt-2',
+          'relative flex flex-col items-center rounded-t-md pt-2',
           plinth.height,
         )}
         style={{
@@ -257,6 +322,12 @@ const PodiumPlace: React.FC<PodiumPlaceProps> = ({ step, slot, index, transition
         <span className={clsx('font-wordmark font-extrabold leading-none tabular-nums drop-shadow-[0_1px_0_rgb(255_255_255/0.5)]', plinth.numeral)}>
           {step.rank}
         </span>
+        {/* Engraved on first's plinth only, in the same gold ink. */}
+        {isFirst && (
+          <span className="mt-1 sm:mt-1.5 text-[8px] sm:text-[10px] font-extrabold tracking-[0.3em] pl-[0.3em]">
+            CHAMPION
+          </span>
+        )}
       </div>
     </li>
   );
