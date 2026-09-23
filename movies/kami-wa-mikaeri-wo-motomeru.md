@@ -1,7 +1,6 @@
 ---
 title: '神は見返りを求める'
 published: false
-seen: true
 tags:
   - 'Black-Comedy'
   - 'Drama'
@@ -11,7 +10,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/g9uk3D64TnRUnEz5D4jGDTeJcIT.jp
 release_date: '2022-06-24'
 summary: 'A man devotes himself to making a failing YouTuber succeed, and then asks for something back.'
 summary_ja: '男が売れない YouTuber を成功させることに献身し、そのあとで見返りを求める。'
-added: '2026-08-03T13:24:27Z'
+added: '2026-08-03T13:24:27.000Z'
 ---
 
-Logged as seen.
+Directed by Yoshida Keisuke, with Muro Tsuyoshi and Kishii Yukino.
