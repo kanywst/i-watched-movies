@@ -234,6 +234,60 @@ describe('recommendWatchlist', () => {
     expect(pick.predicted).toBeCloseTo(6.75, 5);
   });
 
+  it('does not let one extreme rating sink a genre the other films rate highly', () => {
+    // Comedy is 8.5 five times and 1.0 once, so its raw mean (7.25) sits under Drama's 7.5
+    // and an uncapped model ranks Drama first. Capping the 1.0 at the outlier line
+    // (baseline - 2 sd, about 3.6 here) puts Comedy back above Drama, where five of its six
+    // films say it belongs.
+    const skewed = [
+      ...Array.from({ length: 7 }, (_, i) => make({ id: `d${i}`, tags: ['Drama'], point: 7.5 })),
+      ...Array.from({ length: 5 }, (_, i) => make({ id: `c${i}`, tags: ['Comedy'], point: 8.5 })),
+      make({ id: 'flop', tags: ['Comedy'], point: 1 }),
+    ];
+    const picks = recommendWatchlist(
+      [
+        make({ id: 'drama', published: false, title: 'A', tags: ['Drama'] }),
+        make({ id: 'comedy', published: false, title: 'B', tags: ['Comedy'] }),
+      ],
+      skewed,
+      computeTasteProfile(skewed),
+      10,
+    );
+    expect(picks.map(p => p.movie.id)).toEqual(['comedy', 'drama']);
+  });
+
+  it('predicts around the capped baseline, not the raw one', () => {
+    const skewed = [
+      ...Array.from({ length: 9 }, (_, i) => make({ id: `d${i}`, tags: ['Drama'], point: 8 })),
+      make({ id: 'flop', tags: ['Drama'], point: 0 }),
+    ];
+    const profile = computeTasteProfile(skewed);
+    const [pick] = recommendWatchlist(
+      [make({ id: 'w', published: false, tags: ['Western'] })],
+      skewed,
+      profile,
+      10,
+    );
+    // Raw mean 7.2, sd 2.4, so the 0 is capped at 2.4 and the baseline becomes 7.44.
+    expect(profile.baseline).toBeCloseTo(7.2, 5);
+    expect(pick.predicted).toBeCloseTo(7.44, 5);
+  });
+
+  it('caps an extreme high rating the same way', () => {
+    const skewed = [
+      ...Array.from({ length: 9 }, (_, i) => make({ id: `d${i}`, tags: ['Drama'], point: 5 })),
+      make({ id: 'gem', tags: ['Drama'], point: 10 }),
+    ];
+    const [pick] = recommendWatchlist(
+      [make({ id: 'w', published: false, tags: ['Western'] })],
+      skewed,
+      computeTasteProfile(skewed),
+      10,
+    );
+    // Raw mean 5.5, sd 1.5, so the 10 is capped at 8.5 and the baseline becomes 5.35.
+    expect(pick.predicted).toBeCloseTo(5.35, 5);
+  });
+
   it('averages the genre pull instead of summing it', () => {
     const picks = recommendWatchlist(
       [
