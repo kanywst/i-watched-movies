@@ -21,8 +21,11 @@ const DATE = new Intl.DateTimeFormat('en', {
 });
 const formatDate = (iso: string) => DATE.format(new Date(iso));
 
-const formatDays = (days: number) =>
-  days === 0 ? 'taken today' : days === 1 ? '1 day' : `${days} days`;
+// Zero days means two different things. For the current holder it was taken today; for a
+// closed reign it was taken and lost on the same watch_date (a higher score watched later
+// that day), which can be years back, so "today" would be false there.
+const formatDays = (days: number, current: boolean) =>
+  days === 0 ? (current ? 'taken today' : 'lost the same day') : days === 1 ? '1 day' : `${days} days`;
 
 export const RankHistory: React.FC<RankHistoryProps> = ({ watched, onOpenMovie }) => {
   const { events, reigns } = useMemo(
@@ -118,7 +121,7 @@ const ReignRow: React.FC<ReignRowProps> = ({ reign, longest, onOpenMovie }) => {
               : `${formatDate(reign.from)} to ${formatDate(reign.to!)}`}
           </span>
           <span className={clsx(current && 'font-medium')} style={current ? { color: 'var(--accent-a-ink)' } : undefined}>
-            {formatDays(reign.days)}
+            {formatDays(reign.days, current)}
           </span>
         </span>
       </span>
