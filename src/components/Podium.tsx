@@ -1,5 +1,6 @@
 import React from 'react';
 import { clsx } from 'clsx';
+import { Crown, Trophy } from 'lucide-react';
 import type { Movie } from '../types';
 import type { PodiumStep } from '../podium';
 import { PODIUM_TIED_NAMES } from '../constants';
@@ -29,19 +30,14 @@ const SLOT: { order: string; width: string; sizes: string }[] = [
  * The plinth under each step, by rank rather than slot, so a tie reads correctly: with two
  * films sharing first, the step beside them is third and stands at third's height.
  *
- * Numeral contrast, measured 2026-09-23 from the rendered colours against each plinth's own
- * fill. The numerals are 24-48px extrabold, so the WCAG large-text floor of 3:1 applies:
- * - first, accent ink: #d61f6d on stone-200 (#e7e5e4) 3.91:1 light, #ff4d97 on stone-900
- *   (#1c1917) 5.63:1 dark
- * - second and third: stone-500 (#79716b) on stone-200 3.81:1 light, stone-400 (#a6a09b)
- *   on stone-900 6.76:1 dark
- * The 11px tie line is stone-500 on the stone-50 page, 4.58:1 against a 4.5:1 floor, so it
- * cannot go a step lighter.
+ * Each plinth is a solid gold, silver or bronze block (`.medal-N` in index.css) and the
+ * numeral takes that class's dark ink, so its contrast is the one measured there against
+ * every stop of the gradient, 4.70:1 at the worst, well past the 3:1 a 28-56px numeral needs.
  */
 const PLINTH: Record<number, { height: string; numeral: string }> = {
-  1: { height: 'h-16 sm:h-20', numeral: 'text-[36px] sm:text-5xl' },
-  2: { height: 'h-11 sm:h-14', numeral: 'text-[28px] sm:text-4xl text-stone-500 dark:text-stone-400' },
-  3: { height: 'h-8 sm:h-10', numeral: 'text-[24px] sm:text-3xl text-stone-500 dark:text-stone-400' },
+  1: { height: 'h-20 sm:h-28', numeral: 'text-[40px] sm:text-6xl' },
+  2: { height: 'h-14 sm:h-20', numeral: 'text-[30px] sm:text-5xl' },
+  3: { height: 'h-10 sm:h-14', numeral: 'text-[26px] sm:text-4xl' },
 };
 
 const ORDINAL: Record<number, string> = { 1: 'First', 2: 'Second', 3: 'Third' };
@@ -59,8 +55,16 @@ interface PodiumProps {
 export const Podium: React.FC<PodiumProps> = ({ steps, total, transitioningId, selectedId, onOpen }) => {
   if (steps.length === 0) return null;
   return (
-    <section aria-labelledby="podium-heading" className="mb-14">
-      <div className="mb-6 flex items-baseline gap-3">
+    <section aria-labelledby="podium-heading" className="relative mb-14">
+      {/* A spotlight on the winner: a soft gold bloom behind the middle step. Decoration,
+          so it sits under everything and takes no pointer events. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-10 -z-0 h-72 w-[min(640px,90%)] -translate-x-1/2 rounded-full blur-3xl opacity-60 dark:opacity-70"
+        style={{ background: 'radial-gradient(closest-side, rgb(251 191 36 / 0.55), rgb(251 191 36 / 0.15) 60%, transparent)' }}
+      />
+      <div className="relative mb-6 flex items-baseline gap-3">
+        <Trophy aria-hidden="true" className="h-5 w-5 self-center text-amber-500" strokeWidth={2.25} />
         <h2
           id="podium-heading"
           className="font-wordmark text-xl sm:text-2xl font-extrabold tracking-[-0.02em] text-stone-900 dark:text-stone-50"
@@ -70,7 +74,7 @@ export const Podium: React.FC<PodiumProps> = ({ steps, total, transitioningId, s
         <p className="text-xs text-stone-500 dark:text-stone-400">of {total} films</p>
       </div>
 
-      <ol className="flex items-end justify-center gap-2.5 sm:gap-5">
+      <ol className="relative flex items-end justify-center gap-2.5 pt-8 sm:gap-6 sm:pt-10">
         {SLOT.map((slot, i) => {
           const step = steps.find(s => s.rank === i + 1);
           // No step holds this place: either a tie above used it up (two films sharing first
@@ -123,7 +127,7 @@ const PodiumPlace: React.FC<PodiumPlaceProps> = ({ step, slot, index, transition
 
   return (
     <li
-      className={clsx('podium-enter flex flex-col', slot.order, slot.width)}
+      className={clsx('podium-enter flex flex-col', `medal-tone-${Math.min(step.rank, 3)}`, slot.order, slot.width)}
       style={{ '--podium-index': index } as React.CSSProperties}
     >
       <button
@@ -132,12 +136,29 @@ const PodiumPlace: React.FC<PodiumPlaceProps> = ({ step, slot, index, transition
         aria-label={`${place} place, ${lead.title}, rated ${step.point} out of 10`}
         className="group flex flex-col text-left rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-stone-400 focus-visible:ring-offset-stone-50 dark:focus-visible:ring-stone-300 dark:focus-visible:ring-offset-stone-950"
       >
+        <div className="relative">
+        {isFirst && (
+          <Crown
+            aria-hidden="true"
+            className="crown-float absolute left-1/2 -top-7 sm:-top-9 z-10 h-9 w-9 sm:h-12 sm:w-12 drop-shadow-[0_2px_10px_rgb(251_191_36/0.8)]"
+            fill="#fbbf24"
+            stroke="#92400e"
+            strokeWidth={1.5}
+          />
+        )}
         <div
-          style={posterStyle}
+          style={{
+            ...posterStyle,
+            // The metal as a ring round the poster plus a glow in the same tone, so the three
+            // steps read as gold, silver and bronze before the plinths are even in view.
+            boxShadow: isFirst
+              ? '0 0 0 3px var(--medal-ring), 0 12px 48px var(--medal-glow)'
+              : '0 0 0 2px var(--medal-ring), 0 8px 28px var(--medal-glow)',
+          }}
           className={clsx(
             'relative aspect-[2/3] w-full overflow-hidden rounded-lg bg-stone-100 dark:bg-dark-card',
-            'transition-[transform,box-shadow] duration-500 ease-out motion-safe:group-hover:-translate-y-1',
-            isFirst ? 'shadow-xl group-hover:shadow-2xl' : 'shadow-md group-hover:shadow-xl',
+            'transition-transform duration-500 ease-out motion-safe:group-hover:-translate-y-1.5 motion-safe:group-hover:scale-[1.02]',
+            isFirst && 'medal-shine',
           )}
         >
           {lead.cover_image && (
@@ -157,6 +178,7 @@ const PodiumPlace: React.FC<PodiumPlaceProps> = ({ step, slot, index, transition
             className="pointer-events-none absolute inset-0 rounded-lg ring-1 ring-inset ring-black/10 dark:ring-white/10"
           />
         </div>
+        </div>
 
         {/* The title is held to two lines' height whether it needs them or not, so every
             step's score sits the same distance above its plinth. The score is here rather
@@ -175,8 +197,8 @@ const PodiumPlace: React.FC<PodiumPlaceProps> = ({ step, slot, index, transition
           </h3>
           <span
             className={clsx(
-              'mt-0.5 tabular-nums font-semibold text-stone-600 dark:text-stone-300',
-              isFirst ? 'text-sm sm:text-base' : 'text-xs sm:text-sm',
+              'mt-0.5 font-wordmark tabular-nums font-extrabold text-stone-900 dark:text-stone-50',
+              isFirst ? 'text-xl sm:text-2xl' : 'text-base sm:text-lg',
             )}
           >
             {step.point}
@@ -211,21 +233,21 @@ const PodiumPlace: React.FC<PodiumPlaceProps> = ({ step, slot, index, transition
         </p>
       )}
 
-      {/* Hidden from assistive tech: the button's label already says the place. First
-          gets the accent as a rule along its top edge, the one coloured plinth. */}
+      {/* Hidden from assistive tech: the button's label already says the place. Each
+          plinth is a solid block of its metal. */}
       <div
         aria-hidden="true"
         className={clsx(
-          'flex justify-center rounded-t-md pt-1.5 bg-stone-200 dark:bg-dark-card',
-          isFirst && 'border-t-2',
+          `medal-${Math.min(step.rank, 3)} medal-shine`,
+          'relative flex justify-center rounded-t-md pt-2',
           plinth.height,
         )}
-        style={isFirst ? { borderTopColor: 'var(--accent-a-solid)' } : undefined}
+        style={{
+          boxShadow: 'inset 0 1px 0 rgb(255 255 255 / 0.7), inset 0 -10px 18px rgb(0 0 0 / 0.12), 0 10px 30px var(--medal-glow)',
+          '--shine-delay': `${step.rank * 0.8}s`,
+        } as React.CSSProperties}
       >
-        <span
-          className={clsx('font-wordmark font-extrabold leading-none tabular-nums', plinth.numeral)}
-          style={isFirst ? { color: 'var(--accent-a-ink)' } : undefined}
-        >
+        <span className={clsx('font-wordmark font-extrabold leading-none tabular-nums drop-shadow-[0_1px_0_rgb(255_255_255/0.5)]', plinth.numeral)}>
           {step.rank}
         </span>
       </div>

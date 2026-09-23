@@ -161,3 +161,69 @@ body {
   animation: card-fade-up 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
   animation-delay: calc(var(--podium-index, 0) * 90ms);
 }
+
+/* Gold, silver and bronze, shared by the podium plinths and the grid's rank badge. Each is an
+   opaque fill with its own dark ink, so the badge reads the same over any poster. Ink against
+   every gradient stop, measured 2026-09-23 (4.5:1 floor, the badge numeral is 16px bold):
+   gold #451a03 on #fef3c7 13.45 / #fcd34d 10.39 / #f59e0b 6.97 / #d97706 4.70,
+   silver #0f172a on #f8fafc 17.06 / #e2e8f0 14.48 / #cbd5e1 12.02 / #94a3b8 6.96,
+   bronze #2a1204 on #fed7aa 13.07 / #fdba74 10.49 / #e8894a 6.83 / #c2703a 4.78. */
+.medal-1,
+.medal-tone-1 {
+  --medal-glow: rgb(251 191 36 / 0.55);
+  --medal-ring: #fbbf24;
+}
+.medal-1 {
+  color: #451a03;
+  background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 30%, #f59e0b 65%, #d97706 100%);
+}
+.medal-2,
+.medal-tone-2 {
+  --medal-glow: rgb(203 213 225 / 0.45);
+  --medal-ring: #cbd5e1;
+}
+.medal-2 {
+  color: #0f172a;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #cbd5e1 65%, #94a3b8 100%);
+}
+.medal-3,
+.medal-tone-3 {
+  --medal-glow: rgb(232 137 74 / 0.45);
+  --medal-ring: #e8894a;
+}
+.medal-3 {
+  color: #2a1204;
+  background: linear-gradient(135deg, #fed7aa 0%, #fdba74 30%, #e8894a 65%, #c2703a 100%);
+}
+
+/* A band of light that crosses a medal surface every few seconds. Decoration only, so it is
+   silenced with every other animation under prefers-reduced-motion. No `position` here: this
+   file's rules are unlayered and beat Tailwind's utilities, so a `position: relative` here
+   overrode the grid badge's `absolute` and stretched it across the poster. The element
+   brings its own positioning. */
+.medal-shine {
+  overflow: hidden;
+}
+.medal-shine::after {
+  content: '';
+  position: absolute;
+  inset: -50% auto -50% -60%;
+  width: 40%;
+  background: linear-gradient(100deg, transparent, rgb(255 255 255 / 0.55), transparent);
+  transform: skewX(-20deg);
+  animation: medal-shine 4.5s ease-in-out infinite;
+  animation-delay: var(--shine-delay, 0s);
+  pointer-events: none;
+}
+@keyframes medal-shine {
+  0%, 70% { left: -60%; }
+  100% { left: 130%; }
+}
+
+@keyframes crown-float {
+  0%, 100% { transform: translate(-50%, 0) rotate(-6deg); }
+  50% { transform: translate(-50%, -4px) rotate(-6deg); }
+}
+.crown-float {
+  animation: crown-float 3s ease-in-out infinite;
+}

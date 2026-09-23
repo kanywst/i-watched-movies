@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image as ImageIcon, Sparkles } from 'lucide-react';
+import { Image as ImageIcon, Medal, Award, Crown, Sparkles } from 'lucide-react';
 import { Movie } from '../types';
 import { clsx } from 'clsx';
 import { COUNTRY_FLAGS } from '../constants';
@@ -62,6 +62,9 @@ interface MovieCardProps {
   hasTransitionName?: boolean;
   onClick: (movie: Movie) => void;
 }
+
+/** One icon per place; the fill and ink come from `.medal-N`. */
+const RANK_ICON: Record<number, typeof Crown> = { 1: Crown, 2: Medal, 3: Award };
 
 const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, isNew, isSelected, hasTransitionName, onClick }) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -133,17 +136,29 @@ const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, is
             clipped by the top of the scroll container on the first row and collided with the
             neighbouring card's artwork everywhere else. Rank goes left, score right, so the
             two never meet. */}
-        {/* The place as a numeral, the same mark the podium above the grid prints large. It
-            was a crown, a medal and an award in gold, silver and bronze, three icons the
-            reader had to decode into a number, in three fills that each needed their own
-            contrast check against the poster. Kept at all (the podium already shows these
-            films) because sorted by date or scrolled past the podium, this is the only
-            thing that says which card it is. The fill is mid's score-chip black/65, and over
-            a pure-white poster (measured 2026-09-23) the white numeral is 6.98:1 and the
-            stone-300 "No." 4.68:1, against the 4.5:1 floor at these sizes. */}
-        {rank && (
-          <div className="absolute top-2 left-2 z-40 px-1.5 py-0.5 rounded backdrop-blur-md shadow-lg border border-white/10 bg-black/65 text-white text-xs font-bold tabular-nums font-wordmark">
-            <span aria-hidden="true" className="text-[10px] font-semibold text-stone-300">No.</span>
+        {/* The place, as the medal it is: crown, medal or award on an opaque gold, silver or
+            bronze fill (`.medal-N` in index.css) with the numeral beside it. It was briefly a
+            bare "No.1" numeral chip on black glass, which read as a label rather than a
+            place. The fill is opaque with its own dark ink, so the poster behind it does not
+            enter the contrast sum; the measured ratios live with the gradients in index.css.
+            Kept alongside the podium because sorted by date or scrolled past it, this is the
+            only thing that says which card it is. */}
+        {rank && rank <= 3 && (
+          <div
+            className={clsx(
+              `medal-${rank} medal-shine`,
+              'absolute top-2 left-2 z-40 flex items-center gap-1 rounded-full pl-2 pr-2.5 py-1 font-wordmark text-base font-extrabold tabular-nums leading-none',
+            )}
+            style={{
+              boxShadow: '0 0 0 1px rgb(255 255 255 / 0.35) inset, 0 4px 14px var(--medal-glow)',
+              '--shine-delay': `${rank * 0.6}s`,
+            } as React.CSSProperties}
+          >
+            {React.createElement(RANK_ICON[rank], {
+              className: rank === 1 ? 'w-[18px] h-[18px]' : 'w-4 h-4',
+              strokeWidth: 2.5,
+              'aria-hidden': true,
+            })}
             {rank}
           </div>
         )}
