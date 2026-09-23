@@ -1,6 +1,7 @@
 ---
 title: 'Ocean''s Eleven'
 published: false
+seen: true
 tags:
   - 'Crime'
   - 'Thriller'
@@ -16,4 +17,4 @@ summary_ja: '出所したばかりの詐欺師が11人の専門家を集め、�
 added: '2026-09-23T14:31:48.974Z'
 ---
 
-The polished heist template: a plan revealed after it has already worked, the payoff Glass Onion and The Menu were rated for.
+Logged as seen.
