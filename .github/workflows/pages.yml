@@ -1,0 +1,55 @@
+name: Deploy to GitHub Pages
+
+# One push, one deploy. This replaced Cloudflare's GitHub integration on 2026-09-24, which
+# dropped builds when pushes landed close together (a batch of movie issues does that by
+# construction) and needed a watchdog workflow to notice.
+#
+# workflow_dispatch is not optional: movie-from-issue.yml merges with GITHUB_TOKEN, and a
+# push made with that token starts no workflow run, so without the dispatch it sends at the
+# end of each merge, entries filed through issues would never deploy.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# A single slot: a newer push supersedes a queued deploy, since the latest main is the only
+# state worth publishing. In-progress deploys are not cancelled mid-upload.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
