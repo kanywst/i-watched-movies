@@ -1,4 +1,4 @@
-import { Activity, Bookmark, ChartColumn, Check, CircleSlash, Eye, Play } from 'lucide-react';
+import { Activity, Bookmark, ChartColumn, Check, CircleSlash, Eye, Play, Trophy } from 'lucide-react';
 import type React from 'react';
 import type { SortKey, View } from './types';
 
@@ -15,12 +15,12 @@ export interface ViewSpec {
   icon: React.ComponentType<{ className?: string }>;
   /**
    * Which movie list the filter bar and grid operate on. `null` for the views that render
-   * their own panel instead (History, Stats), which is also what suppresses the filter bar.
+   * their own panel instead (Top, History, Stats), which is also what suppresses the filter bar.
    */
   source: 'watched' | 'watching' | 'watchlist' | 'seen' | 'dropped' | null;
   /**
-   * Whether the tab shows a count. Stats has none because its figure would only repeat the
-   * Watched tab's.
+   * Whether the tab shows a count. Top and Stats have none because their figure would only
+   * repeat the Watched tab's.
    */
   showCount: boolean;
   /**
@@ -34,6 +34,9 @@ export interface ViewSpec {
 }
 
 export const VIEW_SPECS: ViewSpec[] = [
+  // The front page: the podium on its own. It used to sit above the Watched grid, where it
+  // pushed the films a screen down and had to hide itself under every search and filter.
+  { key: 'top', label: 'Top', icon: Trophy, source: null, showCount: false, defaultSort: 'watch_date_desc' },
   { key: 'watched', label: 'Watched', icon: Eye, source: 'watched', showCount: true, defaultSort: 'watch_date_desc' },
   { key: 'watching', label: 'In Progress', icon: Play, source: 'watching', showCount: true, defaultSort: 'added_desc' },
   { key: 'watchlist', label: 'Watchlist', icon: Bookmark, source: 'watchlist', showCount: true, defaultSort: 'added_desc' },
@@ -43,7 +46,7 @@ export const VIEW_SPECS: ViewSpec[] = [
   { key: 'stats', label: 'Stats', icon: ChartColumn, source: null, showCount: false, defaultSort: 'watch_date_desc' },
 ];
 
-export const DEFAULT_VIEW: View = 'watched';
+export const DEFAULT_VIEW: View = 'top';
 
 // Keyed rather than searched, so viewSpec has no unreachable fallback branch: the index is
 // typed Record<View, ViewSpec>, which also makes a missing VIEW_SPECS entry a type error.

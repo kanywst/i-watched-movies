@@ -14,16 +14,16 @@ import { tmdbResize, tmdbSrcSet } from '../tmdbImage';
  * third; only `order` moves them.
  *
  * Still a row on a phone, not a stack. At 400px the three steps come out about 130 / 95 /
- * 95px wide, which is a readable poster, and a stack would push the grid a full screen down
- * to show three films the grid itself also contains.
+ * 95px wide, which is a readable poster, and all three stay in one screen. Sized up on
+ * desktop since the podium became the whole Top page rather than a header over the grid.
  *
  * One slot per place up to RANK_LIMIT (3). Raising the limit means adding a slot here, or
  * the extra places are ranked and badged on the grid but never stood on the podium.
  */
 const SLOT: { order: string; width: string; sizes: string }[] = [
-  { order: 'order-2', width: 'w-[38%] sm:w-44 lg:w-48', sizes: '(min-width: 1024px) 192px, (min-width: 640px) 176px, 38vw' },
-  { order: 'order-1', width: 'w-[29%] sm:w-36', sizes: '(min-width: 640px) 144px, 29vw' },
-  { order: 'order-3', width: 'w-[29%] sm:w-36', sizes: '(min-width: 640px) 144px, 29vw' },
+  { order: 'order-2', width: 'w-[38%] sm:w-52 lg:w-64', sizes: '(min-width: 1024px) 256px, (min-width: 640px) 208px, 38vw' },
+  { order: 'order-1', width: 'w-[29%] sm:w-40 lg:w-48', sizes: '(min-width: 1024px) 192px, (min-width: 640px) 160px, 29vw' },
+  { order: 'order-3', width: 'w-[29%] sm:w-40 lg:w-48', sizes: '(min-width: 1024px) 192px, (min-width: 640px) 160px, 29vw' },
 ];
 
 /**

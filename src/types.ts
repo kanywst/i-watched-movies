@@ -55,6 +55,7 @@ export interface Movie {
 export type Language = 'en' | 'ja';
 
 export type View =
+  | 'top'
   | 'watched'
   | 'watching'
   | 'watchlist'
