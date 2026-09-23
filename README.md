@@ -4,6 +4,8 @@ My personal log of movies I've watched. Each entry is a markdown file in `movies
 
 Live: <https://kanywst.github.io/i-watched-movies/> · [RSS](https://kanywst.github.io/i-watched-movies/feed.xml)
 
+The old `i-watched-movies.edgebox12.workers.dev` address 301-redirects here, path and query included, so older links and feed subscriptions keep working. That redirect is `worker/redirect.js`, deployed by Cloudflare's GitHub integration.
+
 ## Views
 
 Seven tabs, each linkable through `?view=`. Filters, search, sort and the open film are mirrored to the query string too.
@@ -95,6 +97,7 @@ Tests cover pure logic only, one file per module (`src/*.test.ts`, `scripts/*.te
 4. `scripts/build-feeds.js`: update `SITE_URL`, `SITE_NAME`, `SITE_DESC`
 5. Replace the contents of `movies/` with your own
 6. Settings > Pages > Source: GitHub Actions. `pages.yml` deploys from there
+7. `wrangler.jsonc` and `worker/` only exist to redirect the old Cloudflare host; delete them
 
 ## Stack
 

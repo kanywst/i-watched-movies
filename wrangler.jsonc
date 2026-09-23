@@ -1,7 +1,6 @@
 {
   "name": "i-watched-movies",
   "compatibility_date": "2026-05-02",
-  "assets": {
-    "directory": "./dist"
-  }
+  // The site itself is on GitHub Pages now; this Worker only 301s the old host there.
+  "main": "worker/redirect.js"
 }
