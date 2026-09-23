@@ -19,7 +19,7 @@ export const MASTHEAD_POSTER_COUNT = 8;
 // Card grid entrance stagger (`.card-enter` in src/index.css) is 50ms per card index, so
 // uncapped the last card of a grid of N starts N * 50ms after the grid appears and, because
 // the animation is `both`-filled, sits invisible until it does. That was 9.2s when the
-// watchlist held 185; the largest grid is the watchlist at 82 on 2026-09-13, still 4.1s.
+// watchlist held 185; the largest grid is Watched at 63 on 2026-09-23, still 3.2s.
 // Past the first screenful the stagger is not perceptible anyway, so the index feeding the
 // delay is clamped here rather than the list being kept short: 11 gives a 550ms tail, about
 // two full rows on the widest layout, whatever the list grows to.

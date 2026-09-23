@@ -5,7 +5,9 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
-  { ignores: ['dist'] },
+  // .claude/ holds agent worktrees, each a full checkout with its own tsconfig; linting them
+  // from the root fails every file with a multiple-tsconfigRootDir parse error.
+  { ignores: ['dist', '.claude'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
