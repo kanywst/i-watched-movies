@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image as ImageIcon, Medal, Award, Crown, Sparkles } from 'lucide-react';
+import { Image as ImageIcon, Sparkles } from 'lucide-react';
 import { Movie } from '../types';
 import { clsx } from 'clsx';
 import { COUNTRY_FLAGS } from '../constants';
@@ -74,14 +74,6 @@ const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, is
     setIsLoaded(true);
   };
 
-  const getRankBadge = (r: number) => {
-    if (r === 1) return { color: 'text-yellow-100', bg: 'bg-yellow-600/80 backdrop-blur-md shadow-lg', icon: Crown };
-    if (r === 2) return { color: 'text-slate-100', bg: 'bg-slate-500/80 backdrop-blur-md shadow-lg', icon: Medal };
-    if (r === 3) return { color: 'text-orange-100', bg: 'bg-orange-700/80 backdrop-blur-md shadow-lg', icon: Award };
-    return null;
-  };
-
-  const rankStyle = rank ? getRankBadge(rank) : null;
   const displayFlag = movie.national ? COUNTRY_FLAGS[movie.national] : null;
   // Only a rated entry has a score worth printing. isWatched is the same rule the grid was
   // partitioned with, so a card can never disagree with the tab it is sitting under.
@@ -122,7 +114,7 @@ const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, is
       }}
       role="button"
       tabIndex={0}
-      aria-label={`${movie.title}${
+      aria-label={`${rank ? `Number ${rank}, ` : ''}${movie.title}${
         hasScore
           ? `, rated ${movie.point} out of 10`
           : seasonChip
@@ -141,12 +133,18 @@ const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, is
             clipped by the top of the scroll container on the first row and collided with the
             neighbouring card's artwork everywhere else. Rank goes left, score right, so the
             two never meet. */}
-        {rankStyle && (
-          <div className={clsx(
-            'absolute top-2 left-2 z-40 w-7 h-7 rounded-full flex items-center justify-center shadow-lg border border-white/10',
-            rankStyle.bg,
-          )}>
-            <rankStyle.icon className={clsx('w-3.5 h-3.5', rankStyle.color)} />
+        {/* The place as a numeral, the same mark the podium above the grid prints large. It
+            was a crown, a medal and an award in gold, silver and bronze, three icons the
+            reader had to decode into a number, in three fills that each needed their own
+            contrast check against the poster. Kept at all (the podium already shows these
+            films) because sorted by date or scrolled past the podium, this is the only
+            thing that says which card it is. The fill is mid's score-chip black/65, and over
+            a pure-white poster (measured 2026-09-23) the white numeral is 6.98:1 and the
+            stone-300 "No." 4.68:1, against the 4.5:1 floor at these sizes. */}
+        {rank && (
+          <div className="absolute top-2 left-2 z-40 px-1.5 py-0.5 rounded backdrop-blur-md shadow-lg border border-white/10 bg-black/65 text-white text-xs font-bold tabular-nums font-wordmark">
+            <span aria-hidden="true" className="text-[10px] font-semibold text-stone-300">No.</span>
+            {rank}
           </div>
         )}
 
