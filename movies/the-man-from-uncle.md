@@ -1,6 +1,7 @@
 ---
 title: 'The Man from U.N.C.L.E.'
 published: false
+seen: true
 tags:
   - 'Action'
   - 'Comedy'
@@ -15,4 +16,4 @@ summary_ja: '1963年、殺し合ったばかりのCIAとKGBのエージェント
 added: '2026-09-23T14:31:49.710Z'
 ---
 
-Guy Ritchie's stylish spy caper, the closest thing to Kingsman (8.9) outside the series.
+Logged as seen.
