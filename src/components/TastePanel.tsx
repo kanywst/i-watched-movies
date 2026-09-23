@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
-import { Compass, Gauge, Sparkles, TrendingDown, TrendingUp } from 'lucide-react';
+import { Compass, Crown, Gauge, Sparkles, TrendingDown, TrendingUp } from 'lucide-react';
 import { clsx } from 'clsx';
 import type { Movie } from '../types';
 import { tmdbResize } from '../tmdbImage';
 import { Stat } from './ui/Stat';
+import { RankHistory } from './RankHistory';
 import type { Affinity, ScoringHabits } from '../taste';
 import { computeScoringHabits, computeTasteProfile, recommendWatchlist } from '../taste';
 import {
@@ -181,6 +182,14 @@ export const TastePanel: React.FC<TastePanelProps> = ({ watched, watchlist, onOp
             )}
           </div>
         </div>
+      </Section>
+
+      <Section
+        icon={Crown}
+        title="Top of the diary"
+        note="Replayed in watch order with today's scores, so a film re-scored later counts at its new score from the day it was watched. A tie keeps the film that got there first."
+      >
+        <RankHistory watched={watched} onOpenMovie={onOpenMovie} />
       </Section>
 
       <Section
