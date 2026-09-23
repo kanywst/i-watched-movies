@@ -2,6 +2,8 @@ import moviesData from './data/movies.json';
 import type { Movie, View } from './types';
 import { countGenres, countLogged, partitionMovies } from './partition';
 import { buildRatedPoints } from './scoreBand';
+import { podiumSteps, rankById } from './podium';
+import { RANK_LIMIT } from './constants';
 
 /**
  * The diary is a static JSON module baked at build time, so every partition of it is a
@@ -58,3 +60,11 @@ export const TAB_COUNTS: Record<View, number> = {
   history: HISTORY_COUNT,
   stats: 0,
 };
+
+/**
+ * The Watched view's podium and the rank marker on each grid card, both off the whole
+ * watched list for the reason RATED_POINTS gives: a film's place must not move because the
+ * grid is filtered. Tie handling lives in src/podium.ts.
+ */
+export const PODIUM = podiumSteps(WATCHED_MOVIES, RANK_LIMIT);
+export const MOVIE_RANKS = rankById(PODIUM);

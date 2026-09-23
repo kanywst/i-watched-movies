@@ -7,6 +7,10 @@ import huluLogo from './assets/streaming/hulu.svg';
 
 export const RANK_LIMIT = 3;
 export const NEW_LIMIT = 2;
+// How many tied films a podium step names before folding the rest into "and N more", from
+// the `sm` breakpoint up (a phone gets the count only). Two ran to three lines under a 144px
+// flank step on 2026-09-23.
+export const PODIUM_TIED_NAMES = 2;
 
 // Posters tiled behind the masthead, highest-rated first. Eight fills the band at desktop
 // width while each tile still reads as a poster; below `sm` they are ~40px and are texture.

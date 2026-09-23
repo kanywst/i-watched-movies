@@ -2,6 +2,7 @@ import React, { Suspense, lazy, useCallback, useMemo } from 'react';
 import { flushSync } from 'react-dom';
 import { Movie, SortKey, View } from './types';
 import { MovieCard } from './components/MovieCard';
+import { Podium } from './components/Podium';
 import { FilterBar } from './components/FilterBar';
 import { MovieDetailModal } from './components/MovieDetailModal';
 import { Sun, Moon } from 'lucide-react';
@@ -12,7 +13,6 @@ import {
   MASTHEAD_POSTER_COUNT,
   MAX_STAGGER_INDEX,
   NEW_LIMIT,
-  RANK_LIMIT,
   SORT_OPTIONS,
 } from './constants';
 import { tmdbResize } from './tmdbImage';
@@ -24,6 +24,8 @@ import {
   DROPPED_GENRE_COUNT,
   DROPPED_MOVIES,
   HISTORY_MOVIES,
+  MOVIE_RANKS,
+  PODIUM,
   SEEN_GENRE_COUNT,
   SEEN_MOVIES,
   TAB_COUNTS,
@@ -119,6 +121,11 @@ const App: React.FC = () => {
   const [urlState, setUrlState] = useUrlState(URL_SPECS);
   // Which card, if any, currently owns the shared poster view-transition-name.
   const [transitioningId, setTransitioningId] = React.useState('');
+  // Which copy of that poster owns it. A podium film is also in the grid below, and the name
+  // may sit on only one live element at a time, so the card and the podium step both check
+  // this before wearing it. Left alone when the id clears, so closing hands the name back to
+  // the poster the modal was opened from.
+  const [transitionOrigin, setTransitionOrigin] = React.useState<'grid' | 'podium'>('grid');
   const view: View = isView(urlState.view) ? urlState.view : DEFAULT_VIEW;
   const spec = viewSpec(view);
   const sort: SortKey = isSort(urlState.sort) ? urlState.sort : spec.defaultSort;
@@ -161,19 +168,9 @@ const App: React.FC = () => {
     return Array.from(tags).sort();
   }, [viewMovies]);
 
-  // Rank and NEW badges are computed over the full watched list, not the filtered/sorted
-  // index, so they keep tracking the same films when filters change. A Map rather than an
-  // array because getRank runs per rendered card; indexOf made that O(cards x RANK_LIMIT).
-  const movieRanks = useMemo(
-    () =>
-      new Map(
-        sortMovies(WATCHED_MOVIES, 'point_desc')
-          .slice(0, RANK_LIMIT)
-          .map((m, i) => [m.id, i + 1] as const),
-      ),
-    [],
-  );
-
+  // NEW badges, like the rank markers (MOVIE_RANKS in collections.ts), are computed over the
+  // full watched list, not the filtered/sorted index, so they keep tracking the same films
+  // when filters change.
   const newMovieIds = useMemo(
     () => new Set(sortMovies(WATCHED_MOVIES, 'watch_date_desc').slice(0, NEW_LIMIT).map(m => m.id)),
     [],
@@ -249,7 +246,7 @@ const App: React.FC = () => {
   };
 
   const getRank = (movieId: string) =>
-    view === 'watched' ? movieRanks.get(movieId) : undefined;
+    view === 'watched' ? MOVIE_RANKS.get(movieId) : undefined;
 
   const switchView = (next: View) => {
     setUrlState({ view: next, tags: [] });
@@ -262,17 +259,27 @@ const App: React.FC = () => {
   // Only the card being handed to or from the modal carries a view-transition-name, and
   // `transitioningId` is what says which one. Naming every card meant the browser captured
   // a snapshot pair for all of them on every open, when exactly one element morphs.
-  const openMovie = useCallback(
-    (movie: Movie) => {
+  const openMovieFrom = useCallback(
+    (movie: Movie, origin: 'grid' | 'podium') => {
       // The old state is snapshotted the moment startViewTransition is called, so the card
       // has to be wearing the name already: commit that first, synchronously.
-      flushSync(() => setTransitioningId(movie.id));
+      flushSync(() => {
+        setTransitionOrigin(origin);
+        setTransitioningId(movie.id);
+      });
       const transition = withViewTransition(() =>
         setUrlState({ selected: movie.id }, { history: 'push' }),
       );
       clearAfter(transition, setTransitioningId);
     },
     [setUrlState],
+  );
+  const openMovie = useCallback((movie: Movie) => openMovieFrom(movie, 'grid'), [openMovieFrom]);
+  // A tied film named in text under a step has no poster on the podium, so its morph starts
+  // from its grid card like any other.
+  const openFromPodium = useCallback(
+    (movie: Movie, fromPoster: boolean) => openMovieFrom(movie, fromPoster ? 'podium' : 'grid'),
+    [openMovieFrom],
   );
 
   // Closing runs the other way: the modal already holds the name in the old state, and the
@@ -439,6 +446,22 @@ const App: React.FC = () => {
             allTags={allTags}
           />
 
+          {/* Only on the unfiltered Watched grid. The places are global (a film's rank does
+              not change because the grid is filtered), so under a search or a genre the
+              podium would sit above the results showing films that do not match them. It
+              goes below the filter bar rather than above it for the same reason: typing the
+              first letter of a search hides it, and above the bar that would yank the input
+              out from under the cursor. */}
+          {view === 'watched' && search.trim() === '' && selectedTags.length === 0 && (
+            <Podium
+              steps={PODIUM}
+              total={WATCHED_MOVIES.length}
+              transitioningId={transitionOrigin === 'podium' ? transitioningId : ''}
+              selectedId={urlState.selected}
+              onOpen={openFromPodium}
+            />
+          )}
+
           {/* Grid */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-10">
             {filteredMovies.map((movie, index) => (
@@ -453,7 +476,7 @@ const App: React.FC = () => {
                 rank={getRank(movie.id)}
                 isNew={view === 'watched' && newMovieIds.has(movie.id)}
                 isSelected={movie.id === urlState.selected}
-                hasTransitionName={movie.id === transitioningId}
+                hasTransitionName={movie.id === transitioningId && transitionOrigin === 'grid'}
                 onClick={openMovie}
               />
             ))}
