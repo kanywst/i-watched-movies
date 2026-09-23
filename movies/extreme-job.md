@@ -1,6 +1,7 @@
 ---
 title: 'Extreme Job'
 published: false
+seen: true
 tags:
   - 'Comedy'
   - 'Crime'
@@ -18,4 +19,4 @@ summary_ja: '成果の出ない麻薬捜査班が、組織のアジトの向か�
 added: '2026-09-23T14:31:41.236Z'
 ---
 
-Korea's biggest comedy, the lighter side of the Yadang (8.5) and Inside Men (8.4) crime lane.
+Logged as seen.
