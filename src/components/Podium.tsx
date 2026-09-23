@@ -40,6 +40,13 @@ const PLINTH: Record<number, { height: string; numeral: string }> = {
   3: { height: 'h-10 sm:h-14', numeral: 'text-[26px] sm:text-4xl' },
 };
 
+/**
+ * The metal a place stands on. Three metals exist (`.medal-1` to `.medal-3` in index.css);
+ * that is independent of RANK_LIMIT, and a place past third, which only a raised limit plus
+ * a new SLOT could produce, stands on bronze rather than on an undefined class.
+ */
+const medalOf = (rank: number) => Math.min(rank, 3);
+
 const ORDINAL: Record<number, string> = { 1: 'First', 2: 'Second', 3: 'Third' };
 
 interface PodiumProps {
@@ -127,7 +134,7 @@ const PodiumPlace: React.FC<PodiumPlaceProps> = ({ step, slot, index, transition
 
   return (
     <li
-      className={clsx('podium-enter flex flex-col', `medal-tone-${Math.min(step.rank, 3)}`, slot.order, slot.width)}
+      className={clsx('podium-enter flex flex-col', `medal-tone-${medalOf(step.rank)}`, slot.order, slot.width)}
       style={{ '--podium-index': index } as React.CSSProperties}
     >
       <button
@@ -238,7 +245,7 @@ const PodiumPlace: React.FC<PodiumPlaceProps> = ({ step, slot, index, transition
       <div
         aria-hidden="true"
         className={clsx(
-          `medal-${Math.min(step.rank, 3)} medal-shine`,
+          `medal-${medalOf(step.rank)} medal-shine`,
           'relative flex justify-center rounded-t-md pt-2',
           plinth.height,
         )}

@@ -63,8 +63,13 @@ interface MovieCardProps {
   onClick: (movie: Movie) => void;
 }
 
-/** One icon per place; the fill and ink come from `.medal-N`. */
-const RANK_ICON: Record<number, typeof Crown> = { 1: Crown, 2: Medal, 3: Award };
+/**
+ * One icon per metal; the fill and ink come from `.medal-N` in index.css. There are three
+ * metals, which is a fact about medals rather than about RANK_LIMIT: if the limit is ever
+ * raised, places past third fall back to the plain numeral chip below instead of losing
+ * their badge.
+ */
+const RANK_ICON: Partial<Record<number, typeof Crown>> = { 1: Crown, 2: Medal, 3: Award };
 
 const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, isNew, isSelected, hasTransitionName, onClick }) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -143,7 +148,7 @@ const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, is
             enter the contrast sum; the measured ratios live with the gradients in index.css.
             Kept alongside the podium because sorted by date or scrolled past it, this is the
             only thing that says which card it is. */}
-        {rank && rank <= 3 && (
+        {rank && RANK_ICON[rank] && (
           <div
             className={clsx(
               `medal-${rank} medal-shine`,
@@ -154,11 +159,18 @@ const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, is
               '--shine-delay': `${rank * 0.6}s`,
             } as React.CSSProperties}
           >
-            {React.createElement(RANK_ICON[rank], {
+            {React.createElement(RANK_ICON[rank]!, {
               className: rank === 1 ? 'w-[18px] h-[18px]' : 'w-4 h-4',
               strokeWidth: 2.5,
               'aria-hidden': true,
             })}
+            {rank}
+          </div>
+        )}
+        {/* Past the three metals: the score chip's black/65 over any poster, white numeral
+            6.98:1 against a pure-white poster (measured 2026-09-23). */}
+        {rank && !RANK_ICON[rank] && (
+          <div className="absolute top-2 left-2 z-40 rounded-full px-2 py-1 bg-black/65 text-white text-sm font-extrabold tabular-nums font-wordmark leading-none border border-white/10 backdrop-blur-md">
             {rank}
           </div>
         )}
