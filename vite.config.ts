@@ -2,6 +2,7 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { defineConfig, type Plugin } from 'vite'
+import { configDefaults } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
@@ -45,5 +46,8 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test-setup.ts'],
+    // Agent worktrees under .claude/ are full checkouts; without this their copies of the
+    // suite run alongside the real one and double-count (or fail against stale code).
+    exclude: [...configDefaults.exclude, '.claude/**'],
   },
 })
