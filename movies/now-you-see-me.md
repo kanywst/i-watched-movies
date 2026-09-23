@@ -1,6 +1,7 @@
 ---
 title: 'Now You See Me'
 published: false
+seen: true
 tags:
   - 'Crime'
   - 'Thriller'
@@ -16,4 +17,4 @@ summary_ja: '4人のマジシャンがラスベガスのショーの最中に銀
 added: '2026-09-23T14:31:41.400Z'
 ---
 
-A heist told as a magic trick, with the reveal structure that tops the diary.
+Logged as seen.
