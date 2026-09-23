@@ -1,6 +1,7 @@
 ---
 title: '調査官ク・ギョンイ'
 published: false
+dropped: true
 tags:
   - 'Crime'
   - 'Mystery'
@@ -15,4 +16,4 @@ summary_ja: 'ゲーム中毒の元警官が保険調査の仕事を通じて、�
 added: '2026-09-12T14:52:36.000Z'
 ---
 
-Lee Young-ae as the investigator. The killer is known to the viewer from the first episode, so it plays as a chase rather than a whodunit.
+Started and given up on partway.
