@@ -13,10 +13,15 @@ permissions:
 
 jobs:
   build:
+    # An issue filed with its labels fires `opened` plus one `labeled` per label, four runs
+    # for one issue. Only the `type: movie` label can change whether this job applies, so
+    # the other `labeled` events are dropped here. That still leaves two (opened, and
+    # labeled with type: movie), which the "already on main" check below makes harmless.
     if: >-
       github.event_name == 'issues' &&
       contains(github.event.issue.labels.*.name, 'type: movie') &&
-      github.event.issue.state == 'open'
+      github.event.issue.state == 'open' &&
+      (github.event.action != 'labeled' || github.event.label.name == 'type: movie')
     runs-on: ubuntu-latest
     concurrency:
       group: movie-from-issue-${{ github.event.issue.number }}
@@ -81,14 +86,51 @@ jobs:
           npm test
           npm run build
 
-      - name: Configure git
+      # cancel-in-progress does not stop a run that is already past its checkout, so two runs
+      # for one issue can both build from a main that predates the other's merge. On
+      # 2026-09-23 the loser opened a second PR adding the same file with a different
+      # `added` stamp, failed five merge attempts, and marked an issue failed whose entry
+      # had already landed. Re-read main right before committing and stand down if it
+      # already carries this content. `added` is ignored in the comparison because each run
+      # stamps its own; the one already on main is the one to keep.
+      - name: Check whether main already has this entry
         if: steps.changes.outputs.changed == 'true'
+        id: landed
+        env:
+          PATH_FILE: ${{ steps.build.outputs.path }}
+        run: |
+          git fetch --quiet origin main
+          if git cat-file -e "origin/main:$PATH_FILE" 2>/dev/null; then
+            git show "origin/main:$PATH_FILE" | grep -v '^added:' > "$RUNNER_TEMP/on-main.md"
+            grep -v '^added:' "$PATH_FILE" > "$RUNNER_TEMP/built.md"
+          fi
+          if [ -f "$RUNNER_TEMP/on-main.md" ] && cmp -s "$RUNNER_TEMP/on-main.md" "$RUNNER_TEMP/built.md"; then
+            echo "landed=true" >> "$GITHUB_OUTPUT"
+            echo "main already carries $PATH_FILE with this content."
+          else
+            echo "landed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Acknowledge entry already on main
+        if: steps.landed.outputs.landed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          gh issue edit "$ISSUE" \
+            --remove-label 'status: processing' \
+            --remove-label 'status: pr-opened' \
+            --add-label 'status: merged' || true
+          gh issue close "$ISSUE" --reason completed || true
+
+      - name: Configure git
+        if: steps.changes.outputs.changed == 'true' && steps.landed.outputs.landed != 'true'
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
 
       - name: Commit and push branch
-        if: steps.changes.outputs.changed == 'true'
+        if: steps.changes.outputs.changed == 'true' && steps.landed.outputs.landed != 'true'
         id: commit
         env:
           SLUG: ${{ steps.build.outputs.slug }}
@@ -110,7 +152,7 @@ jobs:
           git push --force-with-lease origin "$BRANCH"
 
       - name: Open or update PR and merge
-        if: steps.changes.outputs.changed == 'true'
+        if: steps.changes.outputs.changed == 'true' && steps.landed.outputs.landed != 'true'
         id: pr
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -171,7 +213,7 @@ jobs:
           echo "url=$URL" >> "$GITHUB_OUTPUT"
 
       - name: Mark issue as merged
-        if: success() && steps.changes.outputs.changed == 'true'
+        if: success() && steps.changes.outputs.changed == 'true' && steps.landed.outputs.landed != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE: ${{ github.event.issue.number }}
@@ -194,7 +236,7 @@ jobs:
       # so a batch collapses to one run watching the final state of main, which is the
       # right one to watch.
       - name: Ask verify-deploy to watch this push
-        if: success() && steps.changes.outputs.changed == 'true'
+        if: success() && steps.changes.outputs.changed == 'true' && steps.landed.outputs.landed != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
