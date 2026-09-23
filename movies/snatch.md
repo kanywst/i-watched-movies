@@ -1,6 +1,7 @@
 ---
 title: 'Snatch'
 published: false
+seen: true
 tags:
   - 'Crime'
   - 'Comedy'
@@ -15,4 +16,4 @@ summary_ja: '盗まれたダイヤが、ロンドンのギャング、素手ボ�
 added: '2026-09-23T14:31:46.134Z'
 ---
 
-Guy Ritchie, the same ensemble-crime machine as The Gentlemen and Kingsman's British swagger.
+Logged as seen.
