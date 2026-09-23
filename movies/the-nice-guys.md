@@ -1,6 +1,7 @@
 ---
 title: 'The Nice Guys'
 published: false
+seen: true
 tags:
   - 'Comedy'
   - 'Crime'
@@ -16,4 +17,4 @@ summary_ja: '1977年のロサンゼルス。腕っぷしだけの示談屋と頼
 added: '2026-09-23T14:31:49.143Z'
 ---
 
-Shane Black's buddy mystery: a real puzzle under the jokes, the Glass Onion and Sheep Detectives shape with fists.
+Logged as seen.
