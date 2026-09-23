@@ -231,7 +231,7 @@ export interface RecommendationReason {
 
 export interface Recommendation {
   movie: Movie;
-  /** Baseline plus the shrunk genre and country deltas, clamped to the 0-10 scale. */
+  /** Outlier-capped baseline plus the shrunk genre and country deltas, clamped to 0-10. */
   predicted: number;
   reasons: RecommendationReason[];
 }
@@ -285,6 +285,22 @@ function countryAffinity(
 }
 
 /**
+ * The rated films with every score held within OUTLIER_SIGMA standard deviations of the mean,
+ * for prediction only. One film is not a taste: 新解釈・幕末伝 at 1.0 on its own dragged Comedy
+ * to -0.38 and Period to -3.04 (2026-09-23, 63 rated films), which put Kingsman: The Golden
+ * Circle 42nd of 44 on the watchlist while the first film sits at 8.9, the diary's top score.
+ * The cap is the same line the Stats page already calls an outlier at, so a rating counts
+ * as "far below average" without counting as eight points below it. The Stats display keeps
+ * the raw averages, since there they describe what happened rather than predict.
+ */
+function capOutliers(rated: Movie[], profile: TasteProfile): Movie[] {
+  if (profile.spread === 0) return rated;
+  const lo = profile.baseline - OUTLIER_SIGMA * profile.spread;
+  const hi = profile.baseline + OUTLIER_SIGMA * profile.spread;
+  return rated.map(m => (m.point < lo || m.point > hi ? { ...m, point: clamp(m.point, lo, hi) } : m));
+}
+
+/**
  * Rank watchlist entries by how well they match the rated profile. This predicts how the
  * film would be scored, not how good it is: an untagged entry or one whose genres have
  * never been rated simply lands on the baseline.
@@ -297,7 +313,11 @@ export function recommendWatchlist(
   profile: TasteProfile,
   limit: number,
 ): Recommendation[] {
-  const genreIndex = new Map(profile.genres.map(a => [a.key, a]));
+  // Predict from the outlier-capped diary. Its baseline shifts with the cap, so every term
+  // below reads off `model` rather than the display profile passed in.
+  const capped = capOutliers(rated, profile);
+  const model = computeTasteProfile(capped);
+  const genreIndex = new Map(model.genres.map(a => [a.key, a]));
 
   return watchlist
     .map((movie): Recommendation => {
@@ -307,7 +327,7 @@ export function recommendWatchlist(
       const genrePart = genrePull(movie, genreIndex);
       for (const a of hits) reasons.push({ key: a.key, contribution: shrink(a) / hits.length });
 
-      const country = countryAffinity(movie, rated, genreIndex, profile.baseline);
+      const country = countryAffinity(movie, capped, genreIndex, model.baseline);
       const countryPart = country ? shrink(country) * COUNTRY_AFFINITY_WEIGHT : 0;
       if (country) reasons.push({ key: country.key, contribution: countryPart });
 
@@ -315,7 +335,7 @@ export function recommendWatchlist(
       reasons.sort((a, b) => Math.abs(b.contribution) - Math.abs(a.contribution));
       return {
         movie,
-        predicted: clamp(profile.baseline + genrePart + countryPart, 0, 10),
+        predicted: clamp(model.baseline + genrePart + countryPart, 0, 10),
         reasons: reasons.slice(0, REASON_LIMIT),
       };
     })
