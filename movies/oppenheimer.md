@@ -1,5 +1,6 @@
 ---
 title: 'Oppenheimer'
+title_ja: 'オッペンハイマー'
 published: false
 seen: true
 tags:

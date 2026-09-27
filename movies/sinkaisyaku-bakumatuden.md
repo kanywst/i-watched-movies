@@ -1,5 +1,6 @@
 ---
 title: '新解釈・幕末伝'
+title_en: 'New Interpretation of the End of Edo Period'
 published: true
 tags:
   - 'Period'

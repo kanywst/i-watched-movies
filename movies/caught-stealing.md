@@ -1,5 +1,6 @@
 ---
 title: 'Caught Stealing'
+title_ja: 'コート・スティーリング'
 published: true
 tags:
   - 'Black-Comedy'

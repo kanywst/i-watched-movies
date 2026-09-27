@@ -1,5 +1,6 @@
 ---
 title: '神は見返りを求める'
+title_en: 'God Seeks in Return'
 published: false
 tags:
   - 'Black-Comedy'

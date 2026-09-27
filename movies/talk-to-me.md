@@ -1,5 +1,6 @@
 ---
 title: 'Talk to Me'
+title_ja: 'TALK TO ME トーク・トゥ・ミー'
 published: false
 seen: true
 tags:

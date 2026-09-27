@@ -1,6 +1,7 @@
 ---
 title: '無間道'
 title_en: 'Infernal Affairs'
+title_ja: 'インファナル・アフェア'
 published: false
 tags:
   - 'Crime'

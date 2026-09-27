@@ -1,5 +1,6 @@
 ---
 title: 'Send Help'
+title_ja: 'HELP/復讐島'
 published: true
 tags:
   - 'Hybrid-Genre'

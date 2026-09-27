@@ -1,5 +1,6 @@
 ---
 title: 'A Haunting in Venice'
+title_ja: '名探偵ポアロ：ベネチアの亡霊'
 published: true
 tags:
   - 'Mystery'

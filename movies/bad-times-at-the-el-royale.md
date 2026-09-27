@@ -1,5 +1,6 @@
 ---
 title: 'Bad Times at the El Royale'
+title_ja: 'ホテル・エルロワイヤル'
 published: false
 tags:
   - 'Mystery'

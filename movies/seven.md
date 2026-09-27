@@ -1,5 +1,6 @@
 ---
 title: 'Se7en'
+title_ja: 'セブン'
 published: false
 seen: true
 tags:

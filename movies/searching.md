@@ -1,5 +1,6 @@
 ---
 title: 'Searching'
+title_ja: 'search／サーチ'
 published: false
 tags:
   - 'Mystery'

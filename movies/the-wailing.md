@@ -1,6 +1,7 @@
 ---
 title: '곡성'
 title_en: 'The Wailing'
+title_ja: '哭声／コクソン'
 published: true
 tags:
   - 'Horror'

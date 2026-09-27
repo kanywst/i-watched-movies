@@ -1,6 +1,7 @@
 ---
 title: '신세계'
 title_en: 'New World'
+title_ja: '新しき世界'
 published: false
 tags:
   - 'Crime'

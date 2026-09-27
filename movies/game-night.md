@@ -1,5 +1,6 @@
 ---
 title: 'Game Night'
+title_ja: 'ゲーム・ナイト'
 published: false
 tags:
   - 'Comedy'

@@ -1,6 +1,7 @@
 ---
 title: '극한직업'
 title_en: 'Extreme Job'
+title_ja: 'エクストリーム・ジョブ'
 published: false
 seen: true
 tags:

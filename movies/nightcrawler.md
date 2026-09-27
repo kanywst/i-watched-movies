@@ -1,5 +1,6 @@
 ---
 title: 'Nightcrawler'
+title_ja: 'ナイトクローラー'
 published: false
 tags:
   - 'Crime'

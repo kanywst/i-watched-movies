@@ -1,5 +1,6 @@
 ---
 title: 'CUBE 一度入ったら、最後'
+title_en: 'Cube'
 published: false
 seen: true
 tags:

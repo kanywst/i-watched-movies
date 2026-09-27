@@ -1,5 +1,6 @@
 ---
 title: 'Avatar: Fire and Ash '
+title_ja: 'アバター：ファイヤー・アンド・アッシュ'
 published: true
 tags:
   - 'Epic'

@@ -1,5 +1,6 @@
 ---
 title: 'Bullet Train'
+title_ja: 'ブレット・トレイン'
 published: false
 tags:
   - 'Action'

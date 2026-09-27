@@ -1,5 +1,6 @@
 ---
 title: 'Primate'
+title_ja: 'おさるのベン'
 published: true
 tags:
   - 'Natural-horror'

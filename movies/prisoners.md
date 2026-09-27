@@ -1,5 +1,6 @@
 ---
 title: 'Prisoners'
+title_ja: 'プリズナーズ'
 published: false
 tags:
   - 'Thriller'

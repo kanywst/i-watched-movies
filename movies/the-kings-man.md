@@ -1,5 +1,6 @@
 ---
 title: 'The King''s Man'
+title_ja: 'キングスマン：ファースト・エージェント'
 published: false
 tags:
   - 'Action'

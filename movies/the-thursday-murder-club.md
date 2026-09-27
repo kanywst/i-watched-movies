@@ -1,5 +1,6 @@
 ---
 title: 'The Thursday Murder Club'
+title_ja: '木曜殺人クラブ'
 published: true
 tags:
   - 'Mystery'

@@ -1,5 +1,6 @@
 ---
 title: 'Knives Out'
+title_ja: 'ナイブズ・アウト 名探偵と刃の館の秘密'
 published: false
 seen: true
 tags:

@@ -1,5 +1,6 @@
 ---
 title: '８番出口'
+title_en: 'Exit 8'
 published: true
 tags:
   - 'Horror'

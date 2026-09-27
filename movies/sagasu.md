@@ -1,5 +1,6 @@
 ---
 title: 'さがす'
+title_en: 'Missing'
 published: true
 tags:
   - 'Crime'

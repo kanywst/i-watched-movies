@@ -1,5 +1,6 @@
 ---
 title: 'Ocean''s Eleven'
+title_ja: 'オーシャンズ11'
 published: false
 seen: true
 tags:

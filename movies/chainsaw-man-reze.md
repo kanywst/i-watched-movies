@@ -1,5 +1,6 @@
 ---
 title: '劇場版『チェンソーマン レゼ篇』'
+title_en: 'Chainsaw Man - The Movie: Reze Arc'
 published: true
 tags:
   - 'Horror'

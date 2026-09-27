@@ -1,5 +1,6 @@
 ---
 title: 'CURE キュア'
+title_en: 'Cure'
 published: false
 tags:
   - 'Mystery'

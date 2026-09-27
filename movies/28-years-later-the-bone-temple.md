@@ -1,5 +1,6 @@
 ---
 title: '28 Years Later: The Bone Temple'
+title_ja: '28年後... 白骨の神殿'
 published: true
 tags:
   - 'Horror'

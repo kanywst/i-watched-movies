@@ -1,5 +1,6 @@
 ---
 title: 'The Long Walk'
+title_ja: 'ロングウォーク'
 published: true
 tags:
   - 'Dystopian'

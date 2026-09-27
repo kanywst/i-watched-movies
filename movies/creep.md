@@ -1,5 +1,6 @@
 ---
 title: 'Creep'
+title_ja: 'クリープ'
 published: true
 tags:
   - 'Horror'

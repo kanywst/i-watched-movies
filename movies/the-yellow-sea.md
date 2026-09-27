@@ -1,6 +1,7 @@
 ---
 title: '황해'
 title_en: 'The Yellow Sea'
+title_ja: '哀しき獣'
 published: false
 tags:
   - 'Crime'

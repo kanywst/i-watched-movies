@@ -1,5 +1,6 @@
 ---
 title: 'The Sheep Detectives'
+title_ja: 'ひつじ探偵団'
 published: true
 tags:
   - 'Mystery'

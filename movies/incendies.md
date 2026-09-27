@@ -1,5 +1,6 @@
 ---
 title: 'Incendies'
+title_ja: '灼熱の魂'
 published: false
 tags:
   - 'Drama'

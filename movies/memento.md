@@ -1,5 +1,6 @@
 ---
 title: 'Memento'
+title_ja: 'メメント'
 published: false
 seen: true
 tags:

@@ -1,6 +1,7 @@
 ---
 title: '야당'
-title_en: 'Yadang'
+title_en: 'Yadang: The Snitch'
+title_ja: 'YADANG ヤダン'
 published: true
 tags:
   - 'Crime'

@@ -1,5 +1,6 @@
 ---
 title: '渇き。'
+title_en: 'The World of Kanako'
 published: false
 tags:
   - 'Crime'

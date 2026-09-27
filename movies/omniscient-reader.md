@@ -1,6 +1,7 @@
 ---
 title: '전지적 독자 시점'
 title_en: 'Omniscient Reader: The Prophecy'
+title_ja: '全知的な読者の視点から'
 published: true
 tags:
   - 'Action'

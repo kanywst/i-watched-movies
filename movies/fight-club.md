@@ -1,5 +1,6 @@
 ---
 title: 'Fight Club'
+title_ja: 'ファイト・クラブ'
 published: false
 seen: true
 tags:

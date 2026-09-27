@@ -1,5 +1,6 @@
 ---
 title: 'Get Out'
+title_ja: 'ゲット・アウト'
 published: false
 seen: true
 tags:

@@ -1,6 +1,7 @@
 ---
 title: '기생충'
 title_en: 'Parasite'
+title_ja: 'パラサイト 半地下の家族'
 published: false
 seen: true
 tags:

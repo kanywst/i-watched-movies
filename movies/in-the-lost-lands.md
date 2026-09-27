@@ -1,5 +1,6 @@
 ---
 title: 'In the Lost Lands'
+title_ja: 'ロストランズ 闇を狩る者'
 published: true
 tags:
   - 'Action'

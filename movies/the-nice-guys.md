@@ -1,5 +1,6 @@
 ---
 title: 'The Nice Guys'
+title_ja: 'ナイスガイズ！'
 published: false
 seen: true
 tags:

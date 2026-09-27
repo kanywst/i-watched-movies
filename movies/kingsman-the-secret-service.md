@@ -1,5 +1,6 @@
 ---
 title: 'Kingsman: The Secret Service'
+title_ja: 'キングスマン'
 published: true
 tags:
   - 'Action'

@@ -1,5 +1,6 @@
 ---
 title: '今際の国のアリス'
+title_en: 'Alice in Borderland'
 published: false
 seen: true
 tags:

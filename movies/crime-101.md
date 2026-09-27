@@ -1,5 +1,6 @@
 ---
 title: 'Crime 101'
+title_ja: 'クライム101'
 published: true
 tags:
   - 'Crime'

@@ -1,5 +1,6 @@
 ---
 title: 'The Fantastic Four: First Steps'
+title_ja: 'ファンタスティック４：ファースト・ステップ'
 published: true
 tags:
   - 'Superhero'

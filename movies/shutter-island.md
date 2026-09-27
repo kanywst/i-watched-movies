@@ -1,5 +1,6 @@
 ---
 title: 'Shutter Island'
+title_ja: 'シャッター アイランド'
 published: false
 seen: true
 tags:

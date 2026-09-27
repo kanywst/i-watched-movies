@@ -1,6 +1,7 @@
 ---
 title: '아가씨'
 title_en: 'The Handmaiden'
+title_ja: 'お嬢さん'
 published: false
 tags:
   - 'Thriller'

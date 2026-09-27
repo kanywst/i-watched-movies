@@ -1,5 +1,6 @@
 ---
 title: '首'
+title_en: 'Kubi'
 published: true
 tags:
   - 'Period'

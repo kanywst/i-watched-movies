@@ -1,6 +1,7 @@
 ---
 title: '마더'
 title_en: 'Mother'
+title_ja: '母なる証明'
 published: false
 tags:
   - 'Mystery'

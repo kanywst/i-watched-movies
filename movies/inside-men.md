@@ -1,6 +1,7 @@
 ---
 title: '내부자들'
 title_en: 'Inside Men'
+title_ja: 'インサイダーズ 内部者たち'
 published: true
 tags:
   - 'Crime'

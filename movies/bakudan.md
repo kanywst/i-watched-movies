@@ -1,5 +1,6 @@
 ---
 title: '爆弾'
+title_en: 'Suzuki=Bakudan'
 published: true
 tags:
   - 'Mystery'

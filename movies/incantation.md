@@ -1,6 +1,7 @@
 ---
 title: '咒'
 title_en: 'Incantation'
+title_ja: '呪詛'
 published: false
 seen: true
 tags:

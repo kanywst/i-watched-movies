@@ -1,6 +1,7 @@
 ---
 title: '살인의 추억'
 title_en: 'Memories of Murder'
+title_ja: '殺人の追憶'
 published: true
 tags:
   - 'Crime'

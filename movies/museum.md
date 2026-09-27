@@ -1,5 +1,6 @@
 ---
 title: 'ミュージアム'
+title_en: 'Museum'
 published: false
 seen: true
 tags:

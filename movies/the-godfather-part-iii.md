@@ -1,5 +1,6 @@
 ---
 title: 'The Godfather Part III'
+title_ja: 'ゴッドファーザー PART III'
 published: false
 tags:
   - 'Crime'

@@ -1,5 +1,6 @@
 ---
 title: 'Fargo'
+title_ja: 'ファーゴ'
 published: false
 tags:
   - 'Crime'
