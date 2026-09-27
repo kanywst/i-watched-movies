@@ -34,4 +34,9 @@ async function generate() {
   console.log(`Wrote ${JSONLD_FILE} and ${RSS_FILE}`);
 }
 
-generate().catch(console.error);
+// A failure must fail the build: `npm run build` chains straight into tsc and vite, which
+// would otherwise ship whatever stale artifacts the last good run left in public/.
+generate().catch((err) => {
+  console.error(err);
+  process.exitCode = 1;
+});
