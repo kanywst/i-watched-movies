@@ -1,6 +1,7 @@
 ---
 title: '올드보이'
 title_en: 'Oldboy'
+title_ja: 'オールド・ボーイ'
 published: true
 tags:
   - 'Mystery'

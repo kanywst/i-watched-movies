@@ -1,5 +1,6 @@
 ---
 title: 'Wake Up Dead Man: A Knives Out Mystery'
+title_ja: 'ナイブズ・アウト: ウェイク・アップ・デッドマン'
 published: true
 tags:
   - 'Mystery'

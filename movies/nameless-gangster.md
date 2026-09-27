@@ -1,6 +1,7 @@
 ---
 title: '범죄와의 전쟁: 나쁜놈들 전성시대'
 title_en: 'Nameless Gangster'
+title_ja: '悪いやつら'
 published: false
 tags:
   - 'Crime'

@@ -1,5 +1,6 @@
 ---
 title: '近畿地方のある場所について'
+title_en: 'KINKI'
 published: true
 tags:
   - 'Horror'

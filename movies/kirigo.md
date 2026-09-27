@@ -1,5 +1,7 @@
 ---
-title: 'キリゴ'
+title: '기리고'
+title_en: 'If Wishes Could Kill'
+title_ja: 'キリゴ'
 published: false
 watching: true
 tags:

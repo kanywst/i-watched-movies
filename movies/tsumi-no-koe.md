@@ -1,5 +1,6 @@
 ---
 title: '罪の声'
+title_en: 'The Voice of Sin'
 published: false
 dropped: true
 tags:

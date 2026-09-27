@@ -1,5 +1,6 @@
 ---
 title: '告白'
+title_en: 'Confessions'
 published: false
 seen: true
 tags:

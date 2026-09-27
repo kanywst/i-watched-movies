@@ -1,5 +1,6 @@
 ---
 title: 'Michael'
+title_ja: 'Michael／マイケル'
 published: true
 tags:
   - 'Biographical'

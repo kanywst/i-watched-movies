@@ -1,5 +1,6 @@
 ---
 title: 'The Devil Wears Prada 2'
+title_ja: 'プラダを着た悪魔２'
 published: true
 tags:
   - 'Comedy'

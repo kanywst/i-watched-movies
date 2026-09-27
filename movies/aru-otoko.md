@@ -1,5 +1,6 @@
 ---
 title: 'ある男'
+title_en: 'A Man'
 published: false
 tags:
   - 'Mystery'

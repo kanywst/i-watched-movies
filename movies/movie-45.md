@@ -1,5 +1,6 @@
 ---
 title: '侍タイムスリッパー'
+title_en: 'A Samurai in Time'
 published: true
 tags:
   - 'Fiction'

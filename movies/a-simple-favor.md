@@ -1,5 +1,6 @@
 ---
 title: 'A Simple Favor'
+title_ja: 'シンプル・フェイバー'
 published: false
 tags:
   - 'Mystery'

@@ -1,5 +1,6 @@
 ---
 title: 'Death on the Nile'
+title_ja: 'ナイル殺人事件'
 published: true
 tags:
   - 'Mystery'

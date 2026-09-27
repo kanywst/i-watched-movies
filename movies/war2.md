@@ -1,5 +1,6 @@
 ---
 title: 'WAR 2'
+title_ja: 'ＷＡＲ／バトル・オブ・フェイト'
 published: true
 tags:
   - 'Action'

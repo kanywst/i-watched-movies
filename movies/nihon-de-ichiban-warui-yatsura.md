@@ -1,5 +1,6 @@
 ---
 title: '日本で一番悪い奴ら'
+title_en: 'Twisted Justice'
 published: false
 dropped: true
 tags:

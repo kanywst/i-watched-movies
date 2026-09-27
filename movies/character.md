@@ -1,5 +1,6 @@
 ---
 title: 'キャラクター'
+title_en: 'Character'
 published: false
 seen: true
 tags:

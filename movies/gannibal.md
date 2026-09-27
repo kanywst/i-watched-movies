@@ -1,5 +1,6 @@
 ---
 title: 'ガンニバル'
+title_en: 'Gannibal'
 published: true
 tags:
   - 'Horror'

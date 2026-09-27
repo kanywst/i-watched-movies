@@ -1,5 +1,6 @@
 ---
 title: '新幹線大爆破'
+title_en: 'Bullet Train Explosion'
 published: false
 tags:
   - 'Thriller'

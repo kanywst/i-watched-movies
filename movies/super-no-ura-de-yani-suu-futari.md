@@ -1,5 +1,6 @@
 ---
 title: 'スーパーの裏でヤニ吸うふたり'
+title_en: 'Smoking Behind the Supermarket with You'
 published: true
 tags:
   - 'Anime'

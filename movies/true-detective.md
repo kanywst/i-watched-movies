@@ -1,5 +1,6 @@
 ---
 title: 'True Detective'
+title_ja: 'トゥルー・ディテクティブ'
 published: false
 tags:
   - 'Crime'

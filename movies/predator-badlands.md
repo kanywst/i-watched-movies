@@ -1,5 +1,6 @@
 ---
 title: 'Predator: Badlands'
+title_ja: 'プレデター：バッドランド'
 published: true
 tags:
   - 'Sci-fi'

@@ -1,5 +1,6 @@
 ---
 title: 'Jurassic World: Rebirth'
+title_ja: 'ジュラシック・ワールド　復活の大地'
 published: true
 tags:
   - 'Sci-fi'

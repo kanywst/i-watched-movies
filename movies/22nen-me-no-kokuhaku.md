@@ -1,5 +1,6 @@
 ---
 title: '22年目の告白 私が殺人犯です'
+title_en: 'Memoirs of a Murderer'
 published: false
 seen: true
 tags:

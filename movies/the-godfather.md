@@ -1,5 +1,6 @@
 ---
 title: 'The Godfather'
+title_ja: 'ゴッドファーザー'
 published: false
 tags:
   - 'Crime'

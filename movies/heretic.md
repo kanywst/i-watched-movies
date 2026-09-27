@@ -1,5 +1,6 @@
 ---
 title: 'Heretic'
+title_ja: '異端者の家'
 published: false
 tags:
   - 'Horror'

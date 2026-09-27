@@ -1,5 +1,6 @@
 ---
 title: 'No Country for Old Men'
+title_ja: 'ノーカントリー'
 published: false
 tags:
   - 'Crime'

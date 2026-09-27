@@ -1,5 +1,6 @@
 ---
 title: 'Nothing to Lose'
+title_ja: 'ナッシング・トゥ・ルーズ'
 published: true
 tags:
   - 'Comedy'

@@ -1,5 +1,6 @@
 ---
 title: 'Gone Girl'
+title_ja: 'ゴーン・ガール'
 published: false
 tags:
   - 'Thriller'

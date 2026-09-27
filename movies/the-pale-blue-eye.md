@@ -1,5 +1,6 @@
 ---
 title: 'The Pale Blue Eye'
+title_ja: 'ほの蒼き瞳'
 published: true
 tags:
   - 'Mystery'

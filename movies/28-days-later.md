@@ -1,5 +1,6 @@
 ---
 title: '28 Days Later'
+title_ja: '28日後...'
 published: false
 seen: true
 tags:

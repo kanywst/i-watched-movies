@@ -1,5 +1,6 @@
 ---
 title: 'ヒメアノ〜ル'
+title_en: 'Himeanole'
 published: true
 tags:
   - 'Crime'

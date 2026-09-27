@@ -1,5 +1,6 @@
 ---
 title: 'Kiss Kiss Bang Bang'
+title_ja: 'キスキス,バンバン'
 published: false
 tags:
   - 'Comedy'

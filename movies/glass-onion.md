@@ -1,5 +1,6 @@
 ---
 title: 'Glass Onion: A Knives Out Mystery'
+title_ja: 'ナイブズ・アウト: グラス・オニオン'
 published: true
 tags:
   - 'Mystery'

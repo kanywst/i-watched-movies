@@ -1,5 +1,6 @@
 ---
 title: '冷たい熱帯魚'
+title_en: 'Cold Fish'
 published: false
 seen: true
 tags:

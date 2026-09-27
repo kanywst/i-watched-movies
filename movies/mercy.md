@@ -1,5 +1,6 @@
 ---
 title: 'Mercy'
+title_ja: 'MERCY／マーシー　AI裁判'
 published: true
 tags:
   - 'Action'

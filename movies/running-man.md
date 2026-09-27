@@ -1,5 +1,6 @@
 ---
 title: 'The Running Man'
+title_ja: 'ランニング・マン'
 published: true
 tags:
   - 'Sci-fi'

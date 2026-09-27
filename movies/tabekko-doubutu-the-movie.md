@@ -1,5 +1,6 @@
 ---
 title: 'たべっ子どうぶつ THE MOVIE'
+title_en: 'Dream Animals the Movie'
 published: true
 tags:
   - 'Fantasy'

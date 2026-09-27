@@ -1,5 +1,6 @@
 ---
 title: '死刑にいたる病'
+title_en: 'Lesson in Murder'
 published: true
 tags:
   - 'Crime'

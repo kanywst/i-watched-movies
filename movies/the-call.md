@@ -1,6 +1,7 @@
 ---
 title: '콜'
 title_en: 'The Call'
+title_ja: 'ザ・コール'
 published: false
 seen: true
 tags:

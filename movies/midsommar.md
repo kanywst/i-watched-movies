@@ -1,5 +1,6 @@
 ---
 title: 'Midsommar'
+title_ja: 'ミッドサマー'
 published: false
 seen: true
 tags:

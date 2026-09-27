@@ -1,5 +1,6 @@
 ---
 title: '孤狼の血'
+title_en: 'The Blood of Wolves'
 published: false
 seen: true
 tags:

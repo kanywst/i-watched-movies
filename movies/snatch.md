@@ -1,5 +1,6 @@
 ---
 title: 'Snatch'
+title_ja: 'スナッチ'
 published: false
 seen: true
 tags:

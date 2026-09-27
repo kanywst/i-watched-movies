@@ -1,5 +1,6 @@
 ---
 title: 'The Man from U.N.C.L.E.'
+title_ja: 'コードネーム U.N.C.L.E.'
 published: false
 seen: true
 tags:

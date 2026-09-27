@@ -1,6 +1,7 @@
 ---
 title: '어쩔수가없다'
 title_en: 'No Other Choice'
+title_ja: 'しあわせな選択'
 published: true
 tags:
   - 'Black-Comedy'

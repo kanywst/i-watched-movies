@@ -1,5 +1,6 @@
 ---
 title: '怒り'
+title_en: 'Rage'
 published: false
 tags:
   - 'Mystery'

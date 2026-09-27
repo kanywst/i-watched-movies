@@ -1,5 +1,6 @@
 ---
 title: 'The Guilty'
+title_ja: 'THE GUILTY／ギルティ'
 published: true
 tags:
   - 'Thriller'

@@ -1,5 +1,6 @@
 ---
 title: '凶悪'
+title_en: 'The Devil''s Path'
 published: true
 tags:
   - 'Crime'

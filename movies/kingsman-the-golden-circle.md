@@ -1,5 +1,6 @@
 ---
 title: 'Kingsman: The Golden Circle'
+title_ja: 'キングスマン：ゴールデン・サークル'
 published: true
 tags:
   - 'Action'

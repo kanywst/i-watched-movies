@@ -1,5 +1,6 @@
 ---
 title: 'Tron: Ares'
+title_ja: 'トロン：アレス'
 published: true
 tags:
   - 'Sci-fi'

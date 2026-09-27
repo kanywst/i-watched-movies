@@ -1,5 +1,6 @@
 ---
 title: 'The Menu'
+title_ja: 'ザ・メニュー'
 published: true
 tags:
   - 'Thriller'

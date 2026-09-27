@@ -1,5 +1,6 @@
 ---
 title: 'Murder on the Orient Express'
+title_ja: 'オリエント急行殺人事件'
 published: true
 tags:
   - 'Mystery'

@@ -1,6 +1,7 @@
 ---
 title: '곤지암'
 title_en: 'Gonjiam: Haunted Asylum'
+title_ja: 'コンジアム'
 published: false
 seen: true
 tags:

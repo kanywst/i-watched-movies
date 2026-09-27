@@ -1,6 +1,7 @@
 ---
 title: '악마를 보았다'
 title_en: 'I Saw the Devil'
+title_ja: '悪魔を見た'
 published: false
 tags:
   - 'Thriller'

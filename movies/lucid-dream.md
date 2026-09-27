@@ -1,6 +1,7 @@
 ---
 title: '루시드 드림'
 title_en: 'Lucid Dream'
+title_ja: 'ルシッドドリーム/明晰夢'
 published: true
 tags:
   - 'Thriller'

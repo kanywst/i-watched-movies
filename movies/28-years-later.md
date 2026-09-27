@@ -1,5 +1,6 @@
 ---
 title: '28 Years Later'
+title_ja: '28年後...'
 published: true
 tags:
   - 'Horror'

@@ -1,5 +1,6 @@
 ---
 title: '愚か者の身分'
+title_en: 'BAKA''s Identity'
 published: true
 tags:
   - 'Crime'

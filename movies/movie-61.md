@@ -1,5 +1,6 @@
 ---
 title: '正体'
+title_en: 'Faceless'
 published: true
 tags:
   - 'Suspense'

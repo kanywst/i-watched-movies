@@ -1,5 +1,6 @@
 ---
 title: 'Uncut Gems'
+title_ja: 'アンカット・ダイヤモンド'
 published: false
 tags:
   - 'Crime'

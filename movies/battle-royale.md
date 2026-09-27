@@ -1,5 +1,6 @@
 ---
 title: 'バトル・ロワイアル'
+title_en: 'Battle Royale'
 published: false
 seen: true
 tags:

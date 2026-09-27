@@ -1,5 +1,6 @@
 ---
 title: '怪物'
+title_en: 'Monster'
 published: false
 tags:
   - 'Mystery'

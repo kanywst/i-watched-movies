@@ -1,5 +1,6 @@
 ---
 title: '孤狼の血 LEVEL2'
+title_en: 'Last of the Wolves'
 published: false
 seen: true
 tags:

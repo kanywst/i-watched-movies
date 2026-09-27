@@ -1,5 +1,6 @@
 ---
 title: 'Lock, Stock and Two Smoking Barrels'
+title_ja: 'ロック、ストック&トゥー・スモーキング・バレルズ'
 published: false
 seen: true
 tags:
