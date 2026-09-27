@@ -1,5 +1,6 @@
 ---
 title: '口に関するアンケート'
+title_en: 'The Mouths'
 published: true
 tags:
   - 'Horror'
