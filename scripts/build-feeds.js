@@ -8,10 +8,10 @@ export const SITE_DESC = 'A personal archive of movies kanywst has watched, with
 const FEED_LIMIT = 20;
 
 /** Path of an entry's static page (see build-pages.js), relative to the site root. */
-export const moviePagePath = (id) => `m/${encodeURIComponent(id)}/`;
+export const entryPagePath = (id) => `m/${encodeURIComponent(id)}/`;
 
 /** Where an entry is linked from outside the app: its own page, which unfurls as the film. */
-export const moviePageUrl = (id) => `${SITE_URL}${moviePagePath(id)}`;
+export const entryPageUrl = (id) => `${SITE_URL}${entryPagePath(id)}`;
 
 export const escape = (s) =>
   String(s ?? '')
@@ -56,7 +56,7 @@ export function buildJsonLd(movies) {
         item: {
           '@type': 'Movie',
           name: m.title,
-          url: moviePageUrl(m.id),
+          url: entryPageUrl(m.id),
           image: m.cover_image || undefined,
           datePublished: m.release_date ? m.release_date.slice(0, 10) : undefined,
           countryOfOrigin: m.national || undefined,
@@ -82,7 +82,7 @@ export function buildRssFeed(movies, now = new Date()) {
     .slice(0, FEED_LIMIT)
     .map((m) => `    <item>
       <title>${escape(m.title)}</title>
-      <link>${escape(moviePageUrl(m.id))}</link>
+      <link>${escape(entryPageUrl(m.id))}</link>
       <guid isPermaLink="false">${escape(m.id)}</guid>
       <pubDate>${new Date(m.watch_date).toUTCString()}</pubDate>
       <description>${escape(m.impression || m.summary || '')}</description>

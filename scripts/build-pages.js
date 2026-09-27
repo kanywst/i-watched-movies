@@ -1,4 +1,4 @@
-import { SITE_URL, SITE_NAME, SITE_DESC, escape, isPublished, moviePageUrl } from './build-feeds.js';
+import { SITE_URL, SITE_NAME, SITE_DESC, escape, isPublished, entryPageUrl } from './build-feeds.js';
 
 // One static page per entry, at m/<id>/, so a film has a URL that means that film to
 // something that does not run JavaScript. The app itself is one index.html that opens a
@@ -11,7 +11,7 @@ import { SITE_URL, SITE_NAME, SITE_DESC, escape, isPublished, moviePageUrl } fro
 // canonical is the bare root) would have every sitemap URL reported as a redirect and none
 // of this indexed. The app is one prominent link away instead.
 //
-// Only rated films are offered to search engines. A watchlist, in-progress, seen or dropped
+// Only scored films are offered to search engines. A watchlist, in-progress, seen or dropped
 // page is a line of state over a synopsis that exists all over the web, so those carry
 // noindex and stay out of the sitemap; they still exist, because they still unfurl.
 
@@ -35,6 +35,8 @@ function stateOf(m) {
   if (m.watching) return 'Watching now.';
   if (m.seen) return 'Seen, not rated.';
   if (!m.published) return 'On the watchlist.';
+  // A blank Point on the issue form parses to 0, which every feed here reads as unscored.
+  if (!(m.point > 0)) return 'Watched, not scored.';
   return '';
 }
 
@@ -53,7 +55,7 @@ export function buildMovieJsonLd(m) {
     '@context': 'https://schema.org',
     '@type': 'Movie',
     name: m.title,
-    url: moviePageUrl(m.id),
+    url: entryPageUrl(m.id),
     image: m.cover_image || undefined,
     datePublished: m.release_date ? m.release_date.slice(0, 10) : undefined,
     countryOfOrigin: m.national || undefined,
@@ -80,13 +82,14 @@ export function buildMovieJsonLd(m) {
 const safeJson = (value) => JSON.stringify(value).replace(/</g, '\\u003c');
 
 export function buildMoviePage(m) {
-  const url = moviePageUrl(m.id);
+  const url = entryPageUrl(m.id);
   const pageTitle = `${m.title}${year(m.release_date) ? ` (${year(m.release_date)})` : ''}`;
   const fullTitle = `${pageTitle} · ${SITE_NAME}`;
   const description = describeMovie(m) || SITE_DESC;
   const image = ogImage(m.cover_image);
   const rated = isPublished(m) && m.point > 0;
-  const indexable = isPublished(m);
+  // A watched entry with no score is kept out too: without one the page is only a synopsis.
+  const indexable = rated;
   // Relative, so the page works from any host the build is served on (a local preview
   // included), the same reason vite.config.ts builds with base './'.
   const appHref = `../../?selected=${encodeURIComponent(m.id)}`;
@@ -174,14 +177,14 @@ ${m.summary ? `<p>${escape(m.summary)}</p>
 }
 
 /**
- * The pages worth a search engine's time: the diary itself and each rated film. No lastmod:
+ * The pages worth a search engine's time: the diary itself and each scored film. No lastmod:
  * the only date an entry has is when it was watched, which a re-score or a rewritten
  * impression does not move, and Google discounts a lastmod it finds unreliable.
  */
 export function buildSitemap(movies) {
   const urls = [
     SITE_URL,
-    ...movies.filter(isPublished).map((m) => moviePageUrl(m.id)),
+    ...movies.filter((m) => isPublished(m) && m.point > 0).map((m) => entryPageUrl(m.id)),
   ].map((loc) => `  <url><loc>${escape(loc)}</loc></url>`);
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { glob } from 'glob';
 import { parseMovie, compareByWatchDateDesc } from './parse-movie.js';
-import { buildJsonLd, buildRssFeed, moviePagePath } from './build-feeds.js';
+import { buildJsonLd, buildRssFeed, entryPagePath } from './build-feeds.js';
 import { buildMoviePage, buildSitemap } from './build-pages.js';
 
 const MOVIES_DIR = path.join(process.cwd(), 'movies');
@@ -37,7 +37,7 @@ async function generate() {
   // Cleared first so an entry that was deleted or renamed does not leave its page behind.
   fs.rmSync(PAGES_DIR, { recursive: true, force: true });
   for (const movie of movies) {
-    const dir = path.join(PUBLIC_DIR, moviePagePath(movie.id));
+    const dir = path.join(PUBLIC_DIR, entryPagePath(movie.id));
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, 'index.html'), buildMoviePage(movie));
   }

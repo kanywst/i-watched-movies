@@ -51,6 +51,8 @@ describe('describeMovie', () => {
     [{ watching: true }, 'Watching now.'],
     // dropped beats watching, the same precedence as partitionMovies.
     [{ watching: true, dropped: true }, 'Dropped partway.'],
+    // A blank Point on the issue form: watched, but nothing to lead with.
+    [{ point: 0 }, 'Watched, not scored.'],
   ])('names the list instead of a score for %o', (flags, lead) => {
     expect(describeMovie(movie(flags))).toBe(`${lead} A summary.`);
   });
@@ -110,7 +112,7 @@ describe('buildMoviePage', () => {
 
   it('keeps only rated films in search results', () => {
     expect(buildMoviePage(movie())).not.toContain('noindex');
-    for (const flags of [{ published: false }, { seen: true }, { watching: true }, { dropped: true }]) {
+    for (const flags of [{ published: false }, { seen: true }, { watching: true }, { dropped: true }, { point: 0 }]) {
       expect(buildMoviePage(movie(flags))).toContain('<meta name="robots" content="noindex" />');
     }
   });
@@ -149,6 +151,7 @@ describe('buildSitemap', () => {
       movie({ id: 's', seen: true }),
       movie({ id: 'p', watching: true }),
       movie({ id: 'd', dropped: true }),
+      movie({ id: 'z', point: 0 }),
     ]);
     expect(xml).toContain('<url><loc>https://kanywst.github.io/i-watched-movies/</loc></url>');
     expect(xml).toContain('<url><loc>https://kanywst.github.io/i-watched-movies/m/a/</loc></url>');
