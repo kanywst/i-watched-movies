@@ -2,10 +2,12 @@ import { describe, expect, it } from 'vitest';
 import {
   CATCH_UP,
   ON_RELEASE,
+  checkPredictions,
   computeScoringHabits,
   computeTasteProfile,
   recommendWatchlist,
 } from './taste';
+import { MIN_BACKTEST_SAMPLE } from './constants';
 import { computeStats } from './stats';
 import { countGenres } from './partition';
 import type { Movie } from './types';
@@ -414,6 +416,42 @@ describe('recommendWatchlist', () => {
       2,
     );
     expect(picks.map(p => p.movie.title)).toEqual(['Alpha', 'Beta']);
+  });
+});
+
+describe('checkPredictions', () => {
+  const films = (n: number) =>
+    Array.from({ length: n }, (_, i) =>
+      make({ id: `m${i}`, tags: [i % 2 ? 'Comedy' : 'Crime'], point: i % 2 ? 3 : 9 }),
+    );
+
+  it('needs a real sample before it says anything', () => {
+    expect(checkPredictions(films(MIN_BACKTEST_SAMPLE - 1))).toBeNull();
+    expect(checkPredictions(films(MIN_BACKTEST_SAMPLE))).not.toBeNull();
+  });
+
+  it('predicts each film from the others only', () => {
+    // Holding out one of five 9s leaves 4 x 9 and 5 x 3: average 5.67, 3.33 off. The Crime
+    // delta of 3.33 is shrunk by 4 / (4 + 3), leaving the model 3.33 * 3/7 off. The Comedy
+    // folds mirror it. Scoring a film against a profile that includes it would do better.
+    const check = checkPredictions(films(10));
+    expect(check).not.toBeNull();
+    expect(check!.total).toBe(10);
+    expect(check!.baselineError).toBeCloseTo(10 / 3, 6);
+    expect(check!.modelError).toBeCloseTo(10 / 7, 6);
+  });
+
+  it('measures against the capped average the model starts from, not the raw one', () => {
+    // Ten 7s and one 1, untagged, so the model has nothing but its intercept. Holding out
+    // the 1 leaves ten 7s: 6 off. Holding out a 7 leaves mean 6.4, sigma 1.8, so the 1 is
+    // capped to 2.8 and the capped mean is 6.58: 0.42 off. (0.6 off against the raw mean.)
+    const diary = [
+      ...Array.from({ length: 10 }, (_, i) => make({ id: `s${i}`, point: 7 })),
+      make({ id: 'low', point: 1 }),
+    ];
+    const check = checkPredictions(diary);
+    expect(check!.baselineError).toBeCloseTo((6 + 10 * 0.42) / 11, 6);
+    expect(check!.modelError).toBeCloseTo(check!.baselineError, 6);
   });
 });
 

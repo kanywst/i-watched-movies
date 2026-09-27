@@ -3,6 +3,7 @@ import {
   AFFINITY_PRIOR,
   COUNTRY_AFFINITY_WEIGHT,
   MIN_AFFINITY_SAMPLE,
+  MIN_BACKTEST_SAMPLE,
   MIN_DRIFT_SAMPLE,
   NEW_RELEASE_WINDOW_DAYS,
   OUTLIER_SIGMA,
@@ -365,4 +366,51 @@ export function recommendWatchlist(
     })
     .sort((a, b) => b.predicted - a.predicted || a.movie.title.localeCompare(b.movie.title))
     .slice(0, limit);
+}
+
+export interface PredictionCheck {
+  /** Rated films the check was run over. */
+  total: number;
+  /** Mean absolute miss of recommendWatchlist's prediction, in points. */
+  modelError: number;
+  /**
+   * Mean absolute miss of predicting the outlier-capped average every time, which is where
+   * recommendWatchlist starts before any genre or country term. The raw mean would be an
+   * easier bar: on 2026-09-27 it missed by 0.75 against 0.74 for the capped one, so about a
+   * third of the model's apparent edge over it was the cap, not taste.
+   */
+  baselineError: number;
+}
+
+/**
+ * How far to trust "What to watch next": predict every rated film from all the others, as if
+ * it were still on the watchlist, and compare the miss against just guessing the average.
+ * On 2026-09-27 (66 rated films) the model missed by 0.72 and the capped average by 0.74, a
+ * 3% edge, so the ranking is a lean rather than a forecast, and the page says so.
+ *
+ * This measures the predicted score, not the order: the rank correlation between predicted
+ * and actual was 0.16 on the same date.
+ *
+ * Quadratic in the diary (each fold rebuilds the profile): 15 to 30ms in Node at 66 films on
+ * 2026-09-27. null below MIN_BACKTEST_SAMPLE, where one fold swings the result.
+ */
+export function checkPredictions(rated: Movie[]): PredictionCheck | null {
+  if (rated.length < MIN_BACKTEST_SAMPLE) return null;
+  let modelMiss = 0;
+  let baselineMiss = 0;
+  rated.forEach((target, i) => {
+    const rest = rated.filter((_, j) => j !== i);
+    const profile = computeTasteProfile(rest);
+    const [prediction] = recommendWatchlist([target], rest, profile, 1);
+    // The bar is the model's own intercept, the outlier-capped mean, so the gain measured is
+    // what the genre and country terms add rather than what clipping one 1.0 adds.
+    const intercept = computeTasteProfile(capOutliers(rest, profile)).baseline;
+    modelMiss += Math.abs(prediction.predicted - target.point);
+    baselineMiss += Math.abs(intercept - target.point);
+  });
+  return {
+    total: rated.length,
+    modelError: modelMiss / rated.length,
+    baselineError: baselineMiss / rated.length,
+  };
 }

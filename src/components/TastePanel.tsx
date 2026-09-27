@@ -5,8 +5,13 @@ import type { Movie } from '../types';
 import { tmdbResize } from '../tmdbImage';
 import { Stat } from './ui/Stat';
 import { RankHistory } from './RankHistory';
-import type { Affinity, ScoringHabits } from '../taste';
-import { computeScoringHabits, computeTasteProfile, recommendWatchlist } from '../taste';
+import type { Affinity, PredictionCheck, ScoringHabits } from '../taste';
+import {
+  checkPredictions,
+  computeScoringHabits,
+  computeTasteProfile,
+  recommendWatchlist,
+} from '../taste';
 import {
   COUNTRY_FLAGS,
   MIN_AFFINITY_SAMPLE,
@@ -18,7 +23,7 @@ import {
 /**
  * The analysis is derived here rather than handed down as props so that `taste.ts` is
  * reachable only through this component. This panel is loaded lazily (App.tsx), so keeping
- * the 300-odd lines of affinity maths on this side of the boundary takes them out of the
+ * the 400-odd lines of affinity maths on this side of the boundary takes them out of the
  * entry chunk for the four views that never open Stats.
  */
 interface TastePanelProps {
@@ -33,6 +38,7 @@ interface TastePanelProps {
 const GENRE_ROWS = 10;
 
 const fmt = (n: number) => n.toFixed(1);
+const fmt2 = (n: number) => n.toFixed(2);
 const signed = (n: number) => `${n >= 0 ? '+' : '-'}${Math.abs(n).toFixed(1)}`;
 const pct = (n: number) => `${Math.round(n * 100)}%`;
 
@@ -45,6 +51,7 @@ export const TastePanel: React.FC<TastePanelProps> = ({ watched, watchlist, onOp
     () => recommendWatchlist(watchlist, watched, profile, RECOMMENDATION_LIMIT),
     [watchlist, watched, profile],
   );
+  const check = useMemo(() => checkPredictions(watched), [watched]);
 
   if (profile.total === 0) {
     return (
@@ -202,6 +209,17 @@ export const TastePanel: React.FC<TastePanelProps> = ({ watched, watchlist, onOp
         icon={Sparkles}
         title="What to watch next"
         note="Watchlist entries ranked by the score this profile predicts, not by quality."
+        aside={
+          check && (
+            <>
+              Tested on the diary itself: predicting each rated film from the other{' '}
+              {check.total - 1} films, the prediction misses by{' '}
+              <span className="tabular-nums">{fmt2(check.modelError)}</span> on average, against{' '}
+              <span className="tabular-nums">{fmt2(check.baselineError)}</span> for always
+              guessing the average. {describeGain(check)}
+            </>
+          )
+        }
       >
         {recommendations.length > 0 ? (
           <ol className="grid gap-x-8 gap-y-4 md:grid-cols-2">
@@ -256,6 +274,16 @@ export const TastePanel: React.FC<TastePanelProps> = ({ watched, watchlist, onOp
   );
 };
 
+// Spelled out because the gap is small (3% on 2026-09-27) and can go either way as the
+// diary grows, so the sentence reads the direction off the numbers rather than assuming it.
+function describeGain({ modelError, baselineError }: PredictionCheck): string {
+  if (baselineError === 0) return '';
+  const gain = Math.round((1 - modelError / baselineError) * 100);
+  if (gain > 0) return `That is ${gain}% closer.`;
+  if (gain < 0) return `That is ${-gain}% further off.`;
+  return 'That is no closer.';
+}
+
 function formatLag(days: number): string {
   if (Math.abs(days) < 60) return `${days}d`;
   return `${Math.round(days / 30)}mo`;
@@ -265,10 +293,12 @@ interface SectionProps {
   icon: React.ComponentType<{ className?: string }>;
   title: string;
   note: string;
+  /** An optional second line under the note, for a caveat that qualifies the whole section. */
+  aside?: React.ReactNode;
   children: React.ReactNode;
 }
 
-const Section: React.FC<SectionProps> = ({ icon: Icon, title, note, children }) => (
+const Section: React.FC<SectionProps> = ({ icon: Icon, title, note, aside, children }) => (
   <section aria-label={title}>
     <div className="flex items-center gap-2 mb-1">
       <Icon className="w-4 h-4 text-stone-400" />
@@ -277,7 +307,8 @@ const Section: React.FC<SectionProps> = ({ icon: Icon, title, note, children }) 
           section; it does not need to shout. */}
       <h2 className="text-sm font-semibold text-stone-800 dark:text-stone-200">{title}</h2>
     </div>
-    <p className="text-xs text-stone-500 mb-8">{note}</p>
+    <p className={clsx('text-xs text-stone-500', aside ? 'mb-2' : 'mb-8')}>{note}</p>
+    {aside && <p className="text-xs text-stone-500 mb-8 max-w-prose">{aside}</p>}
     {children}
   </section>
 );
