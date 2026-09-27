@@ -124,10 +124,10 @@ export interface TasteProfile {
   /**
    * Films caught within NEW_RELEASE_WINDOW_DAYS of release against the ones watched later.
    * A catch-up is usually a film already known to be good, a new release is a gamble, so
-   * this gap measures picking as much as taste. Display only: on 2026-09-27 (66 rated
-   * films) it was 7.29 against 7.76, but adding it to recommendWatchlist did not lower the
-   * leave-one-out error, because genre already carries it (the on-release films were mostly
-   * the horror, sci-fi and anime the genre term marks down).
+   * this gap measures picking as much as taste. Display only: adding it to recommendWatchlist
+   * did not lower checkPredictions' error when tried, because genre already carries it (the
+   * on-release films were mostly the horror, sci-fi and anime the genre term marks down).
+   * Re-run that experiment before wiring it in.
    */
   timing: Affinity[];
   /** Median days from release to watch. null when no film has both dates. */
@@ -379,8 +379,7 @@ export interface PredictionCheck {
   /**
    * Mean absolute miss of predicting the outlier-capped average every time, which is where
    * recommendWatchlist starts before any genre or country term. The raw mean would be an
-   * easier bar: on 2026-09-27 it missed by 0.75 against 0.74 for the capped one, so about a
-   * third of the model's apparent edge over it was the cap, not taste.
+   * easier bar, and part of the model's edge over it would be the outlier cap, not taste.
    */
   baselineError: number;
 }
@@ -388,14 +387,11 @@ export interface PredictionCheck {
 /**
  * How far to trust "What to watch next": predict every rated film from all the others, as if
  * it were still on the watchlist, and compare the miss against just guessing the average.
- * On 2026-09-27 (66 rated films) the model missed by 0.72 and the capped average by 0.74, a
- * 3% edge, so the ranking is a lean rather than a forecast, and the page says so.
+ * The page prints both figures live, so the reader sees what the ranking is worth. This
+ * measures the predicted score, not the order of the list.
  *
- * This measures the predicted score, not the order: the rank correlation between predicted
- * and actual was 0.16 on the same date.
- *
- * Quadratic in the diary (each fold rebuilds the profile): 12 to 23ms in Node at 66 films on
- * 2026-09-27. null below MIN_BACKTEST_SAMPLE, where one fold swings the result.
+ * Quadratic in the diary, since every fold rebuilds the profile. null below
+ * MIN_BACKTEST_SAMPLE, where one fold swings the result.
  */
 export function checkPredictions(rated: Movie[]): PredictionCheck | null {
   if (rated.length < MIN_BACKTEST_SAMPLE) return null;
@@ -406,7 +402,7 @@ export function checkPredictions(rated: Movie[]): PredictionCheck | null {
     const profile = computeTasteProfile(rest);
     const [prediction] = recommendWatchlist([target], rest, profile, 1);
     // The bar is the model's own intercept, the outlier-capped mean, so the gain measured is
-    // what the genre and country terms add rather than what clipping one 1.0 adds.
+    // what the genre and country terms add rather than what clipping an outlier adds.
     modelMiss += Math.abs(prediction.predicted - target.point);
     baselineMiss += Math.abs(prediction.intercept - target.point);
   });
