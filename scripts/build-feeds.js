@@ -1,13 +1,19 @@
 // The deployed GitHub Pages URL (the site moved back from Cloudflare Workers on 2026-09-24;
 // the old workers.dev host now 301s here). Every RSS item link, the feed's channel link and
 // the JSON-LD `url` are built from it, so keep it in step with the canonical/og:url pair in
-// index.html. The trailing slash matters: item links append `?selected=` directly.
-const SITE_URL = 'https://kanywst.github.io/i-watched-movies/';
-const SITE_NAME = 'The Movies kanywst Watched';
-const SITE_DESC = 'A personal archive of movies kanywst has watched, with scores and impressions.';
+// index.html. The trailing slash matters: entry page paths are appended to it directly.
+export const SITE_URL = 'https://kanywst.github.io/i-watched-movies/';
+export const SITE_NAME = 'The Movies kanywst Watched';
+export const SITE_DESC = 'A personal archive of movies kanywst has watched, with scores and impressions.';
 const FEED_LIMIT = 20;
 
-const escape = (s) =>
+/** Path of an entry's static page (see build-pages.js), relative to the site root. */
+export const moviePagePath = (id) => `m/${encodeURIComponent(id)}/`;
+
+/** Where an entry is linked from outside the app: its own page, which unfurls as the film. */
+export const moviePageUrl = (id) => `${SITE_URL}${moviePagePath(id)}`;
+
+export const escape = (s) =>
   String(s ?? '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -31,7 +37,7 @@ const escape = (s) =>
  * exclusive), but a hand-edited frontmatter can, and this is the fourth place that has to
  * agree on the shape after parse-movie.js, types.ts and build-movie-from-issue.js.
  */
-const isPublished = (m) => m.published && !m.seen && !m.watching && !m.dropped;
+export const isPublished = (m) => m.published && !m.seen && !m.watching && !m.dropped;
 
 export function buildJsonLd(movies) {
   const watched = movies.filter(isPublished);
@@ -50,6 +56,7 @@ export function buildJsonLd(movies) {
         item: {
           '@type': 'Movie',
           name: m.title,
+          url: moviePageUrl(m.id),
           image: m.cover_image || undefined,
           datePublished: m.release_date || undefined,
           countryOfOrigin: m.national || undefined,
@@ -75,7 +82,7 @@ export function buildRssFeed(movies, now = new Date()) {
     .slice(0, FEED_LIMIT)
     .map((m) => `    <item>
       <title>${escape(m.title)}</title>
-      <link>${SITE_URL}?selected=${escape(m.id)}</link>
+      <link>${escape(moviePageUrl(m.id))}</link>
       <guid isPermaLink="false">${escape(m.id)}</guid>
       <pubDate>${new Date(m.watch_date).toUTCString()}</pubDate>
       <description>${escape(m.impression || m.summary || '')}</description>
