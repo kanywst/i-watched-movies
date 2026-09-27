@@ -106,9 +106,9 @@ React 19, Vite 8, Tailwind 4, TypeScript 6, Vitest 5. Animation is browser-nativ
 
 ## CI / Deploy
 
-- `ci.yml`: lint + test + audit + build on every PR. The audit runs `--audit-level=high --omit=dev`, so a vulnerability that ships in the bundle fails the build while a build-time-only one does not
+- `ci.yml`: lint + Markdown lint + test + audit + build, plus actionlint over the workflows, on every PR and every push to `main`. The audit runs `--audit-level=high --omit=dev`, so a vulnerability that ships in the bundle fails the build while a build-time-only one does not. Every action is pinned to a commit SHA, which Dependabot keeps current
 - `claude-code-review.yml`: Claude reviews every non-bot PR. Advisory, never a merge gate. Authenticates with `CLAUDE_CODE_OAUTH_TOKEN` (from `claude setup-token`, so it runs on the subscription rather than on API credit) and no-ops while that secret is unset. The action refuses to run when the PR changes this workflow file, so a PR that edits it cannot test it
-- `pages.yml`: builds and deploys to GitHub Pages on every push to `main`, one push one deploy. Also dispatched by `movie-from-issue.yml` after each merge, because a merge made with `GITHUB_TOKEN` starts no push run
+- `pages.yml`: lints, tests, builds and deploys to GitHub Pages on every push to `main`, one push one deploy, so nothing reaches the site without passing lint and tests. Also dispatched by `movie-from-issue.yml` after each merge, because a merge made with `GITHUB_TOKEN` starts no push run
 - `movie-from-issue.yml`: turns "Add a movie" issues into PRs and squash-merges them in the same job, then dispatches `pages.yml`. Mirrors progress into `status:*` labels
 - `sync-labels.yml`: pushes `.github/labels.yml` to the repo's actual labels. Runs on changes to that file or via manual dispatch
 - `dependabot-auto-merge.yml`: auto-merges npm Dependabot PRs after CI. GitHub Actions PRs need manual merge (token can't grant `workflows` scope)
