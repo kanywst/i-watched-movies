@@ -56,6 +56,8 @@ export const REASON_LIMIT = 2;
 export const NEW_RELEASE_WINDOW_DAYS = 90;
 // Below this many rated films, an early-half vs late-half average says nothing.
 export const MIN_DRIFT_SAMPLE = 6;
+// Below this many rated films, the leave-one-out check on predictions is one fold's noise.
+export const MIN_BACKTEST_SAMPLE = 10;
 
 // Score bands (src/scoreBand.ts), as percentile cuts within the diary's own ratings rather
 // than fixed points on the 0-10 scale. src/scoreBand.ts has the reason; the short version is
