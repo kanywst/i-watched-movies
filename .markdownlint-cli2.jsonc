@@ -14,5 +14,9 @@
   "globs": ["**/*.md"],
   // Only what is tracked: CLAUDE.md, GEMINI.md and .claude/ are gitignored notes.
   "gitignore": true,
-  "ignores": ["node_modules/**", "dist/**"]
+  // movies/ is content, not documentation. The body is free text off an issue form and is
+  // rendered as plain text nodes (there is no markdown renderer in the app), so the fixes
+  // markdownlint would ask for there, such as wrapping a bare URL in <>, would show up
+  // literally on the site. Linting it would only give a filed movie a new way to fail.
+  "ignores": ["node_modules/**", "dist/**", "movies/**"]
 }
