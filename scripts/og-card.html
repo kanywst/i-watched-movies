@@ -1,0 +1,27 @@
+<!--
+  Source of public/og.jpg, the site-wide share card referenced by index.html.
+  To redraw: serve this file (copy it into dist/ under `npm run preview`), open it in a
+  1200x630 viewport once fonts and posters have loaded, and screenshot the .card element (JPEG, quality 88) to
+  public/og.jpg. The posters are the top of the diary when it was drawn (2026-09-28).
+-->
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&display=block">
+<style>
+html,body{margin:0}
+.card{width:1200px;height:630px;background:#0c0a09;position:relative;overflow:hidden;font-family:"Bricolage Grotesque",sans-serif;color:#fafaf9}
+.strip{position:absolute;inset:0 -40px 0 auto;width:760px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;transform:rotate(-8deg) translate(40px,-70px);opacity:.55}
+.strip img{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:10px}
+.fade{position:absolute;inset:0;background:linear-gradient(90deg,#0c0a09 34%,rgba(12,10,9,.85) 55%,rgba(12,10,9,.2) 100%)}
+.text{position:absolute;left:84px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;max-width:720px}
+h1{font-size:92px;line-height:.98;letter-spacing:-.03em;margin:0;font-weight:800}
+h1 em{font-style:normal;color:#ff4d97}
+p{font-family:system-ui,-apple-system,sans-serif;font-size:28px;color:#a8a29e;margin:32px 0 0;line-height:1.4}
+.url{position:absolute;left:84px;bottom:56px;font-family:system-ui,sans-serif;font-size:22px;color:#78716c;letter-spacing:.01em}
+</style></head><body><div class="card">
+<div class="strip" id="s"></div><div class="fade"></div>
+<div class="text"><h1>The Movies<br><em>kanywst</em><br>Watched</h1><p>A film diary: every score, every impression.</p></div>
+<div class="url">kanywst.github.io/i-watched-movies</div>
+</div><script>
+const u=["r6q9wZK5a2K51KFj4LWVID6Ja1r","vDGr1YdrlfbU9wxTOdpf3zChmv9","iKy5460GdsoknM8ppmGlJbKxAKa","xTI42pmsP5EDnvsNJPEDubwWBQO","mwtyyGNgp1EDVgB9JZU9RbtPfB2","fPtUgMcLIboqlTlPrq0bQpKK8eq","2qwdD7CiLLscPZijVbRsCXILQwY","y7dsDbG8zVWkrkyOhA6ckZXX1uC"];
+const s=document.getElementById('s');for(const h of [...u,...u.slice(0,4)]){const i=new Image();i.src=`https://image.tmdb.org/t/p/w342/${h}.jpg`;s.appendChild(i)}
+</script></body></html>
