@@ -31,7 +31,9 @@ Two paths.
 
 ```markdown
 ---
-title: 'Title'
+title: 'Title'                # the original-language title: 기생충, 無間道, Les Traducteurs
+title_en: 'Parasite'         # optional, shown under the title when it differs
+title_ja: 'パラサイト 半地下の家族'  # optional, the Japanese release title, same
 published: true              # false = lives on the Watchlist tab instead
 seen: true                   # optional, watched through but unrated: own tab, no score
 watching: true               # optional, started but not finished: own tab, wins over the two above
