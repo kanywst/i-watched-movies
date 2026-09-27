@@ -227,9 +227,10 @@ const App: React.FC = () => {
       const matchesSearch =
         q === '' ||
         movie.title.toLowerCase().includes(q) ||
-        // The slug is the English title, so "train to busan" still finds 부산행 now that
-        // non-English films carry their original-language title.
-        movie.id.replace(/-/g, ' ').includes(q) ||
+        // Original-language titles (부산행) have to stay findable as "Train to Busan" and
+        // as 新感染.
+        (movie.title_en?.toLowerCase().includes(q) ?? false) ||
+        (movie.title_ja?.toLowerCase().includes(q) ?? false) ||
         (movie.summary?.toLowerCase().includes(q) ?? false) ||
         (movie.summary_ja?.toLowerCase().includes(q) ?? false) ||
         (movie.national?.toLowerCase().includes(q) ?? false) ||

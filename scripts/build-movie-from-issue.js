@@ -175,6 +175,8 @@ export function buildMovie(sections, { issueNumber, now = new Date() } = {}) {
 
   const movie = {
     title: (sections['Title'] || '').trim(),
+    title_en: (sections['English title'] || '').trim(),
+    title_ja: (sections['Japanese title'] || '').trim(),
     published,
     seen,
     watching,
@@ -199,28 +201,34 @@ export function buildMovie(sections, { issueNumber, now = new Date() } = {}) {
     throw new Error('Title is required.');
   }
 
-  // slugify() strips everything outside [a-z0-9], so a Japanese title yields nothing and
-  // would land on the movie-<issue> fallback. Prefer, in order: an entry that already
-  // holds this title (so re-logging a watchlist film updates it instead of forking a
-  // second file), then an explicit Slug section, then the title, then the fallback.
+  // slugify() strips everything outside [a-z0-9], so a Japanese or Korean title yields
+  // nothing and would land on the movie-<issue> fallback. Prefer, in order: an entry that
+  // already holds this title under any of its names (so re-logging a watchlist film
+  // updates it instead of forking a second file), then an explicit Slug section, then the
+  // English title, then the title, then the fallback.
   const fallback = issueNumber ? `movie-${issueNumber}` : 'movie';
   const slug =
     findSlugByTitle(movie.title) ||
+    findSlugByTitle(movie.title_en) ||
+    findSlugByTitle(movie.title_ja) ||
     slugify(sections['Slug'], '') ||
+    slugify(movie.title_en, '') ||
     slugify(movie.title, fallback);
   return { movie, slug };
 }
 
-// Scan movies/ for an entry whose title matches, and return its slug. Without this a
-// Japanese-titled film already on the watchlist gets a fresh movie-<issue>.md when it is
-// later logged as watched, because readExisting() only ever looks a file up by slug.
+// Scan movies/ for an entry known by this title, in any of its three names, and return its
+// slug. Without this a film already on the watchlist gets a fresh movie-<issue>.md when it
+// is later logged as watched under another of its names (the Japanese release title for a
+// Korean film, say), because readExisting() only ever looks a file up by slug.
 export function findSlugByTitle(title, dir = MOVIES_DIR) {
   if (!title || !fs.existsSync(dir)) return '';
   for (const file of fs.readdirSync(dir)) {
     if (!file.endsWith('.md')) continue;
     try {
       const { data } = matter(fs.readFileSync(path.join(dir, file), 'utf8'));
-      if (String(data.title || '').trim() === title) return file.replace(/\.md$/, '');
+      const names = [data.title, data.title_en, data.title_ja].map((n) => String(n || '').trim());
+      if (names.includes(title)) return file.replace(/\.md$/, '');
     } catch {
       // A malformed file should not block the entry being written.
     }
@@ -245,6 +253,8 @@ export function readExisting(filePath) {
   }
   return {
     title: (data.title ?? '').toString().trim(),
+    title_en: (data.title_en ?? '').toString().trim(),
+    title_ja: (data.title_ja ?? '').toString().trim(),
     published: data.published ?? true,
     seen: data.seen ?? false,
     watching: data.watching ?? false,
@@ -282,6 +292,8 @@ function existingStamp(value) {
 export function mergeMovie(existing, incoming) {
   return {
     title: incoming.title,
+    title_en: incoming.title_en || existing.title_en,
+    title_ja: incoming.title_ja || existing.title_ja,
     published: incoming.published,
     seen: incoming.seen,
     // Cleared, not OR-ed: re-filing an in-progress series as Watched has to drop the flag,
@@ -316,6 +328,8 @@ function quote(s) {
 export function formatFile(movie) {
   const lines = ['---'];
   lines.push(`title: ${quote(movie.title)}`);
+  if (movie.title_en) lines.push(`title_en: ${quote(movie.title_en)}`);
+  if (movie.title_ja) lines.push(`title_ja: ${quote(movie.title_ja)}`);
   lines.push(`published: ${movie.published}`);
   if (movie.seen) lines.push('seen: true');
   if (movie.watching) lines.push('watching: true');

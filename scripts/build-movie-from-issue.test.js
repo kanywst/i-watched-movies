@@ -271,8 +271,55 @@ describe('findSlugByTitle', () => {
     expect(findSlugByTitle('死刑にいたる病')).toBe('shikei-ni-itaru-yamai');
   });
 
+  it('finds a film by its English or Japanese title as well as its original one', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'movies-'));
+    try {
+      fs.writeFileSync(
+        path.join(dir, 'parasite.md'),
+        "---\ntitle: '기생충'\ntitle_en: 'Parasite'\ntitle_ja: 'パラサイト 半地下の家族'\n---\n",
+      );
+      expect(findSlugByTitle('기생충', dir)).toBe('parasite');
+      expect(findSlugByTitle('Parasite', dir)).toBe('parasite');
+      expect(findSlugByTitle('パラサイト 半地下の家族', dir)).toBe('parasite');
+      expect(findSlugByTitle('パラサイト', dir)).toBe('');
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
   it('returns empty for a title no entry holds', () => {
     expect(findSlugByTitle('A Film That Does Not Exist')).toBe('');
+  });
+});
+
+describe('alternate titles', () => {
+  const korean = `### Title\n\n어느 영화\n\n### English title\n\nSome Film\n\n### Japanese title\n\nある映画\n\n### List\n\nWatchlist\n`;
+
+  it('reads the English and Japanese title sections', () => {
+    const { movie } = buildMovie(parseIssueBody(korean));
+    expect(movie.title).toBe('어느 영화');
+    expect(movie.title_en).toBe('Some Film');
+    expect(movie.title_ja).toBe('ある映画');
+  });
+
+  it('names the file after the English title when the original has no ASCII to slug', () => {
+    expect(buildMovie(parseIssueBody(korean), { issueNumber: 7 }).slug).toBe('some-film');
+  });
+
+  it('writes them straight under title, and not at all when empty', () => {
+    const { movie } = buildMovie(parseIssueBody(korean));
+    expect(formatFile(movie)).toMatch(/title: '어느 영화'\ntitle_en: 'Some Film'\ntitle_ja: 'ある映画'\npublished:/);
+    const { movie: plain } = buildMovie(parseIssueBody(sample));
+    expect(formatFile(plain)).not.toMatch(/title_(en|ja):/);
+  });
+
+  it('keeps the stored ones when a re-filed issue leaves them blank', () => {
+    const merged = mergeMovie(
+      { title: '기생충', title_en: 'Parasite', title_ja: 'パラサイト 半地下の家族', tags: [], streaming: [], seasons: [] },
+      { title: '기생충', title_en: '', title_ja: '', tags: [], streaming: [], seasons: [], point: null },
+    );
+    expect(merged.title_en).toBe('Parasite');
+    expect(merged.title_ja).toBe('パラサイト 半地下の家族');
   });
 });
 

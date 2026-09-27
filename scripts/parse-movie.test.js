@@ -10,6 +10,8 @@ describe('parseMovie', () => {
     const movie = parseMovie(
       md(
         `title: 'Test'
+title_en: 'Test EN'
+title_ja: 'テスト'
 tags:
   - 'A'
   - 'B'
@@ -29,6 +31,8 @@ added: '2026-01-20T04:05:06Z'`,
     expect(movie).toEqual({
       id: 'test-movie',
       title: 'Test',
+      title_en: 'Test EN',
+      title_ja: 'テスト',
       published: true,
       seen: false,
       watching: false,
@@ -67,6 +71,12 @@ added: '2026-01-20T04:05:06Z'`,
 
   it('leaves added null when the frontmatter omits it', () => {
     expect(parseMovie(md(`title: 'T'`), 't').added).toBeNull();
+  });
+
+  it('defaults title_en and title_ja to empty strings when the frontmatter omits them', () => {
+    const movie = parseMovie(md(`title: 'T'`), 't');
+    expect(movie.title_en).toBe('');
+    expect(movie.title_ja).toBe('');
   });
 
   it('defaults summary_ja to an empty string when the frontmatter omits it', () => {

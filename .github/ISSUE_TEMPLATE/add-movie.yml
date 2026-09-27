@@ -10,9 +10,24 @@ body:
     id: movie_title
     attributes:
       label: Title
+      description: 'The original-language title: 기생충, 無間道, Les Traducteurs. Japanese films keep their Japanese title.'
       placeholder: e.g. 28 Years Later
     validations:
       required: true
+
+  - type: input
+    id: title_en
+    attributes:
+      label: English title
+      description: 'Optional. Shown under the title when it differs, e.g. Parasite for 기생충. Also used for the filename when there is no Slug.'
+      placeholder: e.g. Parasite
+
+  - type: input
+    id: title_ja
+    attributes:
+      label: Japanese title
+      description: 'Optional. The Japanese release title, shown under the title when it differs, e.g. パラサイト 半地下の家族.'
+      placeholder: e.g. パラサイト 半地下の家族
 
   - type: dropdown
     id: list
