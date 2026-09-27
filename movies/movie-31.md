@@ -1,5 +1,6 @@
 ---
 title: '君のクイズ'
+title_en: 'Your Own Quiz'
 published: true
 tags:
   - 'Fiction'

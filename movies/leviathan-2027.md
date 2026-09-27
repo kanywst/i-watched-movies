@@ -1,5 +1,6 @@
 ---
 title: 'リバイアサン'
+title_en: 'Leviathan'
 published: false
 tags:
   - 'Sci-fi'

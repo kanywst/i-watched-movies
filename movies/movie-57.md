@@ -1,5 +1,6 @@
 ---
 title: 'ガス人間'
+title_en: 'Human Vapor'
 published: true
 tags:
   - 'Sci-fi'
