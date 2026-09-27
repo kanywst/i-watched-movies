@@ -99,10 +99,20 @@ describe('buildMoviePage', () => {
     expect(html).not.toContain('<img');
   });
 
-  it('hands a reader to the app with the film open, relative to wherever it is served', () => {
+  it('links into the app with the film open, relative to wherever it is served', () => {
     const html = buildMoviePage(movie({ id: 'x-2' }));
-    expect(html).toContain('location.replace("../../?selected=x-2")');
-    expect(html).toContain('<a href="../../?selected=x-2">Open in the diary</a>');
+    expect(html).toContain('<a class="open" href="../../?selected=x-2">Open in the diary</a>');
+  });
+
+  it('does not redirect, so a crawler indexes the page rather than following it away', () => {
+    expect(buildMoviePage(movie())).not.toMatch(/location\.|http-equiv="refresh"/);
+  });
+
+  it('keeps only rated films in search results', () => {
+    expect(buildMoviePage(movie())).not.toContain('noindex');
+    for (const flags of [{ published: false }, { seen: true }, { watching: true }, { dropped: true }]) {
+      expect(buildMoviePage(movie(flags))).toContain('<meta name="robots" content="noindex" />');
+    }
   });
 
   it('escapes entry text in markup and attributes', () => {
@@ -120,7 +130,7 @@ describe('buildMoviePage', () => {
   });
 
   it('shows the score only for a rated film', () => {
-    expect(buildMoviePage(movie())).toContain('<p class="score">8.5 <small>/ 10</small></p>');
+    expect(buildMoviePage(movie())).toContain('<p class="score">8.5<small>/ 10</small></p>');
     const watchlist = buildMoviePage(movie({ published: false }));
     expect(watchlist).not.toContain('class="score"');
     expect(watchlist).toContain('On the watchlist.');
@@ -132,16 +142,17 @@ describe('buildMoviePage', () => {
 });
 
 describe('buildSitemap', () => {
-  it('lists the diary and one page per entry, dated by watch or add date', () => {
+  it('lists the diary and each rated film, and nothing else', () => {
     const xml = buildSitemap([
       movie({ id: 'a' }),
-      movie({ id: 'b', watch_date: '', added: '2026-09-01T10:00:00Z' }),
-      movie({ id: 'c', watch_date: '' }),
+      movie({ id: 'w', published: false }),
+      movie({ id: 's', seen: true }),
+      movie({ id: 'p', watching: true }),
+      movie({ id: 'd', dropped: true }),
     ]);
-    expect(xml).toContain('<loc>https://kanywst.github.io/i-watched-movies/</loc>');
-    expect(xml).toContain('<loc>https://kanywst.github.io/i-watched-movies/m/a/</loc><lastmod>2026-04-01</lastmod>');
-    expect(xml).toContain('<loc>https://kanywst.github.io/i-watched-movies/m/b/</loc><lastmod>2026-09-01</lastmod>');
-    expect(xml).toContain('<loc>https://kanywst.github.io/i-watched-movies/m/c/</loc></url>');
-    expect(xml.match(/<url>/g)).toHaveLength(4);
+    expect(xml).toContain('<url><loc>https://kanywst.github.io/i-watched-movies/</loc></url>');
+    expect(xml).toContain('<url><loc>https://kanywst.github.io/i-watched-movies/m/a/</loc></url>');
+    expect(xml.match(/<url>/g)).toHaveLength(2);
+    expect(xml).not.toContain('lastmod');
   });
 });

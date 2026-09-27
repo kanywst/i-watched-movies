@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Check, Share2 } from 'lucide-react';
 import { moviePageUrl } from '../constants';
 
@@ -9,6 +9,11 @@ const COPIED_MS = 2000;
  * `?selected=` URL in the address bar, which unfurls as the site. The system share sheet
  * where there is one (phones, mostly), otherwise a copy to the clipboard with a tick to say
  * it happened.
+ *
+ * The clipboard is only the fallback for a browser with no share sheet, not for a share
+ * that failed: by the time `navigator.share` rejects, the click's user activation is spent
+ * and Safari refuses the clipboard write, and a second click while the sheet is still open
+ * rejects with InvalidStateError, where copying behind the open sheet would be wrong too.
  */
 export const ShareButton: React.FC<{ id: string; title: string; className?: string }> = ({
   id,
@@ -16,6 +21,7 @@ export const ShareButton: React.FC<{ id: string; title: string; className?: stri
   className,
 }) => {
   const [copied, setCopied] = useState(false);
+  const inFlight = useRef(false);
 
   useEffect(() => {
     if (!copied) return;
@@ -24,21 +30,21 @@ export const ShareButton: React.FC<{ id: string; title: string; className?: stri
   }, [copied]);
 
   const share = async () => {
+    if (inFlight.current) return;
+    inFlight.current = true;
     const url = moviePageUrl(id, document.baseURI);
-    if (navigator.share) {
-      try {
-        await navigator.share({ title, url });
-        return;
-      } catch (err) {
-        // The reader closing the sheet is not a failure worth a fallback.
-        if (err instanceof DOMException && err.name === 'AbortError') return;
-      }
-    }
     try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
+      if (navigator.share) {
+        await navigator.share({ title, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+        setCopied(true);
+      }
     } catch {
-      // No clipboard (an insecure context, or permission refused): nothing sensible to do.
+      // Dismissing the sheet rejects with AbortError, and a refused clipboard (an insecure
+      // context) has no better fallback here; either way the button just does nothing.
+    } finally {
+      inFlight.current = false;
     }
   };
 

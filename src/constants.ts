@@ -186,7 +186,7 @@ export const SORT_OPTIONS: { value: SortKey; label: string }[] = [
 // the link to hand out rather than the app's `?selected=` URL: the host serves the same
 // <head> for every query string, so only the page unfurls as the film on X, Slack or LINE.
 // Resolved against the document rather than a hard-coded site URL, so it is right on the
-// live site, a preview deploy and the dev server alike.
+// live site, a preview deploy and the dev server alike (vite.config.ts serves m/<id>/ there).
 export function moviePageUrl(id: string, base: string): string {
   return new URL(`m/${encodeURIComponent(id)}/`, base).href;
 }

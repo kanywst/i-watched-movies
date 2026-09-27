@@ -21,9 +21,26 @@ const inlineJsonLd = (): Plugin => ({
   },
 })
 
+// Serve public/m/<id>/index.html for /m/<id>/ under `vite dev`. The dev server's SPA
+// fallback answers a directory URL with the app's index.html before public/ is consulted,
+// so a share link copied from the dev server opened the bare app. `vite preview` and GitHub
+// Pages both resolve the directory index already.
+const serveEntryPages = (): Plugin => ({
+  name: 'serve-entry-pages',
+  configureServer(server) {
+    server.middlewares.use((req, _res, next) => {
+      const url = req.url ?? ''
+      if (/^\/m\/[^/?#]+\/(?:[?#]|$)/.test(url)) {
+        req.url = url.replace(/\/(?=[?#]|$)/, '/index.html')
+      }
+      next()
+    })
+  },
+})
+
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss(), inlineJsonLd()],
+  plugins: [react(), tailwindcss(), inlineJsonLd(), serveEntryPages()],
   base: './', // Use relative base for easier deployment on GH Pages subdirectories
   build: {
     rollupOptions: {
