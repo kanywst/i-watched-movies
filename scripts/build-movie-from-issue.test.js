@@ -282,6 +282,8 @@ describe('findSlugByTitle', () => {
       expect(findSlugByTitle('Parasite', dir)).toBe('parasite');
       expect(findSlugByTitle('パラサイト 半地下の家族', dir)).toBe('parasite');
       expect(findSlugByTitle('パラサイト', dir)).toBe('');
+      expect(findSlugByTitle(['Nope', '', 'パラサイト 半地下の家族'], dir)).toBe('parasite');
+      expect(findSlugByTitle(['', undefined], dir)).toBe('');
     } finally {
       fs.rmSync(dir, { recursive: true, force: true });
     }

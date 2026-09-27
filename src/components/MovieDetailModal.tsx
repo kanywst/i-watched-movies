@@ -147,6 +147,7 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
   // text that actually rendered, which is what screen readers and CJK font selection read.
   const summaryEn = movie.summary || '';
   const summaryJa = movie.summary_ja || '';
+  const alternates = alternateTitles(movie);
   const showJa = lang === 'ja' ? Boolean(summaryJa) : !summaryEn && Boolean(summaryJa);
   const summary = showJa ? summaryJa : summaryEn;
   const summaryLang = showJa ? 'ja' : 'en';
@@ -274,9 +275,9 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
             {/* The title is the original-language one, so a Korean film reads 기생충 here;
                 its English and Japanese release titles sit under it, each tagged with its
                 language so a screen reader and the font fallback both get it right. */}
-            {alternateTitles(movie).length > 0 && (
+            {alternates.length > 0 && (
               <p className="-mt-1 mb-3 text-base text-stone-500 dark:text-stone-400">
-                {alternateTitles(movie).map((t, i) => (
+                {alternates.map((t, i) => (
                   <React.Fragment key={t.lang}>
                     {i > 0 && <span aria-hidden="true"> · </span>}
                     <span lang={t.lang}>{t.text}</span>

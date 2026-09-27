@@ -64,14 +64,13 @@ export function describeMovie(m) {
 
 /** Schema.org Movie for one entry, with the diarist's score as a Review when there is one. */
 export function buildMovieJsonLd(m) {
+  const alternates = alternateTitles(m).map((t) => t.text);
   const rated = isPublished(m) && m.point > 0;
   return {
     '@context': 'https://schema.org',
     '@type': 'Movie',
     name: m.title,
-    alternateName: alternateTitles(m).map((t) => t.text).length
-      ? alternateTitles(m).map((t) => t.text)
-      : undefined,
+    alternateName: alternates.length ? alternates : undefined,
     url: entryPageUrl(m.id),
     image: m.cover_image || undefined,
     datePublished: m.release_date ? m.release_date.slice(0, 10) : undefined,

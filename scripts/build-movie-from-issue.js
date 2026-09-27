@@ -208,9 +208,7 @@ export function buildMovie(sections, { issueNumber, now = new Date() } = {}) {
   // English title, then the title, then the fallback.
   const fallback = issueNumber ? `movie-${issueNumber}` : 'movie';
   const slug =
-    findSlugByTitle(movie.title) ||
-    findSlugByTitle(movie.title_en) ||
-    findSlugByTitle(movie.title_ja) ||
+    findSlugByTitle([movie.title, movie.title_en, movie.title_ja]) ||
     slugify(sections['Slug'], '') ||
     slugify(movie.title_en, '') ||
     slugify(movie.title, fallback);
@@ -221,14 +219,16 @@ export function buildMovie(sections, { issueNumber, now = new Date() } = {}) {
 // slug. Without this a film already on the watchlist gets a fresh movie-<issue>.md when it
 // is later logged as watched under another of its names (the Japanese release title for a
 // Korean film, say), because readExisting() only ever looks a file up by slug.
+// Takes one title or several (one pass over the directory either way).
 export function findSlugByTitle(title, dir = MOVIES_DIR) {
-  if (!title || !fs.existsSync(dir)) return '';
+  const wanted = [].concat(title).map((t) => String(t || '').trim()).filter(Boolean);
+  if (!wanted.length || !fs.existsSync(dir)) return '';
   for (const file of fs.readdirSync(dir)) {
     if (!file.endsWith('.md')) continue;
     try {
       const { data } = matter(fs.readFileSync(path.join(dir, file), 'utf8'));
       const names = [data.title, data.title_en, data.title_ja].map((n) => String(n || '').trim());
-      if (names.includes(title)) return file.replace(/\.md$/, '');
+      if (names.some((n) => n && wanted.includes(n))) return file.replace(/\.md$/, '');
     } catch {
       // A malformed file should not block the entry being written.
     }
