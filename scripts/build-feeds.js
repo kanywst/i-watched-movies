@@ -37,6 +37,23 @@ export const escape = (s) =>
  * exclusive), but a hand-edited frontmatter can, and this is the fourth place that has to
  * agree on the shape after parse-movie.js, types.ts and build-movie-from-issue.js.
  */
+// src/titles.ts restated for the build scripts, which cannot import the app's TypeScript:
+// the English then Japanese title, each only when it is set and not a name already shown.
+export function alternateTitles(m) {
+  const shown = [String(m.title || '').trim()];
+  const out = [];
+  for (const [lang, raw] of [['en', m.title_en], ['ja', m.title_ja]]) {
+    const text = String(raw || '').trim();
+    if (!text || shown.includes(text)) continue;
+    shown.push(text);
+    out.push({ lang, text });
+  }
+  return out;
+}
+
+/** Every name a film goes by, original first, for titles that crawlers and readers see. */
+export const allNames = (m) => [m.title, ...alternateTitles(m).map((t) => t.text)].join(' · ');
+
 export const isPublished = (m) => m.published && !m.seen && !m.watching && !m.dropped;
 
 export function buildJsonLd(movies) {
@@ -56,6 +73,7 @@ export function buildJsonLd(movies) {
         item: {
           '@type': 'Movie',
           name: m.title,
+          alternateName: alternateTitles(m).length ? alternateTitles(m).map((t) => t.text) : undefined,
           url: entryPageUrl(m.id),
           image: m.cover_image || undefined,
           datePublished: m.release_date ? m.release_date.slice(0, 10) : undefined,
@@ -81,7 +99,7 @@ export function buildRssFeed(movies, now = new Date()) {
     .filter(m => isPublished(m) && m.watch_date)
     .slice(0, FEED_LIMIT)
     .map((m) => `    <item>
-      <title>${escape(m.title)}</title>
+      <title>${escape(allNames(m))}</title>
       <link>${escape(entryPageUrl(m.id))}</link>
       <guid isPermaLink="false">${escape(m.id)}</guid>
       <pubDate>${new Date(m.watch_date).toUTCString()}</pubDate>

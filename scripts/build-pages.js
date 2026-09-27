@@ -1,4 +1,15 @@
-import { SITE_URL, SITE_NAME, SITE_DESC, escape, isPublished, entryPageUrl } from './build-feeds.js';
+import {
+  SITE_URL,
+  SITE_NAME,
+  SITE_DESC,
+  alternateTitles,
+  allNames,
+  escape,
+  isPublished,
+  entryPageUrl,
+} from './build-feeds.js';
+
+export { alternateTitles };
 
 // One static page per entry, at m/<id>/, so a film has a URL that means that film to
 // something that does not run JavaScript. The app itself is one index.html that opens a
@@ -26,20 +37,6 @@ export const ogImage = (url) => {
   const m = TMDB_ORIGINAL.exec(url || '');
   return m ? `${m[1]}w780${m[2]}` : url || '';
 };
-
-// src/titles.ts restated for the build scripts, which cannot import the app's TypeScript:
-// the English then Japanese title, each only when it is set and not a name already shown.
-export function alternateTitles(m) {
-  const shown = [String(m.title || '').trim()];
-  const out = [];
-  for (const [lang, raw] of [['en', m.title_en], ['ja', m.title_ja]]) {
-    const text = String(raw || '').trim();
-    if (!text || shown.includes(text)) continue;
-    shown.push(text);
-    out.push({ lang, text });
-  }
-  return out;
-}
 
 const year = (iso) => (/^\d{4}/.exec(iso || '') || [''])[0];
 
@@ -101,7 +98,7 @@ export function buildMoviePage(m) {
   const url = entryPageUrl(m.id);
   const alternates = alternateTitles(m);
   // Every name the film goes by, so a search for パラサイト or Parasite lands on 기생충.
-  const names = [m.title, ...alternates.map((t) => t.text)].join(' · ');
+  const names = allNames(m);
   const pageTitle = `${names}${year(m.release_date) ? ` (${year(m.release_date)})` : ''}`;
   const fullTitle = `${pageTitle} · ${SITE_NAME}`;
   const description = describeMovie(m) || SITE_DESC;
