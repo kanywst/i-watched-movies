@@ -58,7 +58,7 @@ export function buildJsonLd(movies) {
           name: m.title,
           url: moviePageUrl(m.id),
           image: m.cover_image || undefined,
-          datePublished: m.release_date || undefined,
+          datePublished: m.release_date ? m.release_date.slice(0, 10) : undefined,
           countryOfOrigin: m.national || undefined,
           genre: m.tags?.length ? m.tags : undefined,
           aggregateRating: m.point > 0

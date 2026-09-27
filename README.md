@@ -73,9 +73,11 @@ Node `>= 22.22.2` (jsdom 30 and its undici dependency set the floor; on Node 20 
 
 ## What's where
 
-- `scripts/generate-movies.js`: walks `movies/`, writes `src/data/movies.json`, also writes `public/feed.xml` and `public/collection.jsonld`
+- `scripts/generate-movies.js`: walks `movies/`, writes `src/data/movies.json`, also writes `public/feed.xml`, `public/collection.jsonld`, `public/sitemap.xml` and one page per entry under `public/m/<id>/`
 - `scripts/parse-movie.js`: frontmatter to `Movie` object (point coerced to number, dates to ISO)
 - `scripts/build-feeds.js`: RSS + JSON-LD builders (covered by tests)
+- `scripts/build-pages.js`: the per-entry pages (the link the modal's share button hands out, which unfurls as the film rather than the site) and the sitemap
+- `scripts/og-card.html`: source of `public/og.jpg`, the site-wide share card
 - `src/App.tsx`: view toggle, filter/sort/tag state mirrored to the URL
 - `src/components/MovieCard.tsx`, `MovieDetailModal.tsx`: the grid card and the detail view. Modal hand-off uses the View Transitions API (no framer-motion)
 - `src/activity.ts` + `src/components/ActivityHeatmap.tsx`: the History heatmap, streaks and monthly bars
@@ -94,8 +96,8 @@ Tests cover pure logic only, one file per module (`src/*.test.ts`, `scripts/*.te
 
 1. Use as template / fork
 2. `src/config.ts`: set `USER_NAME` to your GitHub handle
-3. `index.html`: replace the `og:*` / `twitter:*` / canonical URLs
-4. `scripts/build-feeds.js`: update `SITE_URL`, `SITE_NAME`, `SITE_DESC`
+3. `index.html`: replace the `og:*` / `twitter:*` / canonical URLs, and redraw `public/og.jpg` from `scripts/og-card.html`
+4. `scripts/build-feeds.js`: update `SITE_URL`, `SITE_NAME`, `SITE_DESC`; `scripts/build-pages.js`: update `AUTHOR` and `AUTHOR_URL` (the byline and Review author on every entry page)
 5. Replace the contents of `movies/` with your own
 6. Settings > Pages > Source: GitHub Actions. `pages.yml` deploys from there
 7. `wrangler.jsonc` and `worker/` only exist to redirect the old Cloudflare host; delete them
