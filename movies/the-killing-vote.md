@@ -1,5 +1,7 @@
 ---
 title: '국민사형투표'
+title_en: 'The Killing Vote'
+title_ja: '国民死刑投票'
 published: false
 watching: true
 tags:

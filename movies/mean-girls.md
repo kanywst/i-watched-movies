@@ -1,5 +1,6 @@
 ---
 title: 'Mean Girls'
+title_ja: 'ミーン・ガールズ'
 published: false
 seen: true
 tags:

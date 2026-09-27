@@ -1,5 +1,6 @@
 ---
 title: 'It''s What''s Inside'
+title_ja: 'ワッツ・インサイド'
 published: false
 seen: true
 tags:

@@ -1,5 +1,6 @@
 ---
 title: 'The Conjuring'
+title_ja: '死霊館'
 published: false
 seen: true
 tags:

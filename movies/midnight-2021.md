@@ -1,5 +1,7 @@
 ---
 title: '미드나이트'
+title_en: 'Midnight'
+title_ja: '殺人鬼から逃げる夜'
 published: false
 tags:
   - 'Thriller'

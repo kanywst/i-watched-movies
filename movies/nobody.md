@@ -1,5 +1,6 @@
 ---
 title: 'Nobody'
+title_ja: 'Mr.ノーバディ'
 published: true
 tags:
   - 'Action'

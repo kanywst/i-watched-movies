@@ -1,5 +1,6 @@
 ---
 title: '추격자'
+title_en: 'The Chaser'
 published: true
 tags:
   - 'Crime'

@@ -1,5 +1,6 @@
 ---
 title: 'The Gentlemen'
+title_ja: 'ジェントルメン'
 published: false
 tags:
   - 'Crime'

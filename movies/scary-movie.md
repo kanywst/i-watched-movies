@@ -1,5 +1,6 @@
 ---
 title: 'Scary Movie'
+title_ja: '最終絶叫計画'
 published: false
 seen: true
 tags:

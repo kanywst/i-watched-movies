@@ -1,5 +1,7 @@
 ---
 title: '밤이 되었습니다'
+title_en: 'Night Has Come'
+title_ja: '夜になりました～人狼ヲ探セ～'
 published: false
 dropped: true
 tags:

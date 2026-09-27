@@ -1,5 +1,7 @@
 ---
 title: '부산행'
+title_en: 'Train to Busan'
+title_ja: '新感染 ファイナル・エクスプレス'
 published: false
 tags:
   - 'Horror'

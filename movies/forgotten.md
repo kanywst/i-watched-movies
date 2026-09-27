@@ -1,5 +1,6 @@
 ---
 title: '기억의 밤'
+title_en: 'Forgotten'
 published: false
 seen: true
 tags:

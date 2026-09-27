@@ -1,5 +1,7 @@
 ---
 title: '끝까지 간다'
+title_en: 'A Hard Day'
+title_ja: '最後まで行く'
 published: false
 tags:
   - 'Crime'

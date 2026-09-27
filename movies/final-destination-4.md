@@ -1,5 +1,6 @@
 ---
 title: 'The Final Destination'
+title_ja: 'ファイナル・デッドサーキット'
 published: true
 tags:
   - 'Horror'

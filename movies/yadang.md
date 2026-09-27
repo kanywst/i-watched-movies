@@ -1,5 +1,6 @@
 ---
 title: '야당'
+title_en: 'Yadang'
 published: true
 tags:
   - 'Crime'

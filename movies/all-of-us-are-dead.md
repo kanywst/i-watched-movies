@@ -1,5 +1,7 @@
 ---
 title: '지금 우리 학교는'
+title_en: 'All of Us Are Dead'
+title_ja: '今、私たちの学校は...'
 published: false
 dropped: true
 tags:
