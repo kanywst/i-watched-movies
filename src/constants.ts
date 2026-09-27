@@ -181,3 +181,12 @@ export const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: 'release_date_desc', label: 'Release Date (Newest)' },
   { value: 'release_date_asc', label: 'Release Date (Oldest)' },
 ];
+
+// An entry's static page (scripts/build-pages.js writes one per movie at m/<id>/). This is
+// the link to hand out rather than the app's `?selected=` URL: the host serves the same
+// <head> for every query string, so only the page unfurls as the film on X, Slack or LINE.
+// Resolved against the document rather than a hard-coded site URL, so it is right on the
+// live site, a preview deploy and the dev server alike (vite.config.ts serves m/<id>/ there).
+export function moviePageUrl(id: string, base: string): string {
+  return new URL(`m/${encodeURIComponent(id)}/`, base).href;
+}

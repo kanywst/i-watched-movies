@@ -28,6 +28,7 @@ describe('buildJsonLd', () => {
     expect(ld.mainEntity.numberOfItems).toBe(1);
     expect(ld.mainEntity.itemListElement[0].item['@type']).toBe('Movie');
     expect(ld.mainEntity.itemListElement[0].item.name).toBe('A');
+    expect(ld.mainEntity.itemListElement[0].item.url).toBe('https://kanywst.github.io/i-watched-movies/m/a/');
   });
 
   it('omits aggregateRating when point is 0', () => {
@@ -53,6 +54,12 @@ describe('buildRssFeed', () => {
     expect(xml).toContain('<rss version="2.0">');
     expect(xml).toContain('<title>A</title>');
     expect(xml).not.toContain('<title>B</title>');
+  });
+
+  it("links each item to the entry's own page, which unfurls as the film", () => {
+    const xml = buildRssFeed([movie({ id: 'a' })], new Date('2026-05-02'));
+    expect(xml).toContain('<link>https://kanywst.github.io/i-watched-movies/m/a/</link>');
+    expect(xml).not.toContain('?selected=');
   });
 
   it('skips items without watch_date', () => {

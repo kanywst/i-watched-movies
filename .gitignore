@@ -9,6 +9,8 @@ yarn-error.log*
 src/data/movies.json
 public/collection.jsonld
 public/feed.xml
+public/sitemap.xml
+public/m/
 
 # AI assistant scratch files
 GEMINI.md

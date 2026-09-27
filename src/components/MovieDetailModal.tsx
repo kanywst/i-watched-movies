@@ -4,6 +4,7 @@ import { clsx } from 'clsx';
 import { Language, Movie, SeasonStatus } from '../types';
 import { LANGUAGE_OPTIONS } from '../constants';
 import { StreamingBadges } from './StreamingBadges';
+import { ShareButton } from './ShareButton';
 import { isWatched } from '../partition';
 import { RATED_POINTS } from '../collections';
 import { bandOf, countRatedBelow, type ScoreBand } from '../scoreBand';
@@ -175,6 +176,13 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
         >
           <X className="w-5 h-5" />
         </button>
+        {/* Keyed by film so the copied tick does not carry over to the next one opened. */}
+        <ShareButton
+          key={movie.id}
+          id={movie.id}
+          title={movie.title}
+          className="absolute top-4 right-16 z-50 p-2 rounded-full bg-black/55 hover:bg-black/75 text-white transition-colors backdrop-blur-md border border-white/15"
+        />
 
         {/* Image Section (Top on mobile, Left on desktop) */}
         <div
