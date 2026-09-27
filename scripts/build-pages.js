@@ -143,7 +143,7 @@ h1{font-family:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;font-weig
 .by{color:var(--muted);font-size:.85rem;margin:.5rem 0 0}
 .text p{margin:1.25rem 0 0}
 blockquote{margin:1.5rem 0 0;padding-left:1rem;border-left:3px solid var(--accent);font-style:italic}
-/* White on #d61f6d is 4.9:1, the --accent-a-solid pairing in src/index.css. The brighter dark-mode accent is only about 3:1 under white, so the button keeps the solid in both schemes. */
+/* White on #d61f6d is 4.91:1, the --accent-a-solid pairing in src/index.css. The brighter dark-mode accent (#ff4d97) is 3.11:1 under white (measured 2026-09-28), so the button keeps the solid in both schemes. */
 .open{display:inline-block;margin-top:2rem;padding:.75rem 1.25rem;border-radius:999px;background:#d61f6d;color:#fff;font-weight:600;text-decoration:none}
 .open:hover{filter:brightness(1.08)}
 .open:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
