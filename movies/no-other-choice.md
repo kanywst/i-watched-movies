@@ -1,5 +1,5 @@
 ---
-title: 'No Other Choice'
+title: '어쩔수가없다'
 published: true
 tags:
   - 'Black-Comedy'

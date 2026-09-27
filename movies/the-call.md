@@ -1,5 +1,5 @@
 ---
-title: 'The Call'
+title: '콜'
 published: false
 seen: true
 tags:

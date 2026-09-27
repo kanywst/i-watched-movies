@@ -1,5 +1,5 @@
 ---
-title: 'Yadang'
+title: '야당'
 published: true
 tags:
   - 'Crime'

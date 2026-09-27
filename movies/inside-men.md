@@ -1,5 +1,5 @@
 ---
-title: 'Inside Men'
+title: '내부자들'
 published: true
 tags:
   - 'Crime'

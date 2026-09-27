@@ -1,5 +1,5 @@
 ---
-title: 'Oldboy'
+title: '올드보이'
 published: true
 tags:
   - 'Mystery'

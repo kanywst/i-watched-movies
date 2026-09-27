@@ -1,5 +1,5 @@
 ---
-title: 'Train to Busan'
+title: '부산행'
 published: false
 tags:
   - 'Horror'

@@ -1,5 +1,5 @@
 ---
-title: 'Incantation'
+title: '咒'
 published: false
 seen: true
 tags:

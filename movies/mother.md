@@ -1,5 +1,5 @@
 ---
-title: 'Mother'
+title: '마더'
 published: false
 tags:
   - 'Mystery'

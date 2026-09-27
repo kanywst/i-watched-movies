@@ -1,5 +1,5 @@
 ---
-title: 'Midnight'
+title: '미드나이트'
 published: false
 tags:
   - 'Thriller'

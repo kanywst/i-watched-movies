@@ -1,5 +1,5 @@
 ---
-title: 'Sweet Home'
+title: '스위트홈'
 published: false
 dropped: true
 tags:

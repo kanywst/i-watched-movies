@@ -1,5 +1,5 @@
 ---
-title: 'Parasite'
+title: '기생충'
 published: false
 seen: true
 tags:

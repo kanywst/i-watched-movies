@@ -1,5 +1,5 @@
 ---
-title: 'Emergency Declaration'
+title: '비상선언'
 published: false
 tags:
   - 'Thriller'

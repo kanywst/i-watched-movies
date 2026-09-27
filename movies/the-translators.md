@@ -1,5 +1,5 @@
 ---
-title: 'The Translators'
+title: 'Les Traducteurs'
 published: false
 seen: true
 tags:

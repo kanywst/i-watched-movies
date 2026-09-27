@@ -1,5 +1,5 @@
 ---
-title: 'Gonjiam: Haunted Asylum'
+title: '곤지암'
 published: false
 seen: true
 tags:

@@ -1,5 +1,5 @@
 ---
-title: 'All of Us Are Dead'
+title: '지금 우리 학교는'
 published: false
 dropped: true
 tags:

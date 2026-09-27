@@ -1,5 +1,5 @@
 ---
-title: 'Omniscient Reader: The Prophecy'
+title: '전지적 독자 시점'
 published: true
 tags:
   - 'Action'

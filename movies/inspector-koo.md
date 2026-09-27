@@ -1,5 +1,5 @@
 ---
-title: 'Inspector Koo'
+title: '구경이'
 published: false
 dropped: true
 tags:

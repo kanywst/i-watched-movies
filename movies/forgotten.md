@@ -1,5 +1,5 @@
 ---
-title: 'Forgotten'
+title: '기억의 밤'
 published: false
 seen: true
 tags:

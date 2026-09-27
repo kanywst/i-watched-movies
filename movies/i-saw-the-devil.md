@@ -1,5 +1,5 @@
 ---
-title: 'I Saw the Devil'
+title: '악마를 보았다'
 published: false
 tags:
   - 'Thriller'

@@ -1,5 +1,5 @@
 ---
-title: 'New World'
+title: '신세계'
 published: false
 tags:
   - 'Crime'

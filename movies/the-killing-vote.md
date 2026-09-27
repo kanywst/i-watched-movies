@@ -1,5 +1,5 @@
 ---
-title: 'The Killing Vote'
+title: '국민사형투표'
 published: false
 watching: true
 tags:
