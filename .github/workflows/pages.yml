@@ -37,6 +37,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Pushes straight to main skip the PR run, so this is the last gate before the site.
+      - name: Lint and test
+        run: |
+          npm run lint
+          npm test
+
       - name: Build
         run: npm run build
 
