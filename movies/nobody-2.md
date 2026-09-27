@@ -1,5 +1,5 @@
 ---
-title: 'Mr.ノーバディ2'
+title: 'Nobody 2'
 published: true
 tags:
   - 'Action'

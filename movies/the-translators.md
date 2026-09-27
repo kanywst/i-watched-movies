@@ -1,5 +1,5 @@
 ---
-title: '9人の翻訳家 囚われたベストセラー'
+title: 'The Translators'
 published: false
 seen: true
 tags:

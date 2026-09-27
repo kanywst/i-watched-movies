@@ -1,5 +1,5 @@
 ---
-title: 'ファイナル・デッドブラッド'
+title: 'Final Destination Bloodlines'
 published: false
 tags:
   - 'Horror'

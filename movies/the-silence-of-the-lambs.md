@@ -1,5 +1,5 @@
 ---
-title: '羊たちの沈黙'
+title: 'The Silence of the Lambs'
 published: false
 tags:
   - 'Crime'

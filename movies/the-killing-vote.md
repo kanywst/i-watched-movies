@@ -1,5 +1,5 @@
 ---
-title: '国民死刑投票'
+title: 'The Killing Vote'
 published: false
 watching: true
 tags:

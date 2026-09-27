@@ -1,5 +1,5 @@
 ---
-title: 'スマイル'
+title: 'Smile'
 published: false
 seen: true
 tags:

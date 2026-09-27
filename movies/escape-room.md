@@ -1,5 +1,5 @@
 ---
-title: 'エスケープ・ルーム'
+title: 'Escape Room'
 published: false
 seen: true
 tags:

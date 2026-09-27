@@ -1,5 +1,5 @@
 ---
-title: '夜になりました～人狼ヲ探セ～'
+title: 'Night Has Come'
 published: false
 dropped: true
 tags:

@@ -1,5 +1,5 @@
 ---
-title: 'デッドコースター'
+title: 'Final Destination 2'
 published: false
 seen: true
 tags:

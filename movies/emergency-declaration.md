@@ -1,5 +1,5 @@
 ---
-title: '非常宣言'
+title: 'Emergency Declaration'
 published: false
 tags:
   - 'Thriller'
