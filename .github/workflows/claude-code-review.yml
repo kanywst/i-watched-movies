@@ -32,7 +32,7 @@ jobs:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: echo "present=${CLAUDE_CODE_OAUTH_TOKEN:+true}" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: steps.key.outputs.present == 'true'
         with:
           fetch-depth: 1
@@ -51,7 +51,7 @@ jobs:
       # but an automatic second attempt would double the cost of the common hard failure
       # (no credit), and a first attempt that dies *after* posting some inline comments
       # would duplicate them. Re-run the job by hand when a review is missing.
-      - uses: anthropics/claude-code-action@v1
+      - uses: anthropics/claude-code-action@756cc22e19660d20e8cc9496b4f242475a7f7790 # v1.0.235
         if: steps.key.outputs.present == 'true'
         continue-on-error: true
         with:

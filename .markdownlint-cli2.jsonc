@@ -1,0 +1,22 @@
+// Mirrors the owner's global markdownlint config so CI and the editor agree. cli2 does not
+// read ~ on its own, which is why this lives in the repo rather than being passed with
+// --config from a home directory CI does not have.
+{
+  "config": {
+    "default": true,
+    "MD013": false,
+    "MD024": false,
+    "MD033": { "allowed_elements": ["picture", "source", "img"] },
+    "MD036": false,
+    "MD041": false,
+    "MD060": false
+  },
+  "globs": ["**/*.md"],
+  // Only what is tracked: CLAUDE.md, GEMINI.md and .claude/ are gitignored notes.
+  "gitignore": true,
+  // movies/ is content, not documentation. The body is free text off an issue form and is
+  // rendered as plain text nodes (there is no markdown renderer in the app), so the fixes
+  // markdownlint would ask for there, such as wrapping a bare URL in <>, would show up
+  // literally on the site. Linting it would only give a filed movie a new way to fail.
+  "ignores": ["node_modules/**", "dist/**", "movies/**"]
+}

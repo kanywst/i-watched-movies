@@ -1,19 +1,31 @@
 name: CI
 
+# push to main as well as PRs: commits pushed straight to main never saw a PR run, so
+# they reached the site having passed nothing. pages.yml gates the deploy on lint and test
+# too; this run adds the audit, markdown and workflow checks it leaves out.
 on:
   pull_request:
     branches:
       - main
-      - master
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '24'
           cache: 'npm'
@@ -23,6 +35,9 @@ jobs:
 
       - name: Lint
         run: npm run lint
+
+      - name: Lint Markdown
+        run: npm run lint:md
 
       - name: Test
         run: npm test
@@ -37,3 +52,22 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  actionlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # Pinned release binary checked against its published sha256, the same trust model as
+      # the SHA-pinned actions above. shellcheck ships on the runner image, so the run:
+      # blocks are shell-linted as well.
+      - name: actionlint
+        env:
+          VERSION: 1.7.12
+          SHA256: 8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
+        run: |
+          TARBALL="actionlint_${VERSION}_linux_amd64.tar.gz"
+          curl -fsSLO "https://github.com/rhysd/actionlint/releases/download/v${VERSION}/${TARBALL}"
+          echo "${SHA256}  ${TARBALL}" | sha256sum -c -
+          tar -xzf "$TARBALL" actionlint
+          ./actionlint -color
