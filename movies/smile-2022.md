@@ -1,5 +1,6 @@
 ---
 title: 'Smile'
+title_ja: 'スマイル'
 published: false
 seen: true
 tags:

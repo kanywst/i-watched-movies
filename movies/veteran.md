@@ -1,5 +1,6 @@
 ---
-title: 'Veteran'
+title: '베테랑'
+title_en: 'Veteran'
 published: false
 tags:
   - 'Crime'

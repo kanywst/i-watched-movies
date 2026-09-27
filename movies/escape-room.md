@@ -1,5 +1,6 @@
 ---
 title: 'Escape Room'
+title_ja: 'エスケープ・ルーム'
 published: false
 seen: true
 tags:

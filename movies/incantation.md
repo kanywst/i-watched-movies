@@ -1,5 +1,6 @@
 ---
-title: 'Incantation'
+title: '咒'
+title_en: 'Incantation'
 published: false
 seen: true
 tags:

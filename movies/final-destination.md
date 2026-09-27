@@ -1,5 +1,6 @@
 ---
 title: 'Final Destination'
+title_ja: 'ファイナル・デスティネーション'
 published: false
 seen: true
 tags:

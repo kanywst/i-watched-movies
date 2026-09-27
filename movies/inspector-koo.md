@@ -1,5 +1,7 @@
 ---
-title: 'Inspector Koo'
+title: '구경이'
+title_en: 'Inspector Koo'
+title_ja: '調査官ク・ギョンイ'
 published: false
 dropped: true
 tags:

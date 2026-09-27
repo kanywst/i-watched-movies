@@ -1,5 +1,6 @@
 ---
-title: 'The Call'
+title: '콜'
+title_en: 'The Call'
 published: false
 seen: true
 tags:

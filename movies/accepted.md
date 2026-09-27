@@ -1,5 +1,6 @@
 ---
 title: 'Accepted'
+title_ja: 'トラブル・カレッジ／大学をつくろう！'
 published: false
 tags:
   - 'Comedy'

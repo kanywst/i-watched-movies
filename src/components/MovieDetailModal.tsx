@@ -9,6 +9,7 @@ import { isWatched } from '../partition';
 import { RATED_POINTS } from '../collections';
 import { bandOf, countRatedBelow, type ScoreBand } from '../scoreBand';
 import { tmdbResize, tmdbSrcSet } from '../tmdbImage';
+import { alternateTitles } from '../titles';
 
 /**
  * The score numeral, by where it stands in the diary (src/scoreBand.ts). Only one film is
@@ -146,6 +147,7 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
   // text that actually rendered, which is what screen readers and CJK font selection read.
   const summaryEn = movie.summary || '';
   const summaryJa = movie.summary_ja || '';
+  const alternates = alternateTitles(movie);
   const showJa = lang === 'ja' ? Boolean(summaryJa) : !summaryEn && Boolean(summaryJa);
   const summary = showJa ? summaryJa : summaryEn;
   const summaryLang = showJa ? 'ja' : 'en';
@@ -270,6 +272,19 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
             <h2 id="movie-detail-title" className="text-3xl md:text-4xl font-bold leading-tight mb-3 text-stone-900 dark:text-stone-100">
               {movie.title}
             </h2>
+            {/* The title is the original-language one, so a Korean film reads 기생충 here;
+                its English and Japanese release titles sit under it, each tagged with its
+                language so a screen reader and the font fallback both get it right. */}
+            {alternates.length > 0 && (
+              <p className="-mt-1 mb-3 text-base text-stone-500 dark:text-stone-400">
+                {alternates.map((t, i) => (
+                  <React.Fragment key={t.lang}>
+                    {i > 0 && <span aria-hidden="true"> · </span>}
+                    <span lang={t.lang}>{t.text}</span>
+                  </React.Fragment>
+                ))}
+              </p>
+            )}
 
             <dl className="flex flex-wrap items-baseline gap-x-6 gap-y-1 text-sm text-stone-500 dark:text-stone-400">
               {releasedLabel && (

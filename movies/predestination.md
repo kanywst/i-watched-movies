@@ -1,5 +1,6 @@
 ---
 title: 'Predestination'
+title_ja: 'プリデスティネーション'
 published: false
 tags:
   - 'Sci-fi'

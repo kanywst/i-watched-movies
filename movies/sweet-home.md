@@ -1,5 +1,7 @@
 ---
-title: 'Sweet Home'
+title: '스위트홈'
+title_en: 'Sweet Home'
+title_ja: 'Sweet Home －俺と世界の絶望－'
 published: false
 dropped: true
 tags:

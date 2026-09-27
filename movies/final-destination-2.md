@@ -1,5 +1,6 @@
 ---
 title: 'Final Destination 2'
+title_ja: 'デッドコースター'
 published: false
 seen: true
 tags:

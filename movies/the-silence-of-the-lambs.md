@@ -1,5 +1,6 @@
 ---
 title: 'The Silence of the Lambs'
+title_ja: '羊たちの沈黙'
 published: false
 tags:
   - 'Crime'

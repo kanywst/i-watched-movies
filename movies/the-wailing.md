@@ -1,5 +1,6 @@
 ---
-title: 'The Wailing'
+title: '곡성'
+title_en: 'The Wailing'
 published: true
 tags:
   - 'Horror'

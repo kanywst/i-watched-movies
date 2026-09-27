@@ -143,6 +143,27 @@ describe('buildMoviePage', () => {
   });
 });
 
+describe('alternate titles', () => {
+  const parasite = movie({ title: '기생충', title_en: 'Parasite', title_ja: 'パラサイト 半地下の家族', release_date: '2019-05-30' });
+
+  it('prints the English and Japanese titles under the original one', () => {
+    expect(buildMoviePage(parasite)).toContain(
+      '<h1>기생충</h1>\n<p class="aka"><span lang="en">Parasite</span> · <span lang="ja">パラサイト 半地下の家族</span></p>',
+    );
+  });
+
+  it('puts every name in the page title and the structured data', () => {
+    const html = buildMoviePage(parasite);
+    expect(html).toContain('<title>기생충 · Parasite · パラサイト 半地下の家族 (2019) · The Movies kanywst Watched</title>');
+    expect(buildMovieJsonLd(parasite).alternateName).toEqual(['Parasite', 'パラサイト 半地下の家族']);
+  });
+
+  it('adds nothing for a film with no other name', () => {
+    expect(buildMoviePage(movie())).not.toContain('class="aka"');
+    expect(buildMovieJsonLd(movie()).alternateName).toBeUndefined();
+  });
+});
+
 describe('buildSitemap', () => {
   it('lists the diary and each rated film, and nothing else', () => {
     const xml = buildSitemap([

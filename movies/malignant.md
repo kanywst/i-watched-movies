@@ -1,5 +1,6 @@
 ---
 title: 'Malignant'
+title_ja: 'マリグナント 狂暴な悪夢'
 published: false
 seen: true
 tags:

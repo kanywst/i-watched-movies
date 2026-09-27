@@ -13,7 +13,12 @@ export interface Season {
 
 export interface Movie {
   id: string;
+  // `title` is the original-language title (기생충, 無間道, Les Traducteurs), so these two
+  // carry the English and Japanese release titles for the detail view, the entry page and
+  // search. Empty when there is none, or when it is the same string as `title`.
   title: string;
+  title_en?: string;
+  title_ja?: string;
   published: boolean;
   seen?: boolean;
   // Started but not finished (a long series, mostly). Takes precedence over `published`

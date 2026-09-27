@@ -1,5 +1,6 @@
 ---
 title: 'Sisu'
+title_ja: 'SISU シス 不死身の男'
 published: false
 seen: true
 tags:

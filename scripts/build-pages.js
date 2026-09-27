@@ -1,4 +1,13 @@
-import { SITE_URL, SITE_NAME, SITE_DESC, escape, isPublished, entryPageUrl } from './build-feeds.js';
+import {
+  SITE_URL,
+  SITE_NAME,
+  SITE_DESC,
+  alternateTitles,
+  allNames,
+  escape,
+  isPublished,
+  entryPageUrl,
+} from './build-feeds.js';
 
 // One static page per entry, at m/<id>/, so a film has a URL that means that film to
 // something that does not run JavaScript. The app itself is one index.html that opens a
@@ -50,11 +59,13 @@ export function describeMovie(m) {
 
 /** Schema.org Movie for one entry, with the diarist's score as a Review when there is one. */
 export function buildMovieJsonLd(m) {
+  const alternates = alternateTitles(m).map((t) => t.text);
   const rated = isPublished(m) && m.point > 0;
   return {
     '@context': 'https://schema.org',
     '@type': 'Movie',
     name: m.title,
+    alternateName: alternates.length ? alternates : undefined,
     url: entryPageUrl(m.id),
     image: m.cover_image || undefined,
     datePublished: m.release_date ? m.release_date.slice(0, 10) : undefined,
@@ -83,7 +94,10 @@ const safeJson = (value) => JSON.stringify(value).replace(/</g, '\\u003c');
 
 export function buildMoviePage(m) {
   const url = entryPageUrl(m.id);
-  const pageTitle = `${m.title}${year(m.release_date) ? ` (${year(m.release_date)})` : ''}`;
+  const alternates = alternateTitles(m);
+  // Every name the film goes by, so a search for パラサイト or Parasite lands on 기생충.
+  const names = allNames(m);
+  const pageTitle = `${names}${year(m.release_date) ? ` (${year(m.release_date)})` : ''}`;
   const fullTitle = `${pageTitle} · ${SITE_NAME}`;
   const description = describeMovie(m) || SITE_DESC;
   const image = ogImage(m.cover_image);
@@ -138,6 +152,7 @@ main.wrap{display:grid;gap:2rem;padding-block:2.5rem 4rem}
 @media (min-width:44rem){main.wrap{grid-template-columns:18rem 1fr;align-items:start}}
 .poster{width:100%;max-width:18rem;height:auto;aspect-ratio:2/3;object-fit:cover;border-radius:.75rem;box-shadow:0 10px 30px rgb(0 0 0/.25)}
 h1{font-family:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;font-weight:800;font-size:clamp(2rem,5vw,3rem);line-height:1.05;letter-spacing:-.02em;margin:0}
+.aka{font-size:1.1rem;color:var(--muted);margin:.5rem 0 0}
 .facts,.state{color:var(--muted);font-size:.9rem;margin:.75rem 0 0}
 .tags{display:flex;flex-wrap:wrap;gap:.5rem;padding:0;margin:1rem 0 0;list-style:none}
 .tags li{font-size:.75rem;padding:.25rem .65rem;border-radius:999px;background:var(--chip);border:1px solid var(--rule)}
@@ -158,7 +173,8 @@ blockquote{margin:1.5rem 0 0;padding-left:1rem;border-left:3px solid var(--accen
 ${image ? `<img class="poster" src="${escape(image)}" alt="${escape(`Poster for ${m.title}`)}" width="288" height="432" />
 ` : ''}<article>
 <h1>${escape(m.title)}</h1>
-${facts ? `<p class="facts">${facts}</p>
+${alternates.length ? `<p class="aka">${alternates.map((t) => `<span lang="${t.lang}">${escape(t.text)}</span>`).join(' · ')}</p>
+` : ''}${facts ? `<p class="facts">${facts}</p>
 ` : ''}${m.tags?.length ? `<ul class="tags">${m.tags.map((t) => `<li>${escape(t)}</li>`).join('')}</ul>
 ` : ''}${rated ? `<p class="score">${escape(m.point)}<small>/ 10</small></p>
 <p class="by">Rated by ${escape(AUTHOR)}${m.watch_date ? ` on ${escape(m.watch_date.slice(0, 10))}` : ''}</p>

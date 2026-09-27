@@ -1,5 +1,6 @@
 ---
 title: 'From Paris with Love'
+title_ja: 'パリより愛をこめて'
 published: false
 tags:
   - 'Action'

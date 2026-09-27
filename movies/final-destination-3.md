@@ -1,5 +1,6 @@
 ---
 title: 'Final Destination 3'
+title_ja: 'ファイナル・デッドコースター'
 published: false
 seen: true
 tags:

@@ -1,5 +1,6 @@
 ---
-title: 'Lucid Dream'
+title: '루시드 드림'
+title_en: 'Lucid Dream'
 published: true
 tags:
   - 'Thriller'

@@ -31,6 +31,12 @@ describe('buildJsonLd', () => {
     expect(ld.mainEntity.itemListElement[0].item.url).toBe('https://kanywst.github.io/i-watched-movies/m/a/');
   });
 
+  it('lists the English and Japanese titles as alternateName', () => {
+    const ld = buildJsonLd([movie({ title: '부산행', title_en: 'Train to Busan', title_ja: '新感染' })]);
+    expect(ld.mainEntity.itemListElement[0].item.alternateName).toEqual(['Train to Busan', '新感染']);
+    expect(buildJsonLd([movie()]).mainEntity.itemListElement[0].item.alternateName).toBeUndefined();
+  });
+
   it('omits aggregateRating when point is 0', () => {
     const ld = buildJsonLd([movie({ point: 0 })]);
     expect(ld.mainEntity.itemListElement[0].item.aggregateRating).toBeUndefined();
@@ -54,6 +60,11 @@ describe('buildRssFeed', () => {
     expect(xml).toContain('<rss version="2.0">');
     expect(xml).toContain('<title>A</title>');
     expect(xml).not.toContain('<title>B</title>');
+  });
+
+  it('titles an item with every name the film goes by', () => {
+    const xml = buildRssFeed([movie({ title: '부산행', title_en: 'Train to Busan', title_ja: '新感染' })], new Date('2026-05-02'));
+    expect(xml).toContain('<title>부산행 · Train to Busan · 新感染</title>');
   });
 
   it("links each item to the entry's own page, which unfurls as the film", () => {

@@ -227,6 +227,12 @@ const App: React.FC = () => {
       const matchesSearch =
         q === '' ||
         movie.title.toLowerCase().includes(q) ||
+        // Original-language titles (부산행) have to stay findable as "Train to Busan" and
+        // as 新感染. The slug is the fallback for an entry filed without an English title:
+        // it is usually the English title in kebab case.
+        (movie.title_en?.toLowerCase().includes(q) ?? false) ||
+        (movie.title_ja?.toLowerCase().includes(q) ?? false) ||
+        movie.id.replace(/-/g, ' ').includes(q) ||
         (movie.summary?.toLowerCase().includes(q) ?? false) ||
         (movie.summary_ja?.toLowerCase().includes(q) ?? false) ||
         (movie.national?.toLowerCase().includes(q) ?? false) ||
