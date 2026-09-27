@@ -258,6 +258,8 @@ export interface Recommendation {
   movie: Movie;
   /** Outlier-capped baseline plus the shrunk genre and country deltas, clamped to 0-10. */
   predicted: number;
+  /** The outlier-capped baseline `predicted` starts from, before any genre or country term. */
+  intercept: number;
   reasons: RecommendationReason[];
 }
 
@@ -361,6 +363,7 @@ export function recommendWatchlist(
       return {
         movie,
         predicted: clamp(model.baseline + genrePart + countryPart, 0, 10),
+        intercept: model.baseline,
         reasons: reasons.slice(0, REASON_LIMIT),
       };
     })
@@ -391,7 +394,7 @@ export interface PredictionCheck {
  * This measures the predicted score, not the order: the rank correlation between predicted
  * and actual was 0.16 on the same date.
  *
- * Quadratic in the diary (each fold rebuilds the profile): 15 to 30ms in Node at 66 films on
+ * Quadratic in the diary (each fold rebuilds the profile): 12 to 23ms in Node at 66 films on
  * 2026-09-27. null below MIN_BACKTEST_SAMPLE, where one fold swings the result.
  */
 export function checkPredictions(rated: Movie[]): PredictionCheck | null {
@@ -404,9 +407,8 @@ export function checkPredictions(rated: Movie[]): PredictionCheck | null {
     const [prediction] = recommendWatchlist([target], rest, profile, 1);
     // The bar is the model's own intercept, the outlier-capped mean, so the gain measured is
     // what the genre and country terms add rather than what clipping one 1.0 adds.
-    const intercept = computeTasteProfile(capOutliers(rest, profile)).baseline;
     modelMiss += Math.abs(prediction.predicted - target.point);
-    baselineMiss += Math.abs(intercept - target.point);
+    baselineMiss += Math.abs(prediction.intercept - target.point);
   });
   return {
     total: rated.length,
