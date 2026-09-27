@@ -9,8 +9,6 @@ import {
   entryPageUrl,
 } from './build-feeds.js';
 
-export { alternateTitles };
-
 // One static page per entry, at m/<id>/, so a film has a URL that means that film to
 // something that does not run JavaScript. The app itself is one index.html that opens a
 // film from `?selected=`, and a static host serves the same <head> for every query string,
