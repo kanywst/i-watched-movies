@@ -10,6 +10,7 @@ import { computeScoringHabits, computeTasteProfile, recommendWatchlist } from '.
 import {
   COUNTRY_FLAGS,
   MIN_AFFINITY_SAMPLE,
+  NEW_RELEASE_WINDOW_DAYS,
   RECOMMENDATION_LIMIT,
   SCORE_BUCKET_STEP,
 } from '../constants';
@@ -97,6 +98,11 @@ export const TastePanel: React.FC<TastePanelProps> = ({ watched, watchlist, onOp
               flags
             />
             <AffinityList title="Eras" items={profile.eras} baseline={profile.baseline} />
+            <AffinityList
+              title={`Release timing (on release = within ${NEW_RELEASE_WINDOW_DAYS} days)`}
+              items={profile.timing}
+              baseline={profile.baseline}
+            />
           </div>
         </div>
       </Section>
