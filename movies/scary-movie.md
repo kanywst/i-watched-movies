@@ -1,5 +1,5 @@
 ---
-title: '最終絶叫計画'
+title: 'Scary Movie'
 published: false
 seen: true
 tags:

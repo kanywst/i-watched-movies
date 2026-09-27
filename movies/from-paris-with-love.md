@@ -1,5 +1,5 @@
 ---
-title: 'パリより愛をこめて'
+title: 'From Paris with Love'
 published: false
 tags:
   - 'Action'

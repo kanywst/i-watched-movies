@@ -1,5 +1,5 @@
 ---
-title: 'エスター ファースト・キル'
+title: 'Orphan: First Kill'
 published: false
 seen: true
 tags:

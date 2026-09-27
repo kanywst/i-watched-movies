@@ -1,5 +1,5 @@
 ---
-title: 'ミーン・ガールズ'
+title: 'Mean Girls'
 published: false
 seen: true
 tags:

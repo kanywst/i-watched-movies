@@ -1,5 +1,5 @@
 ---
-title: 'マリグナント 狂暴な悪夢'
+title: 'Malignant'
 published: false
 seen: true
 tags:

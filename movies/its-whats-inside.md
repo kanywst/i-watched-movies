@@ -1,5 +1,5 @@
 ---
-title: 'ワッツ・インサイド'
+title: 'It''s What''s Inside'
 published: false
 seen: true
 tags:

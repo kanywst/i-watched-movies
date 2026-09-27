@@ -1,5 +1,5 @@
 ---
-title: 'ファイナル・デスティネーション'
+title: 'Final Destination'
 published: false
 seen: true
 tags:

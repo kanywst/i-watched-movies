@@ -1,5 +1,5 @@
 ---
-title: '調査官ク・ギョンイ'
+title: 'Inspector Koo'
 published: false
 dropped: true
 tags:

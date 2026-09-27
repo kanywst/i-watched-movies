@@ -1,5 +1,5 @@
 ---
-title: 'プリデスティネーション'
+title: 'Predestination'
 published: false
 tags:
   - 'Sci-fi'

@@ -1,5 +1,5 @@
 ---
-title: 'Sweet Home －俺と世界の絶望－'
+title: 'Sweet Home'
 published: false
 dropped: true
 tags:

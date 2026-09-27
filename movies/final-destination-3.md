@@ -1,5 +1,5 @@
 ---
-title: 'ファイナル・デッドコースター'
+title: 'Final Destination 3'
 published: false
 seen: true
 tags:

@@ -1,5 +1,5 @@
 ---
-title: 'グッドフェローズ'
+title: 'Goodfellas'
 published: true
 tags:
   - 'Crime'

@@ -1,5 +1,5 @@
 ---
-title: 'SISU シス 不死身の男'
+title: 'Sisu'
 published: false
 seen: true
 tags:
