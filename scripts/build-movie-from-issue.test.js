@@ -315,6 +315,19 @@ describe('alternate titles', () => {
     expect(formatFile(plain)).not.toMatch(/title_(en|ja):/);
   });
 
+  it('keeps the original title when an issue is filed under one of the other names', () => {
+    const existing = { title: '기생충', title_en: 'Parasite', title_ja: 'パラサイト 半地下の家族', tags: [], streaming: [], seasons: [] };
+    const blank = { title_en: '', title_ja: '', tags: [], streaming: [], seasons: [], point: null };
+    for (const alias of ['Parasite', 'パラサイト 半地下の家族']) {
+      const merged = mergeMovie(existing, { ...blank, title: alias });
+      expect(merged.title).toBe('기생충');
+      expect(merged.title_en).toBe('Parasite');
+      expect(merged.title_ja).toBe('パラサイト 半地下の家族');
+    }
+    // A Title that is none of the entry's names is still a deliberate rename.
+    expect(mergeMovie(existing, { ...blank, title: 'Gisaengchung' }).title).toBe('Gisaengchung');
+  });
+
   it('keeps the stored ones when a re-filed issue leaves them blank', () => {
     const merged = mergeMovie(
       { title: '기생충', title_en: 'Parasite', title_ja: 'パラサイト 半地下の家族', tags: [], streaming: [], seasons: [] },

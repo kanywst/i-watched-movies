@@ -290,8 +290,15 @@ function existingStamp(value) {
 }
 
 export function mergeMovie(existing, incoming) {
+  // findSlugByTitle matches an entry by any of its names, so an issue filed as "Parasite"
+  // lands on 기생충. Taking its Title as-is would overwrite the original-language title
+  // with the English one and leave nothing to show under it. A Title that is one of the
+  // entry's other names is a lookup, not a rename; any other Title still renames.
+  const filedUnderAlias =
+    incoming.title !== existing.title &&
+    [existing.title_en, existing.title_ja].filter(Boolean).includes(incoming.title);
   return {
-    title: incoming.title,
+    title: filedUnderAlias ? existing.title : incoming.title,
     title_en: incoming.title_en || existing.title_en,
     title_ja: incoming.title_ja || existing.title_ja,
     published: incoming.published,
