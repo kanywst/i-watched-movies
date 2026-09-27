@@ -93,6 +93,24 @@ function eraOf(movie: Movie): string[] {
   return [`${Math.floor(new Date(ms).getUTCFullYear() / 10) * 10}s`];
 }
 
+export const ON_RELEASE = 'On release';
+export const CATCH_UP = 'Catch-up';
+
+/** Days from release to watch. Negative for a preview screening; null without both dates. */
+function lagDays(movie: Movie): number | null {
+  const released = dayMs(movie.release_date);
+  const watched = dayMs(movie.watch_date);
+  if (released === null || watched === null) return null;
+  return (watched - released) / DAY_MS;
+}
+
+function timingOf(movie: Movie): string[] {
+  const lag = lagDays(movie);
+  if (lag === null) return [];
+  // Negative lag = a preview screening, which is as "on release" as it gets.
+  return [lag <= NEW_RELEASE_WINDOW_DAYS ? ON_RELEASE : CATCH_UP];
+}
+
 export interface TasteProfile {
   total: number;
   /** Mean rating. Every delta on this page is measured against it. */
@@ -102,6 +120,15 @@ export interface TasteProfile {
   genres: Affinity[];
   countries: Affinity[];
   eras: Affinity[];
+  /**
+   * Films caught within NEW_RELEASE_WINDOW_DAYS of release against the ones watched later.
+   * A catch-up is usually a film already known to be good, a new release is a gamble, so
+   * this gap measures picking as much as taste. Display only: on 2026-09-27 (66 rated
+   * films) it was 7.29 against 7.76, but adding it to recommendWatchlist did not lower the
+   * leave-one-out error, because genre already carries it (the on-release films were mostly
+   * the horror, sci-fi and anime the genre term marks down).
+   */
+  timing: Affinity[];
   /** Median days from release to watch. null when no film has both dates. */
   medianLagDays: number | null;
   /** Share (0-1) of films caught within NEW_RELEASE_WINDOW_DAYS of release. */
@@ -113,16 +140,12 @@ export function computeTasteProfile(movies: Movie[]): TasteProfile {
   const baseline = mean(points);
 
   const lags: number[] = [];
-  let fresh = 0;
   for (const m of movies) {
-    const released = dayMs(m.release_date);
-    const watched = dayMs(m.watch_date);
-    if (released === null || watched === null) continue;
-    const lag = (watched - released) / DAY_MS;
-    lags.push(lag);
-    // Negative lag = a preview screening, which is as "on release" as it gets.
-    if (lag <= NEW_RELEASE_WINDOW_DAYS) fresh += 1;
+    const lag = lagDays(m);
+    if (lag !== null) lags.push(lag);
   }
+  const timing = buildAffinities(movies, timingOf, baseline);
+  const fresh = timing.find(a => a.key === ON_RELEASE)?.count ?? 0;
 
   return {
     total: movies.length,
@@ -132,6 +155,7 @@ export function computeTasteProfile(movies: Movie[]): TasteProfile {
     genres: buildAffinities(movies, m => m.tags, baseline),
     countries: buildAffinities(movies, m => (m.national ? [m.national] : []), baseline),
     eras: buildAffinities(movies, eraOf, baseline),
+    timing,
     medianLagDays: lags.length ? Math.round(median(lags)) : null,
     newReleaseShare: lags.length ? fresh / lags.length : 0,
   };

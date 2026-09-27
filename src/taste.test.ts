@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { computeScoringHabits, computeTasteProfile, recommendWatchlist } from './taste';
+import {
+  CATCH_UP,
+  ON_RELEASE,
+  computeScoringHabits,
+  computeTasteProfile,
+  recommendWatchlist,
+} from './taste';
 import { computeStats } from './stats';
 import { countGenres } from './partition';
 import type { Movie } from './types';
@@ -28,6 +34,7 @@ describe('computeTasteProfile', () => {
       genres: [],
       countries: [],
       eras: [],
+      timing: [],
       medianLagDays: null,
       newReleaseShare: 0,
     });
@@ -107,6 +114,23 @@ describe('computeTasteProfile', () => {
     ]);
     expect(profile.medianLagDays).toBeNull();
     expect(profile.newReleaseShare).toBe(0);
+    expect(profile.timing).toEqual([]);
+  });
+
+  it('scores films caught on release against the ones watched later', () => {
+    const profile = computeTasteProfile([
+      // 90 days after release is still on release, 91 is not; a preview counts as on release.
+      make({ id: 'a', release_date: '2025-01-01', watch_date: '2025-04-01', point: 6 }),
+      make({ id: 'b', release_date: '2025-06-01', watch_date: '2025-05-30', point: 7 }),
+      make({ id: 'c', release_date: '2025-01-01', watch_date: '2025-04-02', point: 9 }),
+      make({ id: 'd', release_date: '', watch_date: '2025-01-01', point: 2 }),
+    ]);
+    expect(profile.baseline).toBe(6);
+    expect(profile.timing).toEqual([
+      { key: ON_RELEASE, count: 2, average: 6.5, delta: 0.5 },
+      { key: CATCH_UP, count: 1, average: 9, delta: 3 },
+    ]);
+    expect(profile.newReleaseShare).toBeCloseTo(2 / 3);
   });
 });
 
