@@ -23,7 +23,7 @@ import {
 /**
  * The analysis is derived here rather than handed down as props so that `taste.ts` is
  * reachable only through this component. This panel is loaded lazily (App.tsx), so keeping
- * the 400-odd lines of affinity maths on this side of the boundary takes them out of the
+ * the affinity maths on this side of the boundary takes them out of the
  * entry chunk for the four views that never open Stats.
  */
 interface TastePanelProps {
@@ -274,8 +274,8 @@ export const TastePanel: React.FC<TastePanelProps> = ({ watched, watchlist, onOp
   );
 };
 
-// Spelled out because the gap is small (3% on 2026-09-27) and can go either way as the
-// diary grows, so the sentence reads the direction off the numbers rather than assuming it.
+// The gap can go either way as the diary grows, so the sentence reads the direction off the
+// numbers rather than assuming it.
 function describeGain({ modelError, baselineError }: PredictionCheck): string {
   if (baselineError === 0) return '';
   const gain = Math.round((1 - modelError / baselineError) * 100);
