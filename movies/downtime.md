@@ -19,4 +19,4 @@ summary_ja: '天才的なオペ技術を持つ救急外科医が、不本意な�
 added: '2026-10-02T16:02:08.605Z'
 ---
 
-In progress. Netflix Japan original series.
+Netflix Japan original series. Watched through to the end.
