@@ -51,7 +51,7 @@ jobs:
       # but an automatic second attempt would double the cost of the common hard failure
       # (no credit), and a first attempt that dies *after* posting some inline comments
       # would duplicate them. Re-run the job by hand when a review is missing.
-      - uses: anthropics/claude-code-action@fd1c128679612beff4ca259c78021c506e8aa7a7 # v1.0.237
+      - uses: anthropics/claude-code-action@58985842b834ed26087302ba27d07bc24ca8697a # v1.0.244
         if: steps.key.outputs.present == 'true'
         continue-on-error: true
         with:
