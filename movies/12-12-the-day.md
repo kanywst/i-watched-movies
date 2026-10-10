@@ -3,6 +3,7 @@ title: '서울의 봄'
 title_en: '12.12: The Day'
 title_ja: 'ソウルの春'
 published: false
+dropped: true
 tags:
   - 'Thriller'
   - 'Action'
