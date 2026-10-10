@@ -2,6 +2,7 @@
 title: '容疑者Xの献身'
 title_en: 'Suspect X'
 published: false
+seen: true
 tags:
   - 'Mystery'
   - 'Crime'
