@@ -3,6 +3,7 @@ title: '범죄도시'
 title_en: 'The Outlaws'
 title_ja: '犯罪都市'
 published: false
+seen: true
 tags:
   - 'Crime'
   - 'Action'
