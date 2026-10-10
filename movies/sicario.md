@@ -2,6 +2,7 @@
 title: 'Sicario'
 title_ja: 'ボーダーライン'
 published: false
+dropped: true
 tags:
   - 'Crime'
   - 'Thriller'
@@ -16,7 +17,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/el3HSCNEAMI9tfrtgGK7la9ibve.jp
 release_date: '2015-09-18'
 summary: 'An FBI agent is seconded to a border task force and works out too late that she was brought along as a legal formality.'
 summary_ja: 'FBI 捜査官が国境の合同任務部隊に出向し、自分が法的な体裁のために連れてこられただけだと気づくのが遅すぎる。'
-added: '2026-08-02T14:25:14Z'
+added: '2026-08-02T14:25:14.000Z'
 ---
 
 Villeneuve directing a Taylor Sheridan script, so the same bloodline as Hell or High Water (watchlist) and Wind River.
