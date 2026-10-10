@@ -2,6 +2,7 @@
 title: 'Fargo'
 title_ja: 'ファーゴ'
 published: false
+dropped: true
 tags:
   - 'Crime'
   - 'Black-Comedy'
