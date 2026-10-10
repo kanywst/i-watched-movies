@@ -2,6 +2,7 @@
 title: 'Hot Fuzz'
 title_ja: 'ホット・ファズ 俺たちスーパーポリスメン！'
 published: false
+seen: true
 tags:
   - 'Comedy'
   - 'Action'
