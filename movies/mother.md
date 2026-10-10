@@ -3,6 +3,7 @@ title: '마더'
 title_en: 'Mother'
 title_ja: '母なる証明'
 published: false
+dropped: true
 tags:
   - 'Mystery'
   - 'Crime'
@@ -15,7 +16,7 @@ cover_image: 'https://image.tmdb.org/t/p/original/3fqXgROXGhzwU7Lmv2dmfrX12yB.jp
 release_date: '2009-05-28'
 summary: 'A mother whose son is charged with a girl''\''''s murder goes looking for the real killer, and finds out what she is willing to do.'
 summary_ja: '息子が少女殺しで起訴された母親が、真犯人を探しに出て、自分がどこまでやれる人間なのかを知る。'
-added: '2026-08-02T14:25:12Z'
+added: '2026-08-02T14:25:12.000Z'
 ---
 
 Bong Joon-ho between Memories of Murder and Parasite (already in Seen). 2000s Korean crime, the strongest pocket on this list.
