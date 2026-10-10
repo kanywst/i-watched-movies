@@ -11,7 +11,7 @@ national: 'Korea'
 streaming:
   - 'Prime Video'
   - 'U-NEXT'
-checked: '2026-09'
+checked: '2026-10'
 cover_image: 'https://image.tmdb.org/t/p/original/59KtPlcr2GQIudEA6B5KNY5NnBf.jpg'
 release_date: '2015-08-05'
 summary: 'A tenacious Seoul detective goes after the untouchable heir of a conglomerate whose violence has always been paid away, and the family''s money works against him at every step.'
