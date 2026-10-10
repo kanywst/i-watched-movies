@@ -2,6 +2,7 @@
 title: '神は見返りを求める'
 title_en: 'God Seeks in Return'
 published: false
+dropped: true
 tags:
   - 'Black-Comedy'
   - 'Drama'
