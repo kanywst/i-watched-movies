@@ -3,6 +3,7 @@ title: 'ฉลาดเกมส์โกง'
 title_en: 'Bad Genius'
 title_ja: 'バッド・ジーニアス 危険な天才たち'
 published: false
+seen: true
 tags:
   - 'Crime'
   - 'Thriller'
