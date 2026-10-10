@@ -2,6 +2,7 @@
 title: 'Baby Driver'
 title_ja: 'ベイビー・ドライバー'
 published: false
+seen: true
 tags:
   - 'Action'
   - 'Crime'
