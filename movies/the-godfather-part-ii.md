@@ -2,6 +2,7 @@
 title: 'The Godfather Part II'
 title_ja: 'ゴッドファーザー PART II'
 published: false
+dropped: true
 tags:
   - 'Crime'
   - 'Drama'
