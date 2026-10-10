@@ -11,12 +11,12 @@ national: 'Korea'
 streaming:
   - 'Prime Video'
   - 'U-NEXT'
-checked: '2026-08'
+checked: '2026-10'
 cover_image: 'https://image.tmdb.org/t/p/original/2bzblLLBZEbAnPhfM177CSNDVFB.jpg'
 release_date: '2010-08-12'
 summary: 'An agent catches the serial killer who murdered his fiancee, lets him go, and catches him again, over and over.'
 summary_ja: '婚約者を殺した連続殺人犯を捕まえた捜査官が、わざと逃がしてはまた捕まえる。それを何度も繰り返す。'
-added: '2026-08-02T14:31:59Z'
+added: '2026-08-02T14:31:59.000Z'
 ---
 
 Kim Jee-woon at his most punishing. Same revenge lineage as Oldboy (8.3) and The Chaser (8.0), pushed past where either of them stops.
