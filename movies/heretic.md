@@ -2,6 +2,7 @@
 title: 'Heretic'
 title_ja: '異端者の家'
 published: false
+dropped: true
 tags:
   - 'Horror'
   - 'Thriller'
