@@ -9,7 +9,7 @@ national: 'USA'
 streaming:
   - 'U-NEXT'
   - 'Hulu'
-checked: '2026-09'
+checked: '2026-10'
 cover_image: 'https://image.tmdb.org/t/p/original/3bhkrj58Vtu7enYsRolD1fZdja1.jpg'
 release_date: '1972-03-24'
 summary: 'The ageing head of a New York crime family is shot after refusing to go into narcotics, and the son who wanted no part of the business steps in and becomes the most ruthless of them all.'
