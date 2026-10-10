@@ -2,7 +2,6 @@
 title: 'The Hunger Games'
 title_ja: 'ハンガー・ゲーム'
 published: false
-dropped: true
 tags:
   - 'Sci-fi'
   - 'Action'
