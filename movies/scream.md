@@ -2,6 +2,7 @@
 title: 'Scream'
 title_ja: 'スクリーム'
 published: false
+seen: true
 tags:
   - 'Horror'
   - 'Mystery'
