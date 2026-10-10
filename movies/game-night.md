@@ -9,7 +9,7 @@ tags:
 national: 'USA'
 streaming:
   - 'U-NEXT'
-checked: '2026-09'
+checked: '2026-10'
 cover_image: 'https://image.tmdb.org/t/p/original/85R8LMyn9f2Lev2YPBF8Nughrkv.jpg'
 release_date: '2018-02-23'
 summary: 'A competitive couple''s weekly game night turns into a staged kidnapping mystery, and then the kidnapping turns out to be real while the players keep assuming it is part of the game.'
