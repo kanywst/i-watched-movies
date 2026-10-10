@@ -11,7 +11,7 @@ streaming:
   - 'Prime Video'
   - 'U-NEXT'
   - 'Hulu'
-checked: '2026-09'
+checked: '2026-10'
 cover_image: 'https://image.tmdb.org/t/p/original/j8szC8OgrejDQjjMKSVXyaAjw3V.jpg'
 release_date: '2022-08-05'
 summary: 'An unlucky assassin boards a Tokyo bullet train to steal a briefcase and finds that nearly every other passenger is a killer sent after the same case, or after each other.'
