@@ -2,6 +2,7 @@
 title: 'Happy Death Day'
 title_ja: 'ハッピー・デス・デイ'
 published: false
+seen: true
 tags:
   - 'Horror'
   - 'Mystery'
