@@ -2,7 +2,7 @@
 title: 'The Gentlemen'
 title_ja: 'ジェントルメン'
 published: false
-watching: true
+dropped: true
 tags:
   - 'Crime'
   - 'Black-Comedy'
