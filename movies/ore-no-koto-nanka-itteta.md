@@ -19,4 +19,4 @@ summary_ja: 'ロンドン・グローブ座で日本人初の主演を務めた�
 added: '2026-11-03T15:03:13.308Z'
 ---
 
-In progress. Netflix Japan, 8 episodes, written by 宮藤官九郎 and starring 役所広司.
+Netflix Japan, 8 episodes, written by 宮藤官九郎 and starring 役所広司.
