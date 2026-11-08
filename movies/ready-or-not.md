@@ -9,7 +9,7 @@ tags:
 national: 'USA'
 streaming:
   - 'Disney+'
-checked: '2026-10'
+checked: '2026-11'
 cover_image: 'https://image.tmdb.org/t/p/original/oJD9KQFoObZmxAS1je56SIFVNJt.jpg'
 release_date: '2019-08-21'
 summary: 'On her wedding night a bride learns her new in-laws'' family tradition is a game of hide-and-seek where she is the prey.'
