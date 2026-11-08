@@ -12,7 +12,7 @@ streaming:
   - 'Netflix'
   - 'U-NEXT'
   - 'Hulu'
-checked: '2026-10'
+checked: '2026-11'
 cover_image: 'https://image.tmdb.org/t/p/original/3p81Y9Pf2A6yBxv3HCx3mLX7LOK.jpg'
 release_date: '2020-02-19'
 summary: 'A bag stuffed with cash found in a sauna locker pulls a group of desperate people into a chain of lies and murder, told in interlocking chapters.'
