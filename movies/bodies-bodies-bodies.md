@@ -2,6 +2,7 @@
 title: 'Bodies Bodies Bodies'
 title_ja: 'BODIES BODIES BODIES／ボディーズ・ボディーズ・ボディーズ'
 published: false
+dropped: true
 tags:
   - 'Mystery'
   - 'Comedy'
@@ -9,7 +10,7 @@ tags:
 national: 'USA'
 streaming:
   - 'U-NEXT'
-checked: '2026-10'
+checked: '2026-11'
 cover_image: 'https://image.tmdb.org/t/p/original/hSuTjDmqRdy7Dii8ymnF2WILTeP.jpg'
 release_date: '2022-08-05'
 summary: 'A murder party game at a mansion during a hurricane turns real when one of the friends is found dead.'
