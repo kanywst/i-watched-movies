@@ -10,7 +10,7 @@ national: 'USA'
 streaming:
   - 'Prime Video'
   - 'U-NEXT'
-checked: '2026-10'
+checked: '2026-11'
 cover_image: 'https://image.tmdb.org/t/p/original/yuAPCsCGJGSxA7YOW4elF5JNrzK.jpg'
 release_date: '2018-08-24'
 summary: 'A father hunts for his missing daughter entirely through her laptop, and every account he opens changes who she was.'
