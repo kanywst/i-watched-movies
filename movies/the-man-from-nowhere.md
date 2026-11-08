@@ -11,7 +11,7 @@ national: 'Korea'
 streaming:
   - 'U-NEXT'
   - 'Hulu'
-checked: '2026-10'
+checked: '2026-11'
 cover_image: 'https://image.tmdb.org/t/p/original/9QJ3cPpYgoPfhRnRPxpQUfx790r.jpg'
 release_date: '2010-08-04'
 summary: 'A quiet pawnshop owner with a hidden past goes after the drug ring that kidnapped the little girl next door.'
