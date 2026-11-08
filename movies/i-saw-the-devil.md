@@ -3,6 +3,7 @@ title: '악마를 보았다'
 title_en: 'I Saw the Devil'
 title_ja: '悪魔を見た'
 published: false
+dropped: true
 tags:
   - 'Thriller'
   - 'Crime'
@@ -11,7 +12,7 @@ national: 'Korea'
 streaming:
   - 'Prime Video'
   - 'U-NEXT'
-checked: '2026-10'
+checked: '2026-11'
 cover_image: 'https://image.tmdb.org/t/p/original/2bzblLLBZEbAnPhfM177CSNDVFB.jpg'
 release_date: '2010-08-12'
 summary: 'An agent catches the serial killer who murdered his fiancee, lets him go, and catches him again, over and over.'
