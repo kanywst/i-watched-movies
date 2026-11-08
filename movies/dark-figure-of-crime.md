@@ -3,6 +3,7 @@ title: '암수살인'
 title_en: 'Dark Figure of Crime'
 title_ja: '暗数殺人'
 published: false
+dropped: true
 tags:
   - 'Crime'
   - 'Thriller'
@@ -12,7 +13,7 @@ streaming:
   - 'Prime Video'
   - 'U-NEXT'
   - 'Hulu'
-checked: '2026-10'
+checked: '2026-11'
 cover_image: 'https://image.tmdb.org/t/p/original/uWislqbyIFvR02uN4n20zjDnAm2.jpg'
 release_date: '2018-10-03'
 summary: 'A jailed killer offers a detective confessions to seven more murders, one piece at a time, and the detective has to work out which are real.'
