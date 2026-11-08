@@ -3,6 +3,7 @@ title: '신세계'
 title_en: 'New World'
 title_ja: '新しき世界'
 published: false
+dropped: true
 tags:
   - 'Crime'
   - 'Thriller'
@@ -11,7 +12,7 @@ streaming:
   - 'Prime Video'
   - 'U-NEXT'
   - 'Hulu'
-checked: '2026-10'
+checked: '2026-11'
 cover_image: 'https://image.tmdb.org/t/p/original/rpHZhV3zkZkaCCENSU4wKY2Hoft.jpg'
 release_date: '2013-02-21'
 summary: 'An undercover cop eight years inside a crime syndicate is ordered to steer the war over who takes the dead boss''\''''s chair.'
