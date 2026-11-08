@@ -2,6 +2,7 @@
 title: 'Bullet Train'
 title_ja: 'ブレット・トレイン'
 published: false
+dropped: true
 tags:
   - 'Action'
   - 'Comedy'
