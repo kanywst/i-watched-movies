@@ -3,6 +3,7 @@ title: '아가씨'
 title_en: 'The Handmaiden'
 title_ja: 'お嬢さん'
 published: false
+dropped: true
 tags:
   - 'Thriller'
   - 'Mystery'
@@ -10,7 +11,7 @@ tags:
 national: 'Korea'
 streaming:
   - 'U-NEXT'
-checked: '2026-10'
+checked: '2026-11'
 cover_image: 'https://image.tmdb.org/t/p/original/dLlH4aNHdnmf62umnInL8xPlPzw.jpg'
 release_date: '2016-06-01'
 summary: 'A pickpocket is planted as a maid so a con man can swindle a Japanese heiress, and the film then rewinds and shows what was actually going on.'
