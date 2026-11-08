@@ -13,7 +13,7 @@ streaming:
   - 'Prime Video'
   - 'U-NEXT'
   - 'Hulu'
-checked: '2026-10'
+checked: '2026-11'
 cover_image: 'https://image.tmdb.org/t/p/original/lyGWApAtjqfbbsnOGhUpXHbbEp7.jpg'
 release_date: '2016-07-20'
 summary: 'A fund manager takes his daughter on a train to Busan on the morning the outbreak starts, and every carriage has to be retaken one at a time.'
