@@ -9,7 +9,7 @@ national: 'USA'
 streaming:
   - 'Prime Video'
   - 'Hulu'
-checked: '2026-10'
+checked: '2026-11'
 cover_image: 'https://image.tmdb.org/t/p/original/cpf7vsRZ0MYRQcnLWteD5jK9ymT.jpg'
 release_date: '2025-08-08'
 summary: 'At 2:17 one morning, seventeen children from the same class run out of their homes into the dark and vanish. Told chapter by chapter from different points of view.'
