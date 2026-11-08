@@ -2,12 +2,13 @@
 title: 'A Simple Favor'
 title_ja: 'シンプル・フェイバー'
 published: false
+dropped: true
 tags:
   - 'Mystery'
   - 'Thriller'
   - 'Black-Comedy'
 national: 'USA'
-checked: '2026-10'
+checked: '2026-11'
 cover_image: 'https://image.tmdb.org/t/p/original/aIYsjQM0piKc0ibPBCTWv3sqshj.jpg'
 release_date: '2018-09-14'
 summary: 'A mommy-vlogger''s glamorous new friend asks her to pick her son up from school and then vanishes, and the investigation gets run through the vlog.'
