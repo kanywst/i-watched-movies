@@ -13,6 +13,7 @@ streaming:
   - 'U-NEXT'
   - 'Hulu'
 checked: '2026-11'
+recommend_rank: 25
 cover_image: 'https://image.tmdb.org/t/p/original/1pjSsjhkv4tiFe2wTE3VPycQY6a.jpg'
 release_date: '2019-12-13'
 summary: 'A movie-obsessed father uses everything he learned from crime films to hide his family''s accidental killing of a police chief''s son.'
