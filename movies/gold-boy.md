@@ -11,6 +11,7 @@ streaming:
   - 'Netflix'
   - 'U-NEXT'
 checked: '2026-11'
+recommend_rank: 5
 cover_image: 'https://image.tmdb.org/t/p/original/wkltWB4TSgfd66aJzkggyucLwyy.jpg'
 release_date: '2024-03-08'
 summary: 'Three teenagers in Okinawa accidentally film a man pushing his in-laws off a cliff and decide to blackmail him, and a game between killers begins.'
