@@ -28,6 +28,8 @@ export const isWatching = (m: Movie): boolean => !m.dropped && Boolean(m.watchin
 export const isSeen = (m: Movie): boolean => !m.dropped && !m.watching && Boolean(m.seen);
 export const isWatched = (m: Movie): boolean =>
   !m.dropped && !m.watching && m.published && !m.seen;
+// Restated in scripts/parse-movie.js (normalizeRank) and build-movie-from-issue.js
+// (mergeRank), which decide whether a recommend_rank survives; scripts cannot import src.
 export const isWatchlist = (m: Movie): boolean =>
   !m.dropped && !m.watching && !m.published && !m.seen;
 

@@ -1,6 +1,7 @@
 import { Activity, Bookmark, ChartColumn, Check, CircleSlash, Eye, Play, Trophy } from 'lucide-react';
 import type React from 'react';
 import type { SortKey, View } from './types';
+import { SORT_OPTIONS } from './constants';
 
 /**
  * The top-level views, as data. Previously the same n-way branch was written three times in
@@ -27,7 +28,8 @@ export interface ViewSpec {
    * Which sort the grid opens on when the URL names none. Only Watched has a `watch_date`
    * to order by; every other list is unwatched or unfinished, so sorting those by watch
    * date compared zeroes and handed the grid whatever order glob happened to return. They
-   * default to `added_desc` instead, newest entry first. A sort the reader picks is held in
+   * default to `added_desc` instead, newest entry first, except the Watchlist, which opens on
+   * its recommended order (src/recommendOrder.ts). A sort the reader picks is held in
    * the query string and survives a tab switch, so this is only ever the starting point.
    */
   defaultSort: SortKey;
@@ -39,7 +41,7 @@ export const VIEW_SPECS: ViewSpec[] = [
   { key: 'top', label: 'Top', icon: Trophy, source: null, showCount: false, defaultSort: 'watch_date_desc' },
   { key: 'watched', label: 'Watched', icon: Eye, source: 'watched', showCount: true, defaultSort: 'watch_date_desc' },
   { key: 'watching', label: 'In Progress', icon: Play, source: 'watching', showCount: true, defaultSort: 'added_desc' },
-  { key: 'watchlist', label: 'Watchlist', icon: Bookmark, source: 'watchlist', showCount: true, defaultSort: 'added_desc' },
+  { key: 'watchlist', label: 'Watchlist', icon: Bookmark, source: 'watchlist', showCount: true, defaultSort: 'recommended' },
   { key: 'seen', label: 'Seen', icon: Check, source: 'seen', showCount: true, defaultSort: 'added_desc' },
   { key: 'dropped', label: 'Dropped', icon: CircleSlash, source: 'dropped', showCount: true, defaultSort: 'added_desc' },
   { key: 'history', label: 'History', icon: Activity, source: null, showCount: true, defaultSort: 'watch_date_desc' },
@@ -62,3 +64,11 @@ export const isView = (v: string): v is View => VIEW_KEYS.has(v);
 
 /** Safe to index directly: callers pass a `View`, which only isView can produce. */
 export const viewSpec = (v: View): ViewSpec => BY_KEY[v];
+
+/**
+ * The sorts a list's dropdown offers, which is also what App accepts from `?sort=`.
+ * `recommended` is the watchlist's own order (src/recommendOrder.ts), so the other lists
+ * neither offer it nor take it from a link: opened on Watched it falls back to the default.
+ */
+export const sortOptionsFor = (source: ViewSpec['source']) =>
+  source === 'watchlist' ? SORT_OPTIONS : SORT_OPTIONS.filter(o => o.value !== 'recommended');

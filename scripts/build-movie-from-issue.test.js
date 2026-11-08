@@ -871,3 +871,62 @@ describe('mergeMovie', () => {
     expect(merged.point).toBe(0);
   });
 });
+
+describe('recommend_rank', () => {
+  const body = (rank, list = 'Watchlist') =>
+    `### Title\n\nMov\n\n### List\n\n${list}\n\n### Recommend rank\n\n${rank}\n`;
+  const build = (rank, list) => buildMovie(parseIssueBody(body(rank, list))).movie;
+  const existing = (recommend_rank) => ({
+    title: 'Mov',
+    published: false,
+    seen: false,
+    watching: false,
+    dropped: false,
+    tags: [],
+    seasons: [],
+    streaming: [],
+    point: null,
+    recommend_rank,
+  });
+
+  it('parses a positive integer, an explicit clear, and anything else as empty', () => {
+    expect(build('2').recommend_rank).toBe(2);
+    expect(build('0').recommend_rank).toBe(0);
+    expect(build('none').recommend_rank).toBe(0);
+    expect(build('-').recommend_rank).toBe(0);
+    expect(build('_No response_').recommend_rank).toBeNull();
+    expect(build('1.5').recommend_rank).toBeNull();
+    expect(build('-3').recommend_rank).toBeNull();
+  });
+
+  // An empty field is how every other update (a streaming recheck, say) is filed, so it has
+  // to keep the stored rank; 0 is the only way the form can remove one.
+  it('keeps the stored rank on an empty field, replaces it, or clears it on 0', () => {
+    expect(mergeMovie(existing(4), build('_No response_')).recommend_rank).toBe(4);
+    expect(mergeMovie(existing(4), build('1')).recommend_rank).toBe(1);
+    expect(mergeMovie(existing(4), build('0')).recommend_rank).toBeNull();
+    expect(mergeMovie(existing(null), build('_No response_')).recommend_rank).toBeNull();
+  });
+
+  it('drops the rank when the entry leaves the watchlist', () => {
+    for (const list of ['Watched', 'Seen', 'In Progress', 'Dropped']) {
+      expect(mergeMovie(existing(4), build('_No response_', list)).recommend_rank).toBeNull();
+      expect(mergeMovie(existing(4), build('2', list)).recommend_rank).toBeNull();
+    }
+  });
+
+  it('round-trips through formatFile and readExisting', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'movies-'));
+    try {
+      const file = path.join(dir, 'mov.md');
+      fs.writeFileSync(file, formatFile({ ...build('3'), body: '' }));
+      expect(fs.readFileSync(file, 'utf8')).toContain('recommend_rank: 3\n');
+      expect(readExisting(file).recommend_rank).toBe(3);
+      fs.writeFileSync(file, formatFile({ ...build('_No response_'), body: '' }));
+      expect(fs.readFileSync(file, 'utf8')).not.toContain('recommend_rank');
+      expect(readExisting(file).recommend_rank).toBeNull();
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});

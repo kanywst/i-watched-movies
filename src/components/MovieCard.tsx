@@ -52,6 +52,11 @@ interface MovieCardProps {
   /** Position feeding the entrance stagger, already clamped by the caller. */
   staggerIndex: number;
   rank?: number;
+  /**
+   * The film's place in the Watchlist's Recommended order, shown only while the grid is
+   * sorted that way. Not `rank`: that is a score place on Watched and wears a medal.
+   */
+  pick?: number;
   isNew?: boolean;
   isSelected?: boolean;
   /**
@@ -71,7 +76,7 @@ interface MovieCardProps {
  */
 const RANK_ICON: Partial<Record<number, typeof Crown>> = { 1: Crown, 2: Medal, 3: Award };
 
-const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, isNew, isSelected, hasTransitionName, onClick }) => {
+const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, pick, isNew, isSelected, hasTransitionName, onClick }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isPortrait, setIsPortrait] = useState(true);
@@ -122,7 +127,7 @@ const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, is
       }}
       role="button"
       tabIndex={0}
-      aria-label={`${rank ? `Number ${rank}, ` : ''}${movie.title}${
+      aria-label={`${rank ? `Number ${rank}, ` : pick ? `Pick ${pick}, ` : ''}${movie.title}${
         hasScore
           ? `, rated ${movie.point} out of 10`
           : seasonChip
@@ -172,6 +177,14 @@ const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, is
         {rank && !RANK_ICON[rank] && (
           <div className="absolute top-2 left-2 z-40 rounded-full px-2 py-1 bg-black/65 text-white text-sm font-extrabold tabular-nums font-wordmark leading-none border border-white/10 backdrop-blur-md">
             {rank}
+          </div>
+        )}
+
+        {/* Same chip as a place past the metals, so the two lists read alike; a watchlist
+            card never carries `rank`, so they cannot both render. */}
+        {pick && (
+          <div className="absolute top-2 left-2 z-40 rounded-full px-2 py-1 bg-black/65 text-white text-sm font-extrabold tabular-nums font-wordmark leading-none border border-white/10 backdrop-blur-md">
+            {pick}
           </div>
         )}
 
