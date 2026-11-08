@@ -10,6 +10,7 @@ national: 'USA'
 streaming:
   - 'Netflix'
 checked: '2026-11'
+recommend_rank: 21
 cover_image: 'https://image.tmdb.org/t/p/original/5gKKSoD3iezjoL7YqZONjmyAiRA.jpg'
 release_date: '2024-04-19'
 summary: 'A crew of kidnappers holds a crime boss''s ballerina daughter in a remote mansion overnight for ransom, and finds out too late what she really is.'
