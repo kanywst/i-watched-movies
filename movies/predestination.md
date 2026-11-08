@@ -7,7 +7,9 @@ tags:
   - 'Thriller'
   - 'Mystery'
 national: 'Australia'
-checked: '2026-10'
+streaming:
+  - 'Prime Video'
+checked: '2026-11'
 cover_image: 'https://image.tmdb.org/t/p/original/hWevVmO1kNPbxCrhEQYn0zUgcLp.jpg'
 release_date: '2014-08-28'
 summary: 'A time agent hunting a serial bomber takes the testimony of a stranger in a bar, and every loop of the case turns out to close on the same person.'
