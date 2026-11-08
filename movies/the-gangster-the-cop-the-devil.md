@@ -12,7 +12,7 @@ streaming:
   - 'Prime Video'
   - 'U-NEXT'
   - 'Hulu'
-checked: '2026-10'
+checked: '2026-11'
 cover_image: 'https://image.tmdb.org/t/p/original/oHlM4abRm6BzrRcz9Nup1uidw9H.jpg'
 release_date: '2019-05-15'
 summary: 'A crime boss survives an attack by a serial killer and teams up with the cop who hates him to hunt the killer down first.'
