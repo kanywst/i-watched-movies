@@ -2,6 +2,7 @@
 title: 'Kiss Kiss Bang Bang'
 title_ja: 'キスキス,バンバン'
 published: false
+dropped: true
 tags:
   - 'Comedy'
   - 'Crime'
@@ -9,7 +10,7 @@ tags:
 national: 'USA'
 streaming:
   - 'U-NEXT'
-checked: '2026-10'
+checked: '2026-11'
 cover_image: 'https://image.tmdb.org/t/p/original/aWfjIkpENFX6Uw82pET7EQ6jnrd.jpg'
 release_date: '2005-11-11'
 summary: 'A thief fleeing the police stumbles into a Hollywood screen test, is paired with a private investigator for research, and lands in a real murder that keeps producing bodies.'
