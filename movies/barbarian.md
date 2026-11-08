@@ -10,6 +10,7 @@ national: 'USA'
 streaming:
   - 'U-NEXT'
 checked: '2026-11'
+recommend_rank: 16
 cover_image: 'https://image.tmdb.org/t/p/original/idT5mnqPcJgSkvpDX7pJffBzdVH.jpg'
 release_date: '2022-09-09'
 summary: 'A woman arrives at her Detroit rental to find it double-booked by a stranger, and the house turns out to hide far more than a booking mistake.'
