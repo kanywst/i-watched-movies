@@ -11,11 +11,11 @@ streaming:
   - 'Prime Video'
   - 'U-NEXT'
 checked: '2026-11'
-recommend_rank: 7
+recommend_rank: 4
 cover_image: 'https://image.tmdb.org/t/p/original/yuAPCsCGJGSxA7YOW4elF5JNrzK.jpg'
 release_date: '2018-08-24'
-summary: 'A father hunts for his missing daughter entirely through her laptop, and every account he opens changes who she was.'
-summary_ja: '父親が失踪した娘を娘のノートパソコンだけで追い、アカウントを一つ開くたびに娘が何者だったのかが変わっていく。'
+summary: 'A father hunts for his missing daughter almost entirely through screens, starting with her laptop, and every account he opens changes who she was.'
+summary_ja: '父親が失踪した娘を、娘のノートパソコンを手始めにほぼ画面越しだけで追い、アカウントを一つ開くたびに娘が何者だったのかが変わっていく。'
 added: '2026-09-04T12:27:59.000Z'
 ---
 
