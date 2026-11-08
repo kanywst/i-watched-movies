@@ -7,7 +7,7 @@ tags:
   - 'Mystery'
   - 'Sci-fi'
 national: 'USA'
-checked: '2026-10'
+checked: '2026-11'
 cover_image: 'https://image.tmdb.org/t/p/original/rhGx6E3qRNMgj3i5su2oukNHwIQ.jpg'
 release_date: '2026-05-29'
 summary: 'A furniture store owner finds a doorway in his basement that opens onto an endless maze of empty yellow rooms, and the people who go in do not come back.'
