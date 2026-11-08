@@ -11,7 +11,7 @@ streaming:
   - 'Prime Video'
   - 'U-NEXT'
   - 'Hulu'
-checked: '2026-10'
+checked: '2026-11'
 cover_image: 'https://image.tmdb.org/t/p/original/aqhLeieyTpTUKPOfZ3jzo2La0Mq.jpg'
 release_date: '2022-04-22'
 summary: 'Nicolas Cage plays himself, a broke actor who takes a paid appearance at a superfan''s birthday and gets recruited by the CIA to spy on him.'
