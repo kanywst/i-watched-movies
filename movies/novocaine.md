@@ -2,6 +2,7 @@
 title: 'Novocaine'
 title_ja: 'Mr.ノボカイン'
 published: false
+watching: true
 tags:
   - 'Action'
   - 'Comedy'
