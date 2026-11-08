@@ -9,9 +9,8 @@ tags:
 national: 'USA'
 streaming:
   - 'Netflix'
-  - 'Prime Video'
   - 'U-NEXT'
-checked: '2026-10'
+checked: '2026-11'
 cover_image: 'https://image.tmdb.org/t/p/original/uS9m8OBk1A8eM9I042bx8XXpqAq.jpg'
 release_date: '1991-02-14'
 summary: 'An FBI trainee is sent to interview an imprisoned cannibal psychiatrist to get a line on a serial killer still working.'
