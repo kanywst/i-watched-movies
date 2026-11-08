@@ -345,7 +345,9 @@ export function mergeMovie(existing, incoming) {
 
 // A rank orders the watchlist only, so an entry that leaves it (logged as Watched, Seen, In
 // Progress or Dropped) sheds its rank rather than carrying a stale one back if it is ever
-// re-queued. Otherwise an empty field keeps the stored rank, and 0 clears it.
+// re-queued. Otherwise an empty field keeps the stored rank, and 0 clears it. The
+// watchlist test is restated in normalizeRank (parse-movie.js) and isWatchlist
+// (src/partition.ts); a new state touches all three.
 function mergeRank(existing, incoming) {
   const onWatchlist = !incoming.published && !incoming.seen && !incoming.watching && !incoming.dropped;
   if (!onWatchlist) return null;

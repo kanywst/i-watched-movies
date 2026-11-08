@@ -24,7 +24,7 @@ import {
   DROPPED_MOVIES,
   HISTORY_MOVIES,
   MOVIE_RANKS,
-  RECOMMEND_ORDER,
+  getRecommendOrder,
   PODIUM,
   SEEN_GENRE_COUNT,
   SEEN_MOVIES,
@@ -207,7 +207,7 @@ const App: React.FC = () => {
       // Deliberately read off `stats` rather than the taste profile: the profile's `total`
       // and `baseline` are the same count and mean over the same list, and its `genres` has
       // one entry per distinct tag, so the header needs none of taste.ts. (The module is in
-      // the main chunk anyway since the Watchlist's Recommended order, RECOMMEND_ORDER in
+      // the main chunk anyway since the Watchlist's Recommended order, getRecommendOrder in
       // collections.ts, is built from it.)
       case 'stats':
         return [
@@ -243,7 +243,7 @@ const App: React.FC = () => {
       const matchesTags = selectedTags.length === 0 || selectedTags.every(t => movie.tags.includes(t));
       return matchesSearch && matchesTags;
     });
-    return sortMovies(filtered, sort, RECOMMEND_ORDER);
+    return sort === 'recommended' ? sortMovies(filtered, sort, getRecommendOrder()) : sortMovies(filtered, sort);
   }, [viewMovies, search, sort, selectedTags]);
 
   const clearFilters = useCallback(
@@ -494,7 +494,7 @@ const App: React.FC = () => {
                 // positions shifted.
                 staggerIndex={Math.min(index, MAX_STAGGER_INDEX)}
                 rank={getRank(movie.id)}
-                pick={view === 'watchlist' && sort === 'recommended' ? RECOMMEND_ORDER.get(movie.id) : undefined}
+                pick={view === 'watchlist' && sort === 'recommended' ? getRecommendOrder().get(movie.id) : undefined}
                 isNew={view === 'watched' && newMovieIds.has(movie.id)}
                 isSelected={movie.id === urlState.selected}
                 hasTransitionName={movie.id === transitioningId && transitionOrigin === 'grid'}

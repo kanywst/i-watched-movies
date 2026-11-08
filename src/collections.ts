@@ -75,11 +75,19 @@ export const MOVIE_RANKS = rankById(PODIUM);
 /**
  * The Watchlist's "Recommended" order: hand-set ranks first, the rest by the Stats view's
  * predicted score. Over the whole watchlist, so filtering the grid does not renumber it.
- * This pulls taste.ts into the main chunk, which TastePanel alone used to keep lazy.
+ * Built on first use rather than at module load, so a visit that never sorts the Watchlist
+ * that way does not pay for the two profile passes. taste.ts is in the main chunk either
+ * way, which TastePanel alone used to keep lazy.
  */
-const PREDICTED = new Map(
-  recommendWatchlist(WATCHLIST_MOVIES, WATCHED_MOVIES, computeTasteProfile(WATCHED_MOVIES), Infinity).map(
-    r => [r.movie.id, r.predicted],
-  ),
-);
-export const RECOMMEND_ORDER = recommendationOrder(WATCHLIST_MOVIES, PREDICTED);
+let recommendOrderCache: Map<string, number> | null = null;
+export function getRecommendOrder(): Map<string, number> {
+  if (!recommendOrderCache) {
+    const predicted = new Map(
+      recommendWatchlist(WATCHLIST_MOVIES, WATCHED_MOVIES, computeTasteProfile(WATCHED_MOVIES), Infinity).map(
+        r => [r.movie.id, r.predicted],
+      ),
+    );
+    recommendOrderCache = recommendationOrder(WATCHLIST_MOVIES, predicted);
+  }
+  return recommendOrderCache;
+}

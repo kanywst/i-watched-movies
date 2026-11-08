@@ -70,7 +70,9 @@ function normalizeSeasonPoint(value) {
 
 // The watchlist's hand-set order (1 = watch next). Anything that is not a positive integer
 // reads as unranked, and so does a rank left on an entry that is no longer on the
-// watchlist, so the field can never reorder a list it does not belong to.
+// watchlist, so the field can never reorder a list it does not belong to. The watchlist
+// test is restated here, in mergeRank (build-movie-from-issue.js) and in isWatchlist
+// (src/partition.ts); scripts cannot import from src, so a new state touches all three.
 function normalizeRank(value, onWatchlist) {
   if (!onWatchlist) return null;
   const n = Number(value);
