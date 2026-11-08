@@ -4,6 +4,8 @@ import { countGenres, countLogged, partitionMovies } from './partition';
 import { buildRatedPoints } from './scoreBand';
 import { podiumSteps, rankById } from './podium';
 import { RANK_LIMIT } from './constants';
+import { computeTasteProfile, recommendWatchlist } from './taste';
+import { recommendationOrder } from './recommendOrder';
 
 /**
  * The diary is a static JSON module baked at build time, so every partition of it is a
@@ -69,3 +71,15 @@ export const TAB_COUNTS: Record<View, number> = {
  */
 export const PODIUM = podiumSteps(WATCHED_MOVIES, RANK_LIMIT);
 export const MOVIE_RANKS = rankById(PODIUM);
+
+/**
+ * The Watchlist's "Recommended" order: hand-set ranks first, the rest by the Stats view's
+ * predicted score. Over the whole watchlist, so filtering the grid does not renumber it.
+ * This pulls taste.ts into the main chunk, which TastePanel alone used to keep lazy.
+ */
+const PREDICTED = new Map(
+  recommendWatchlist(WATCHLIST_MOVIES, WATCHED_MOVIES, computeTasteProfile(WATCHED_MOVIES), Infinity).map(
+    r => [r.movie.id, r.predicted],
+  ),
+);
+export const RECOMMEND_ORDER = recommendationOrder(WATCHLIST_MOVIES, PREDICTED);

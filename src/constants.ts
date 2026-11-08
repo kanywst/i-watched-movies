@@ -171,7 +171,10 @@ export const LANGUAGE_OPTIONS: { value: Language; label: string; title: string }
   { value: 'ja', label: 'JA', title: '概要を日本語で表示' },
 ];
 
+// `recommended` is the watchlist's own order (src/recommendOrder.ts) and means nothing on
+// the other lists, so App offers it only where the grid shows the watchlist.
 export const SORT_OPTIONS: { value: SortKey; label: string }[] = [
+  { value: 'recommended', label: 'Recommended' },
   { value: 'watch_date_desc', label: 'Watch Date (Newest)' },
   { value: 'watch_date_asc', label: 'Watch Date (Oldest)' },
   { value: 'added_desc', label: 'Added (Newest)' },

@@ -5,7 +5,15 @@ const dateValue = (s: string): number => {
   return Number.isFinite(t) ? t : 0;
 };
 
-export function sortMovies(movies: Movie[], key: SortKey): Movie[] {
+/**
+ * `order` is only read by `recommended`: each film's place from recommendationOrder, built
+ * over the whole list so the grid keeps it under a filter. A film missing from it sorts last.
+ */
+export function sortMovies(
+  movies: Movie[],
+  key: SortKey,
+  order: ReadonlyMap<string, number> = new Map(),
+): Movie[] {
   const sorted = [...movies];
   switch (key) {
     case 'watch_date_desc':
@@ -26,6 +34,10 @@ export function sortMovies(movies: Movie[], key: SortKey): Movie[] {
       return sorted.sort((a, b) => b.point - a.point);
     case 'point_asc':
       return sorted.sort((a, b) => a.point - b.point);
+    case 'recommended':
+      return sorted.sort(
+        (a, b) => (order.get(a.id) ?? Infinity) - (order.get(b.id) ?? Infinity) || 0,
+      );
     default: {
       const _exhaustive: never = key;
       return _exhaustive;

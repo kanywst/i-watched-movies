@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import { SORT_OPTIONS } from './constants';
-import { DEFAULT_VIEW, VIEW_SPECS, isView, viewSpec } from './views';
+import { DEFAULT_VIEW, VIEW_SPECS, isView, sortOptionsFor, viewSpec } from './views';
 
 describe('isView', () => {
   it('accepts every declared view', () => {
@@ -52,15 +52,26 @@ describe('viewSpec', () => {
 
   // Watched is the only list whose entries carry a watch_date. Sorting any of the others
   // by it compared zeroes, so the grid fell through to whatever order glob returned.
-  it('opens the lists with no watch_date on added order', () => {
+  it('opens the lists with no watch_date on added order, and the watchlist on its own', () => {
     expect(viewSpec('watched').defaultSort).toBe('watch_date_desc');
-    for (const key of ['watchlist', 'watching', 'seen', 'dropped'] as const) {
+    expect(viewSpec('watchlist').defaultSort).toBe('recommended');
+    for (const key of ['watching', 'seen', 'dropped'] as const) {
       expect(viewSpec(key).defaultSort).toBe('added_desc');
     }
   });
 
-  it('gives every view a default sort the dropdown offers', () => {
-    const offered = SORT_OPTIONS.map(o => o.value);
-    for (const spec of VIEW_SPECS) expect(offered).toContain(spec.defaultSort);
+  it('gives every view a default sort its own dropdown offers', () => {
+    for (const spec of VIEW_SPECS) {
+      expect(sortOptionsFor(spec.source).map(o => o.value)).toContain(spec.defaultSort);
+    }
+  });
+
+  it('offers the recommended order on the watchlist only', () => {
+    expect(sortOptionsFor('watchlist').map(o => o.value)).toEqual(SORT_OPTIONS.map(o => o.value));
+    for (const source of ['watched', 'watching', 'seen', 'dropped', null] as const) {
+      const offered = sortOptionsFor(source).map(o => o.value);
+      expect(offered).not.toContain('recommended');
+      expect(offered).toHaveLength(SORT_OPTIONS.length - 1);
+    }
   });
 });

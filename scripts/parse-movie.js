@@ -68,6 +68,15 @@ function normalizeSeasonPoint(value) {
   return Number.isFinite(n) ? n : null;
 }
 
+// The watchlist's hand-set order (1 = watch next). Anything that is not a positive integer
+// reads as unranked, and so does a rank left on an entry that is no longer on the
+// watchlist, so the field can never reorder a list it does not belong to.
+function normalizeRank(value, onWatchlist) {
+  if (!onWatchlist) return null;
+  const n = Number(value);
+  return Number.isInteger(n) && n > 0 ? n : null;
+}
+
 export function parseMovie(fileContent, id) {
   const { data, content } = matter(fileContent);
 
@@ -92,6 +101,10 @@ export function parseMovie(fileContent, id) {
     impression: data.impression || '',
     streaming: normalizeStreaming(data.streaming),
     checked: normalizeChecked(data.checked),
+    recommend_rank: normalizeRank(
+      data.recommend_rank,
+      !(data.published ?? true) && !data.seen && !data.watching && !data.dropped,
+    ),
     added: data.added ? new Date(data.added).toISOString() : null,
     content,
   };

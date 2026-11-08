@@ -151,6 +151,13 @@ body:
       placeholder: '2026-07'
 
   - type: input
+    id: recommend_rank
+    attributes:
+      label: Recommend rank
+      description: 'Watchlist only. 1 = watch next. Leave empty to keep the current rank, 0 to remove it. Unranked entries follow, ordered by the predicted score.'
+      placeholder: '1'
+
+  - type: input
     id: cover_image
     attributes:
       label: Cover image URL

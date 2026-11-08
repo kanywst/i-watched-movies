@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Search, SlidersHorizontal, ArrowUpDown, ChevronDown, X } from 'lucide-react';
 import { clsx } from 'clsx';
-import { SORT_OPTIONS } from '../constants';
 import type { SortKey } from '../types';
 
 interface FilterBarProps {
@@ -9,6 +8,8 @@ interface FilterBarProps {
   setSearch: (value: string) => void;
   sort: SortKey;
   setSort: (value: SortKey) => void;
+  /** The sorts this list offers; `recommended` exists only on the Watchlist. */
+  sortOptions: { value: SortKey; label: string }[];
   selectedTags: string[];
   toggleTag: (tag: string) => void;
   clearTags: () => void;
@@ -20,6 +21,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   setSearch,
   sort,
   setSort,
+  sortOptions,
   selectedTags,
   toggleTag,
   clearTags,
@@ -69,7 +71,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             aria-label="Sort movies"
             className="w-full bg-transparent border-b py-3 pl-10 pr-8 text-sm focus:outline-none appearance-none cursor-pointer transition-all rounded-none border-stone-300 text-stone-800 focus:border-stone-500 dark:border-stone-800 dark:text-stone-200"
           >
-            {SORT_OPTIONS.map(({ value, label }) => (
+            {sortOptions.map(({ value, label }) => (
               <option key={value} value={value} className="bg-white dark:bg-dark-bg">{label}</option>
             ))}
           </select>

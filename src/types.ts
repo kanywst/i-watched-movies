@@ -49,6 +49,10 @@ export interface Movie {
   // verified, surfaced next to the badges so a stale entry reads as stale.
   streaming?: string[];
   checked?: string;
+  // Watchlist-only hand-set order, 1 = watch next. Null when unranked, and always null off
+  // the watchlist (parseMovie drops a stale one). Unranked entries follow the ranked ones,
+  // ordered by recommendWatchlist's predicted score; see src/recommendOrder.ts.
+  recommend_rank?: number | null;
   // When the entry first landed in the diary, as a full ISO instant. Machine-set by the
   // issue automation and never displayed: it exists so the lists with no `watch_date` of
   // their own (Watchlist, In Progress, Seen, Dropped) have an order that means something.
@@ -77,4 +81,5 @@ export type SortKey =
   | 'release_date_desc'
   | 'release_date_asc'
   | 'point_desc'
-  | 'point_asc';
+  | 'point_asc'
+  | 'recommended';

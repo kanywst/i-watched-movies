@@ -100,4 +100,9 @@ describe('sortMovies', () => {
     ];
     expect(ids(sortMovies(withBad, 'watch_date_desc'))).toEqual(['x', 'y']);
   });
+
+  it('sorts recommended by the given order, unplaced films last', () => {
+    const order = new Map([['c', 1], ['a', 2]]);
+    expect(ids(sortMovies(movies, 'recommended', order))).toEqual(['c', 'a', 'b']);
+  });
 });

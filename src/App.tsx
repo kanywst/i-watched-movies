@@ -13,7 +13,6 @@ import {
   MASTHEAD_POSTER_COUNT,
   MAX_STAGGER_INDEX,
   NEW_LIMIT,
-  SORT_OPTIONS,
 } from './constants';
 import { tmdbResize } from './tmdbImage';
 import { sortMovies } from './sortMovies';
@@ -25,6 +24,7 @@ import {
   DROPPED_MOVIES,
   HISTORY_MOVIES,
   MOVIE_RANKS,
+  RECOMMEND_ORDER,
   PODIUM,
   SEEN_GENRE_COUNT,
   SEEN_MOVIES,
@@ -50,7 +50,7 @@ import { useDocumentMetadata } from './useDocumentMetadata';
 import { urlParams, useUrlState } from './useUrlState';
 import { useTheme } from './useTheme';
 import { useLanguage } from './useLanguage';
-import { DEFAULT_VIEW, VIEW_SPECS, type ViewSpec, isView, viewSpec } from './views';
+import { DEFAULT_VIEW, VIEW_SPECS, type ViewSpec, isView, sortOptionsFor, viewSpec } from './views';
 
 // Stable empty reference so the History and Stats views don't bust the
 // allTags/filteredMovies memos.
@@ -66,7 +66,7 @@ const SOURCE_LISTS: Record<NonNullable<ViewSpec['source']>, Movie[]> = {
   seen: SEEN_MOVIES,
   dropped: DROPPED_MOVIES,
 };
-const SORT_VALUES: SortKey[] = SORT_OPTIONS.map(o => o.value);
+
 
 /** A figure and its unit in the masthead. Rendered inline, so no size or alignment. */
 interface HeaderStat {
@@ -84,7 +84,6 @@ const URL_SPECS = {
   selected: urlParams.string(''),
 };
 
-const isSort = (s: string): s is SortKey => (SORT_VALUES as string[]).includes(s);
 
 interface ViewTransition {
   finished: Promise<void>;
@@ -128,7 +127,9 @@ const App: React.FC = () => {
   const [transitionOrigin, setTransitionOrigin] = React.useState<'grid' | 'podium'>('grid');
   const view: View = isView(urlState.view) ? urlState.view : DEFAULT_VIEW;
   const spec = viewSpec(view);
-  const sort: SortKey = isSort(urlState.sort) ? urlState.sort : spec.defaultSort;
+  const sortOptions = sortOptionsFor(spec.source);
+  const sort: SortKey =
+    sortOptions.find(o => o.value === urlState.sort)?.value ?? spec.defaultSort;
   const search = urlState.search;
   const selectedTags = urlState.tags;
 
@@ -205,8 +206,9 @@ const App: React.FC = () => {
         return [{ value: activity.total, label: 'in the last year' }];
       // Deliberately read off `stats` rather than the taste profile: the profile's `total`
       // and `baseline` are the same count and mean over the same list, and its `genres` has
-      // one entry per distinct tag, so the header needs none of taste.ts and the module can
-      // stay behind the lazy TastePanel boundary.
+      // one entry per distinct tag, so the header needs none of taste.ts. (The module is in
+      // the main chunk anyway since the Watchlist's Recommended order, RECOMMEND_ORDER in
+      // collections.ts, is built from it.)
       case 'stats':
         return [
           { value: stats.total, label: 'rated' },
@@ -241,7 +243,7 @@ const App: React.FC = () => {
       const matchesTags = selectedTags.length === 0 || selectedTags.every(t => movie.tags.includes(t));
       return matchesSearch && matchesTags;
     });
-    return sortMovies(filtered, sort);
+    return sortMovies(filtered, sort, RECOMMEND_ORDER);
   }, [viewMovies, search, sort, selectedTags]);
 
   const clearFilters = useCallback(
@@ -473,6 +475,7 @@ const App: React.FC = () => {
             setSearch={setSearch}
             sort={sort}
             setSort={setSort}
+            sortOptions={sortOptions}
             selectedTags={selectedTags}
             toggleTag={toggleTag}
             clearTags={() => setUrlState({ tags: [] })}
@@ -491,6 +494,7 @@ const App: React.FC = () => {
                 // positions shifted.
                 staggerIndex={Math.min(index, MAX_STAGGER_INDEX)}
                 rank={getRank(movie.id)}
+                pick={view === 'watchlist' && sort === 'recommended' ? RECOMMEND_ORDER.get(movie.id) : undefined}
                 isNew={view === 'watched' && newMovieIds.has(movie.id)}
                 isSelected={movie.id === urlState.selected}
                 hasTransitionName={movie.id === transitioningId && transitionOrigin === 'grid'}

@@ -134,6 +134,18 @@ function parsePoint(raw) {
   return Number.isFinite(n) ? n : null;
 }
 
+// The watchlist's hand-set order: 1 is the film to watch next. Returns a positive integer,
+// 0 for an explicit clear ("0", "none", "-"), or null when the field was left empty, so
+// mergeMovie can tell "keep the stored rank" from "remove it".
+function parseRank(raw) {
+  if (raw === undefined || raw === null) return null;
+  const s = String(raw).trim().toLowerCase();
+  if (s === '') return null;
+  if (s === '0' || s === 'none' || s === '-') return 0;
+  const n = Number(s);
+  return Number.isInteger(n) && n > 0 ? n : null;
+}
+
 function parseDate(raw) {
   if (!raw) return '';
   const m = String(raw).trim().match(/^\d{4}-\d{2}-\d{2}/);
@@ -190,6 +202,7 @@ export function buildMovie(sections, { issueNumber, now = new Date() } = {}) {
     seasons: parseSeasons(sections['Seasons']),
     streaming: parseStreaming(sections['Streaming']),
     checked: parseMonth(sections['Availability checked']),
+    recommend_rank: parseRank(sections['Recommend rank']),
     summary: (sections['Summary'] || '').trim(),
     summary_ja: (sections['Summary (JA)'] || '').trim(),
     impression: (sections['Impression'] || '').trim(),
@@ -270,6 +283,7 @@ export function readExisting(filePath) {
       ? data.streaming.filter(Boolean).map(String)
       : parseTags(data.streaming),
     checked: existingMonth(data.checked),
+    recommend_rank: parseRank(data.recommend_rank) || null,
     summary: (data.summary ?? '').toString().trim(),
     summary_ja: (data.summary_ja ?? '').toString().trim(),
     impression: (data.impression ?? '').toString().trim(),
@@ -317,6 +331,7 @@ export function mergeMovie(existing, incoming) {
     seasons: mergeSeasons(existing.seasons || [], incoming.seasons || []),
     streaming: incoming.streaming.length ? incoming.streaming : existing.streaming,
     checked: incoming.checked || existing.checked,
+    recommend_rank: mergeRank(existing, incoming),
     summary: incoming.summary || existing.summary,
     summary_ja: incoming.summary_ja || existing.summary_ja,
     impression: incoming.impression || existing.impression,
@@ -326,6 +341,16 @@ export function mergeMovie(existing, incoming) {
     added: existing.added || incoming.added,
     body: incoming.body || existing.body,
   };
+}
+
+// A rank orders the watchlist only, so an entry that leaves it (logged as Watched, Seen, In
+// Progress or Dropped) sheds its rank rather than carrying a stale one back if it is ever
+// re-queued. Otherwise an empty field keeps the stored rank, and 0 clears it.
+function mergeRank(existing, incoming) {
+  const onWatchlist = !incoming.published && !incoming.seen && !incoming.watching && !incoming.dropped;
+  if (!onWatchlist) return null;
+  if (incoming.recommend_rank === 0) return null;
+  return incoming.recommend_rank ?? existing.recommend_rank ?? null;
 }
 
 function quote(s) {
@@ -351,6 +376,7 @@ export function formatFile(movie) {
     for (const s of movie.streaming) lines.push(`  - ${quote(s)}`);
   }
   if (movie.checked) lines.push(`checked: ${quote(movie.checked)}`);
+  if (movie.recommend_rank) lines.push(`recommend_rank: ${movie.recommend_rank}`);
   if (movie.cover_image) lines.push(`cover_image: ${quote(movie.cover_image)}`);
   if (movie.release_date) lines.push(`release_date: ${quote(movie.release_date)}`);
   if (movie.watch_date) lines.push(`watch_date: ${quote(movie.watch_date)}`);
