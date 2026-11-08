@@ -10,6 +10,7 @@ national: 'USA'
 streaming:
   - 'U-NEXT'
 checked: '2026-11'
+recommend_rank: 14
 cover_image: 'https://image.tmdb.org/t/p/original/zZZe5wn0udlhMtdlDjN4NB72R6e.jpg'
 release_date: '2012-04-13'
 summary: 'Five friends head to a remote cabin for the weekend, and the horror that follows is not as random as it looks.'
