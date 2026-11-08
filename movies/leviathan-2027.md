@@ -7,7 +7,7 @@ tags:
   - 'Thriller'
   - 'Survival'
 national: 'Japan'
-checked: '2026-10'
+checked: '2026-11'
 cover_image: 'https://image.tmdb.org/t/p/original/71pwVFoF91NLXGgyas9zNGxB9cd.jpg'
 release_date: '2027-02-11'
 summary: 'On a wrecked spaceship with forty-one hours of oxygen left, thirty-eight students work out that only one of them can survive.'
