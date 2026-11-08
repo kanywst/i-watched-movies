@@ -9,7 +9,8 @@ tags:
 national: 'USA'
 streaming:
   - 'U-NEXT'
-checked: '2026-09'
+  - 'Hulu'
+checked: '2026-11'
 cover_image: 'https://image.tmdb.org/t/p/original/ikf5gOVCu3Z7jih78w0wjFxn15h.jpg'
 release_date: '2012-03-23'
 summary: 'A dictatorship makes twenty-four teenagers kill each other on television every year, and a girl volunteers to take her little sister''s place.'
