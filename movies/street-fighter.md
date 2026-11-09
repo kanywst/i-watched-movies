@@ -2,12 +2,12 @@
 title: 'Street Fighter'
 title_ja: 'ストリートファイター／ザ・ムービー'
 published: false
+dropped: true
 tags:
   - 'Action'
   - 'Fantasy'
 national: 'USA'
 checked: '2026-11'
-recommend_rank: 41
 cover_image: 'https://image.tmdb.org/t/p/original/pwUb3gdkSrlyMZWs0MFOQg3N5s7.jpg'
 release_date: '2026-10-16'
 summary: 'Ryu, Ken and Chun-Li are pulled into a world fighting tournament that fronts for M. Bison''s Shadaloo, in a live-action take on the Capcom game.'
