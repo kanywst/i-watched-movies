@@ -2,12 +2,12 @@
 title: 'Whalefall'
 title_ja: 'クジラに落ちた男'
 published: false
+dropped: true
 tags:
   - 'Thriller'
   - 'Survival'
 national: 'USA'
 checked: '2026-11'
-recommend_rank: 38
 cover_image: 'https://image.tmdb.org/t/p/original/vjTYUTgh9nO88i6HZ4YPRhiFL05.jpg'
 release_date: '2026-10-16'
 summary: 'Diving off the California coast to find his father''s remains, a young man is swallowed by a sperm whale and has one hour of oxygen to get out.'
