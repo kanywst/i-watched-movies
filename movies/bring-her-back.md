@@ -2,11 +2,11 @@
 title: 'Bring Her Back'
 title_ja: 'ブリング・ハー・バック'
 published: false
+dropped: true
 tags:
   - 'Horror'
 national: 'Australia'
 checked: '2026-11'
-recommend_rank: 39
 cover_image: 'https://image.tmdb.org/t/p/original/1Q3GlCXGYWELifxANYZ5OVMRVZl.jpg'
 release_date: '2025-05-29'
 summary: 'After their father dies, a teenage boy and his visually impaired stepsister are placed with a foster mother whose grief over her own daughter has turned into a ritual.'
