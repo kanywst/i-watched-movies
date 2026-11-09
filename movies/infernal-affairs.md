@@ -3,6 +3,7 @@ title: '無間道'
 title_en: 'Infernal Affairs'
 title_ja: 'インファナル・アフェア'
 published: false
+dropped: true
 tags:
   - 'Crime'
   - 'Thriller'
@@ -11,7 +12,6 @@ streaming:
   - 'Netflix'
   - 'Prime Video'
 checked: '2026-11'
-recommend_rank: 13
 cover_image: 'https://image.tmdb.org/t/p/original/gix9thDBXfjJ8M7rYbihqbQGBcP.jpg'
 release_date: '2002-12-12'
 summary: 'A triad has planted a mole inside the police. The police have planted a mole inside the triad. Each side races to find the other''s man, knowing that whoever is exposed first is dead.'
