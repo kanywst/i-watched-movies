@@ -13,7 +13,7 @@ streaming:
   - 'U-NEXT'
   - 'Hulu'
 checked: '2026-11'
-recommend_rank: 24
+recommend_rank: 30
 cover_image: 'https://image.tmdb.org/t/p/original/rCs6Jbyfs7HDNEmLwGXK32vlsXG.jpg'
 release_date: '2024-08-23'
 summary: 'On the eve of Black Friday, parcels shipped from a giant logistics hub start exploding across Japan, and the new center chief has to find the bomber.'
