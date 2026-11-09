@@ -3,6 +3,7 @@ title: '끝까지 간다'
 title_en: 'A Hard Day'
 title_ja: '最後まで行く'
 published: false
+dropped: true
 tags:
   - 'Crime'
   - 'Thriller'
@@ -11,7 +12,6 @@ national: 'Korea'
 streaming:
   - 'Hulu'
 checked: '2026-11'
-recommend_rank: 11
 cover_image: 'https://image.tmdb.org/t/p/original/dn8oJFIcB6TF7U3otVR6sVfQD4d.jpg'
 release_date: '2014-05-29'
 summary: 'A corrupt detective hides a body in his own trunk on the night of his mother''s funeral, and then someone calls to say they watched him do it.'
