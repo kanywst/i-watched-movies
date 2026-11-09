@@ -2,6 +2,7 @@
 title: 'Game Night'
 title_ja: 'ゲーム・ナイト'
 published: false
+dropped: true
 tags:
   - 'Comedy'
   - 'Crime'
@@ -10,7 +11,6 @@ national: 'USA'
 streaming:
   - 'U-NEXT'
 checked: '2026-11'
-recommend_rank: 2
 cover_image: 'https://image.tmdb.org/t/p/original/85R8LMyn9f2Lev2YPBF8Nughrkv.jpg'
 release_date: '2018-02-23'
 summary: 'A competitive couple''s weekly game night turns into a staged kidnapping mystery, and then the kidnapping turns out to be real while the players keep assuming it is part of the game.'
