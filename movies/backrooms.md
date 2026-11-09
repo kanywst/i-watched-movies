@@ -2,13 +2,13 @@
 title: 'Backrooms'
 title_ja: 'バックルームズ'
 published: false
+dropped: true
 tags:
   - 'Horror'
   - 'Mystery'
   - 'Sci-fi'
 national: 'USA'
 checked: '2026-11'
-recommend_rank: 40
 cover_image: 'https://image.tmdb.org/t/p/original/rhGx6E3qRNMgj3i5su2oukNHwIQ.jpg'
 release_date: '2026-05-29'
 summary: 'A furniture store owner finds a doorway in the basement of his showroom that opens onto an endless maze of empty yellow rooms, and the people who go in vanish.'
