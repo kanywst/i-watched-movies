@@ -3,6 +3,7 @@ title: '부산행'
 title_en: 'Train to Busan'
 title_ja: '新感染 ファイナル・エクスプレス'
 published: false
+dropped: true
 tags:
   - 'Horror'
   - 'Action'
@@ -14,7 +15,6 @@ streaming:
   - 'U-NEXT'
   - 'Hulu'
 checked: '2026-11'
-recommend_rank: 30
 cover_image: 'https://image.tmdb.org/t/p/original/lyGWApAtjqfbbsnOGhUpXHbbEp7.jpg'
 release_date: '2016-07-20'
 summary: 'A fund manager takes his daughter on a train to Busan on the morning the outbreak starts, and the survivors have to fight their way through infected carriages to reach each other.'
