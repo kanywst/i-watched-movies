@@ -3,6 +3,7 @@ title: '周處除三害'
 title_en: 'The Pig, the Snake and the Pigeon'
 title_ja: '我、邪で邪を制す'
 published: false
+dropped: true
 tags:
   - 'Crime'
   - 'Action'
@@ -11,7 +12,6 @@ national: 'Taiwan'
 streaming:
   - 'Netflix'
 checked: '2026-11'
-recommend_rank: 33
 cover_image: 'https://image.tmdb.org/t/p/original/9FhZ9VC999qeOWH2ytbangUMMt4.jpg'
 release_date: '2023-10-06'
 summary: 'Taiwan''s third most wanted fugitive is told he is dying and sets out to kill the two men ranked above him, and the hunt leads him into a cult.'
