@@ -2,6 +2,7 @@
 title: 'Gone Girl'
 title_ja: 'ゴーン・ガール'
 published: false
+dropped: true
 tags:
   - 'Thriller'
   - 'Mystery'
@@ -11,7 +12,6 @@ national: 'USA'
 streaming:
   - 'U-NEXT'
 checked: '2026-11'
-recommend_rank: 34
 cover_image: 'https://image.tmdb.org/t/p/original/ts996lKsxvjkO2yiYG0ht4qAicO.jpg'
 release_date: '2014-10-03'
 summary: 'On his fifth wedding anniversary a man becomes the prime suspect when his wife vanishes and every piece of evidence turns the media against him. David Fincher.'
