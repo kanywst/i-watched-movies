@@ -2,6 +2,7 @@
 title: 'Upgrade'
 title_ja: 'アップグレード'
 published: false
+dropped: true
 tags:
   - 'Action'
   - 'Sci-fi'
@@ -10,7 +11,6 @@ national: 'Australia'
 streaming:
   - 'U-NEXT'
 checked: '2026-11'
-recommend_rank: 20
 cover_image: 'https://image.tmdb.org/t/p/original/woLGROUdPWdBnLVFKYdGD3kFkPY.jpg'
 release_date: '2018-06-14'
 summary: 'Paralyzed in an attack that killed his wife, a man gets an experimental chip implanted that lets him move again and hunt the men responsible.'
