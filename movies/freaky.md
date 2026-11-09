@@ -10,7 +10,7 @@ streaming:
   - 'Prime Video'
   - 'U-NEXT'
 checked: '2026-11'
-recommend_rank: 10
+recommend_rank: 5
 cover_image: 'https://image.tmdb.org/t/p/original/8xC6QSyxrpm0D5A6iyHNemEWBVe.jpg'
 release_date: '2020-11-13'
 summary: 'A shy high schooler swaps bodies with a serial killer and has 24 hours to switch back before it becomes permanent.'
