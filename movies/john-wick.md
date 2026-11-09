@@ -13,7 +13,7 @@ streaming:
   - 'U-NEXT'
   - 'Hulu'
 checked: '2026-11'
-recommend_rank: 18
+recommend_rank: 14
 cover_image: 'https://image.tmdb.org/t/p/original/wXqWR7dHncNRbxoEGybEy7QTe9h.jpg'
 release_date: '2014-10-24'
 summary: 'A retired hitman is pulled back in when a mobster''s son steals his car and kills the dog his late wife left him.'
