@@ -9,7 +9,7 @@ national: 'Japan'
 streaming:
   - 'Prime Video'
 checked: '2026-11'
-recommend_rank: 16
+recommend_rank: 28
 cover_image: 'https://image.tmdb.org/t/p/original/uVK449zy5RhrMnieCOnkijH5HCC.jpg'
 release_date: '2024-11-22'
 summary: 'Six finalists for a coveted job are told to form a team for one final group discussion, then learn only one of them will be hired and they must choose who. In the sealed meeting room they find six envelopes, each accusing one of them of a crime.'
