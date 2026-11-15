@@ -11,7 +11,7 @@ streaming:
   - 'Prime Video'
   - 'U-NEXT'
 checked: '2026-11'
-recommend_rank: 7
+recommend_rank: 11
 cover_image: 'https://image.tmdb.org/t/p/original/3goiPN2ov4O4FbeBCBndOAIGZDI.jpg'
 release_date: '2019-01-18'
 summary: 'Tokyo police believe a serial killer''s next murder will happen at a luxury hotel, so detective Nitta goes undercover at the front desk, trained by veteran staffer Yamagishi, who cares only about protecting the guests.'
