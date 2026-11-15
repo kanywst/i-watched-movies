@@ -12,7 +12,7 @@ streaming:
   - 'Prime Video'
   - 'U-NEXT'
 checked: '2026-11'
-recommend_rank: 4
+recommend_rank: 5
 cover_image: 'https://image.tmdb.org/t/p/original/ffMUgkDZICNiyaws1Jkv8qG8uFW.jpg'
 release_date: '2006-03-24'
 summary: 'A masked crew seizes a Manhattan bank and takes hostages, and the detective sent to negotiate finds the robbers always one step ahead, while the bank''s chairman quietly sends a fixer to the scene on a secret errand of his own.'
