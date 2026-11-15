@@ -3,6 +3,7 @@ title: '九龍城寨之圍城'
 title_en: 'Twilight of the Warriors: Walled In'
 title_ja: 'トワイライト・ウォリアーズ 決戦！九龍城砦'
 published: false
+dropped: true
 tags:
   - 'Action'
   - 'Crime'
@@ -11,7 +12,6 @@ national: 'Hong Kong'
 streaming:
   - 'Prime Video'
 checked: '2026-11'
-recommend_rank: 32
 cover_image: 'https://image.tmdb.org/t/p/original/h0tunBO4tMjvKVVG7fXqHgwOr5C.jpg'
 release_date: '2024-05-01'
 summary: 'A refugee on the run from a triad boss finds shelter in Kowloon Walled City in the 1980s, and its residents stand with him.'
