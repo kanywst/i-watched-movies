@@ -11,7 +11,7 @@ national: 'Korea'
 streaming:
   - 'Prime Video'
 checked: '2026-11'
-recommend_rank: 25
+recommend_rank: 15
 cover_image: 'https://image.tmdb.org/t/p/original/lTo5AEHuZwTjrn9Sk5quioEP7FS.jpg'
 release_date: '2018-03-07'
 summary: 'The body of Seol-hee, a wealthy company chairwoman who has just died, disappears from the morgue, and a detective starts investigating.'
