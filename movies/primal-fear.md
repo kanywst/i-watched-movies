@@ -11,7 +11,7 @@ streaming:
   - 'Netflix'
   - 'U-NEXT'
 checked: '2026-11'
-recommend_rank: 21
+recommend_rank: 35
 cover_image: 'https://image.tmdb.org/t/p/original/qJf2TzE8nRTFbFMPJNW6c8mI0KU.jpg'
 release_date: '1996-04-03'
 summary: 'Martin Vail, a defense attorney who takes cases for money and fame, defends a shy altar boy accused of brutally murdering the archbishop of Chicago, and the case that looked simple turns darker as the Church''s secrets come out.'
