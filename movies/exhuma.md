@@ -12,7 +12,7 @@ streaming:
   - 'Prime Video'
   - 'U-NEXT'
 checked: '2026-11'
-recommend_rank: 22
+recommend_rank: 36
 cover_image: 'https://image.tmdb.org/t/p/original/6dasJ58GGFcC62H9KuukAryltUp.jpg'
 release_date: '2024-02-22'
 summary: 'Two shamans hired by a wealthy Korean American family whose newborn son is mysteriously ill bring in a feng shui master and a mortician to move an ancestor''s grave.'
