@@ -10,7 +10,7 @@ national: 'USA'
 streaming:
   - 'Prime Video'
 checked: '2026-11'
-recommend_rank: 8
+recommend_rank: 13
 cover_image: 'https://image.tmdb.org/t/p/original/mpwccO2L8LUVtVTJTdgUVgoQqAo.jpg'
 release_date: '2025-08-22'
 summary: 'A fixer who brokers payoffs between corrupt corporations and the whistleblowers who threaten them, working only through a relay service for the deaf, breaks his own rules when a new client asks him to keep her alive.'
