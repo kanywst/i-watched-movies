@@ -3,6 +3,7 @@ title: '인질'
 title_en: 'Hostage: Missing Celebrity'
 title_ja: '人質 韓国トップスター誘拐事件'
 published: false
+dropped: true
 tags:
   - 'Thriller'
   - 'Crime'
@@ -12,7 +13,6 @@ streaming:
   - 'Prime Video'
   - 'Hulu'
 checked: '2026-11'
-recommend_rank: 16
 cover_image: 'https://image.tmdb.org/t/p/original/5FE6RGxigasa8JKoYDSmcGOaW2I.jpg'
 release_date: '2021-08-18'
 summary: 'After a premiere, actor Hwang Jung-min, playing himself, is kidnapped in central Seoul and soon realizes the gang holding him is not joking.'
