@@ -2,6 +2,7 @@
 title: 'Plane'
 title_ja: 'ロスト・フライト'
 published: false
+dropped: true
 tags:
   - 'Action'
   - 'Thriller'
@@ -11,7 +12,6 @@ streaming:
   - 'Prime Video'
   - 'Hulu'
 checked: '2026-11'
-recommend_rank: 22
 cover_image: 'https://image.tmdb.org/t/p/original/oJRsTQR47pyjSJCZYpOfbycpNBR.jpg'
 release_date: '2023-01-13'
 summary: 'After a storm forces a commercial pilot to make an emergency landing on a remote island in the southern Philippines, he finds it is controlled by armed militants who take his passengers hostage.'
