@@ -10,7 +10,7 @@ national: 'USA'
 streaming:
   - 'Netflix'
 checked: '2026-11'
-recommend_rank: 18
+recommend_rank: 32
 cover_image: 'https://image.tmdb.org/t/p/original/4wsYWH73Hb1B6noGIFaRQSAkuXj.jpg'
 release_date: '2026-01-16'
 summary: 'A team of Miami cops finds millions in cash inside a run-down stash house, and as the night goes on trust inside the team frays until everyone, and everything, is in question.'
