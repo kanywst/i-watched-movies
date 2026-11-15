@@ -2,6 +2,7 @@
 title: 'The Beekeeper'
 title_ja: 'ビーキーパー'
 published: false
+dropped: true
 tags:
   - 'Action'
   - 'Thriller'
@@ -13,7 +14,6 @@ streaming:
   - 'U-NEXT'
   - 'Hulu'
 checked: '2026-11'
-recommend_rank: 10
 cover_image: 'https://image.tmdb.org/t/p/original/A7EByudX0eOzlkQ2FIbogzyazm2.jpg'
 release_date: '2024-01-12'
 summary: 'Adam Clay, a quiet beekeeper renting space in a retired teacher''s barn, sees his kind landlady lose her savings to a phishing scam, and goes after the people behind it.'
