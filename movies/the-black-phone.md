@@ -10,7 +10,7 @@ streaming:
   - 'Prime Video'
   - 'U-NEXT'
 checked: '2026-11'
-recommend_rank: 12
+recommend_rank: 25
 cover_image: 'https://image.tmdb.org/t/p/original/p9ZUzCyy9wRTDuuQexkQ78R2BgF.jpg'
 release_date: '2022-06-24'
 summary: 'In suburban Denver in 1978, a child abductor called The Grabber is taking local kids, and bullied teenager Finney lives there with his sister Gwen and their abusive father.'
