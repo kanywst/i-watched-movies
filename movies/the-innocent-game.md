@@ -12,7 +12,7 @@ streaming:
   - 'U-NEXT'
   - 'Hulu'
 checked: '2026-11'
-recommend_rank: 20
+recommend_rank: 34
 cover_image: 'https://image.tmdb.org/t/p/original/diJc7QsNs4fOzcDGfZHbDSaMiP3.jpg'
 release_date: '2023-11-10'
 summary: 'Law student Kiyoyoshi and his childhood friend Misuzu spend their days studying alongside their brilliant classmate Kaoru, who runs a mock trial at their law school called the Innocent Game.'
