@@ -9,7 +9,7 @@ national: 'Japan'
 streaming:
   - 'Netflix'
 checked: '2026-11'
-recommend_rank: 11
+recommend_rank: 17
 cover_image: 'https://image.tmdb.org/t/p/original/zkJ4R1qsnC7g9Im5j1LcbY2NDoi.jpg'
 release_date: '2025-09-12'
 summary: 'When her father, a retired schoolteacher, is murdered in their struggling hometown, Mayo teams up with her uncle Takeshi, a former Las Vegas magician who reads people expertly and lies as easily as he breathes, to find out who killed him and why.'
