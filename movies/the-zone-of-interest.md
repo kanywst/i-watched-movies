@@ -13,6 +13,7 @@ streaming:
   - 'U-NEXT'
   - 'Hulu'
 checked: '2026-11'
+recommend_rank: 49
 cover_image: 'https://image.tmdb.org/t/p/original/hUu9zyZmDd8VZegKi1iK1Vk0RYS.jpg'
 release_date: '2024-02-02'
 summary: 'Auschwitz commandant Rudolf Höss and his wife Hedwig raise their children and tend an idyllic house and garden on the other side of the camp wall. Jonathan Glazer''s film, loosely based on Martin Amis''s novel, keeps the camp almost entirely out of frame and conveys it through sound.'
