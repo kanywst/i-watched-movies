@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { X, Quote } from 'lucide-react';
+import { X, Quote, Heart } from 'lucide-react';
 import { clsx } from 'clsx';
 import { Language, Movie, SeasonStatus } from '../types';
 import { LANGUAGE_OPTIONS } from '../constants';
 import { StreamingBadges } from './StreamingBadges';
 import { ShareButton } from './ShareButton';
-import { isWatched } from '../partition';
+import { isWatched, isWatchlist } from '../partition';
 import { RATED_POINTS } from '../collections';
 import { bandOf, countRatedBelow, type ScoreBand } from '../scoreBand';
 import { tmdbResize, tmdbSrcSet } from '../tmdbImage';
@@ -340,6 +340,13 @@ export const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
                   })}
                 </ul>
               </div>
+            )}
+
+            {movie.requested && isWatchlist(movie) && (
+              <p className="mt-1 inline-flex items-center gap-1.5 self-start rounded-full px-2.5 py-1 text-xs font-semibold text-white" style={{ backgroundColor: 'var(--accent-a-solid)' }}>
+                <Heart className="w-3 h-3 fill-white" strokeWidth={2.5} aria-hidden="true" />
+                Requested
+              </p>
             )}
 
             <StreamingBadges movie={movie} variant="detail" />

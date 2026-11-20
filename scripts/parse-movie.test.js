@@ -50,6 +50,7 @@ added: '2026-01-20T04:05:06Z'`,
       streaming: [],
       checked: '',
       recommend_rank: null,
+      requested: false,
       added: '2026-01-20T04:05:06.000Z',
       content: '\nBody text\n',
     });
@@ -58,6 +59,16 @@ added: '2026-01-20T04:05:06Z'`,
   // The rank orders the watchlist only. One left behind on an entry that has since been
   // watched, seen, started or dropped must not reach the app, or it would reorder a list
   // the film is no longer in the day the field is read anywhere else.
+  it('reads requested only when it is literally true', () => {
+    const req = (fm) => parseMovie(md(`title: 'T'\npublished: false\n${fm}`), 't').requested;
+    expect(req('requested: true')).toBe(true);
+    expect(req('requested: false')).toBe(false);
+    expect(req("requested: 'yes'")).toBe(false);
+    expect(req('')).toBe(false);
+    // Provenance: it survives the entry being watched.
+    expect(parseMovie(md(`title: 'T'\npublished: true\nrequested: true`), 't').requested).toBe(true);
+  });
+
   it('keeps recommend_rank only on a watchlist entry', () => {
     const rank = (fm) => parseMovie(md(`title: 'T'\n${fm}`), 't').recommend_rank;
     expect(rank('published: false\nrecommend_rank: 3')).toBe(3);

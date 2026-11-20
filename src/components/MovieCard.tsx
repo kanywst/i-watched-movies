@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Image as ImageIcon, Medal, Award, Crown, Sparkles } from 'lucide-react';
+import { Image as ImageIcon, Medal, Award, Crown, Sparkles, Heart } from 'lucide-react';
 import { Movie } from '../types';
 import { clsx } from 'clsx';
 import { COUNTRY_FLAGS } from '../constants';
 import { StreamingBadges } from './StreamingBadges';
-import { isWatched } from '../partition';
+import { isWatched, isWatchlist } from '../partition';
 import { RATED_POINTS } from '../collections';
 import { bandOf, type ScoreBand } from '../scoreBand';
 import { cardSeasonScore } from '../seasons';
@@ -91,6 +91,9 @@ const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, pi
   // Only a rated entry has a score worth printing. isWatched is the same rule the grid was
   // partitioned with, so a card can never disagree with the tab it is sitting under.
   const hasScore = isWatched(movie);
+  // Watchlist only: the mark separates what I asked for from what a recommendation pass put
+  // there. The field itself outlives the watchlist (it is provenance), the mark does not.
+  const requested = Boolean(movie.requested) && isWatchlist(movie);
   const chip = hasScore ? SCORE_CHIP[bandOf(RATED_POINTS, movie.point)] : null;
   // The fallback for a series watched partway, which has no entry score at all. Only one
   // season reaches the card; see src/seasons.ts for which and why.
@@ -127,7 +130,7 @@ const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, pi
       }}
       role="button"
       tabIndex={0}
-      aria-label={`${rank ? `Number ${rank}, ` : pick ? `Pick ${pick}, ` : ''}${movie.title}${
+      aria-label={`${rank ? `Number ${rank}, ` : pick ? `Pick ${pick}, ` : ''}${movie.title}${requested ? ', requested' : ''}${
         hasScore
           ? `, rated ${movie.point} out of 10`
           : seasonChip
@@ -185,6 +188,28 @@ const MovieCardImpl: React.FC<MovieCardProps> = ({ movie, staggerIndex, rank, pi
         {pick && (
           <div className="absolute top-2 left-2 z-40 rounded-full px-2 py-1 bg-black/65 text-white text-sm font-extrabold tabular-nums font-wordmark leading-none border border-white/10 backdrop-blur-md">
             {pick}
+          </div>
+        )}
+
+        {/* A bookmark ribbon hung from the top edge on the right, where a watchlist card has
+            no score chip. Opaque accent fill under a white heart (4.9:1, see --accent-a-solid
+            in index.css), so the poster behind it never enters the contrast sum. The shadow
+            sits on the wrapper because clip-path cuts a box-shadow off with the corners. */}
+        {requested && (
+          <div
+            className="absolute top-0 right-3 z-40"
+            style={{ filter: 'drop-shadow(0 3px 6px rgb(0 0 0 / 0.35))' }}
+            title="Requested"
+          >
+            <div
+              className="flex w-7 h-9 justify-center pt-2"
+              style={{
+                backgroundColor: 'var(--accent-a-solid)',
+                clipPath: 'polygon(0 0, 100% 0, 100% 100%, 50% 76%, 0 100%)',
+              }}
+            >
+              <Heart className="w-3.5 h-3.5 text-white fill-white" strokeWidth={2.5} aria-hidden="true" />
+            </div>
           </div>
         )}
 

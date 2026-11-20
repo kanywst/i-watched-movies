@@ -158,6 +158,13 @@ body:
       placeholder: '1'
 
   - type: input
+    id: requested
+    attributes:
+      label: Requested
+      description: 'yes when I asked for this one myself (marked on the watchlist card, and a refresh keeps it). Leave empty to keep the current mark, no to remove it.'
+      placeholder: 'yes'
+
+  - type: input
     id: cover_image
     attributes:
       label: Cover image URL
