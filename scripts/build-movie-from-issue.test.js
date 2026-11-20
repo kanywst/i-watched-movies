@@ -930,3 +930,61 @@ describe('recommend_rank', () => {
     }
   });
 });
+
+describe('requested', () => {
+  const body = (req, list = 'Watchlist') =>
+    `### Title\n\nMov\n\n### List\n\n${list}\n\n### Requested\n\n${req}\n`;
+  const build = (req, list) => buildMovie(parseIssueBody(body(req, list))).movie;
+  const existing = (requested) => ({
+    title: 'Mov',
+    published: false,
+    seen: false,
+    watching: false,
+    dropped: false,
+    tags: [],
+    seasons: [],
+    streaming: [],
+    point: null,
+    recommend_rank: null,
+    requested,
+  });
+
+  it('parses yes, an explicit no, and anything else as empty', () => {
+    expect(build('yes').requested).toBe(true);
+    expect(build('Yes').requested).toBe(true);
+    expect(build('no').requested).toBe(false);
+    expect(build('-').requested).toBe(false);
+    expect(build('_No response_').requested).toBeNull();
+    expect(build('maybe').requested).toBeNull();
+  });
+
+  // A refresh re-files entries with the field empty; that must not wipe the mark.
+  it('keeps the stored mark on an empty field, sets it on yes, clears it on no', () => {
+    expect(mergeMovie(existing(true), build('_No response_')).requested).toBe(true);
+    expect(mergeMovie(existing(false), build('yes')).requested).toBe(true);
+    expect(mergeMovie(existing(true), build('no')).requested).toBe(false);
+    expect(mergeMovie(existing(false), build('_No response_')).requested).toBe(false);
+    expect(mergeMovie(existing(undefined), build('_No response_')).requested).toBe(false);
+  });
+
+  it('keeps the mark when the entry leaves the watchlist', () => {
+    for (const list of ['Watched', 'Seen', 'In Progress', 'Dropped']) {
+      expect(mergeMovie(existing(true), build('_No response_', list)).requested).toBe(true);
+    }
+  });
+
+  it('round-trips through formatFile and readExisting', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'movies-'));
+    try {
+      const file = path.join(dir, 'mov.md');
+      fs.writeFileSync(file, formatFile({ ...build('yes'), body: '' }));
+      expect(fs.readFileSync(file, 'utf8')).toContain('requested: true\n');
+      expect(readExisting(file).requested).toBe(true);
+      fs.writeFileSync(file, formatFile({ ...build('no'), body: '' }));
+      expect(fs.readFileSync(file, 'utf8')).not.toContain('requested');
+      expect(readExisting(file).requested).toBe(false);
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});

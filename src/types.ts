@@ -53,6 +53,11 @@ export interface Movie {
   // the watchlist (parseMovie drops a stale one). Unranked entries follow the ranked ones,
   // ordered by recommendWatchlist's predicted score; see src/recommendOrder.ts.
   recommend_rank?: number | null;
+  // True when kt asked for the film to be added, rather than it coming from a recommendation
+  // pass. Kept after the entry leaves the watchlist (it is provenance), but only the
+  // watchlist card shows it. Nothing in the app orders by it: keeping a requested entry
+  // through a watchlist refresh is a rule for whoever files the refresh issues.
+  requested?: boolean;
   // When the entry first landed in the diary, as a full ISO instant. Machine-set by the
   // issue automation and never displayed: it exists so the lists with no `watch_date` of
   // their own (Watchlist, In Progress, Seen, Dropped) have an order that means something.

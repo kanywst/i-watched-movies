@@ -50,9 +50,20 @@ added: '2026-01-20T04:05:06Z'`,
       streaming: [],
       checked: '',
       recommend_rank: null,
+      requested: false,
       added: '2026-01-20T04:05:06.000Z',
       content: '\nBody text\n',
     });
+  });
+
+  it('reads requested only when it is literally true', () => {
+    const req = (fm) => parseMovie(md(`title: 'T'\npublished: false\n${fm}`), 't').requested;
+    expect(req('requested: true')).toBe(true);
+    expect(req('requested: false')).toBe(false);
+    expect(req("requested: 'yes'")).toBe(false);
+    expect(req('')).toBe(false);
+    // Provenance: it survives the entry being watched.
+    expect(parseMovie(md(`title: 'T'\npublished: true\nrequested: true`), 't').requested).toBe(true);
   });
 
   // The rank orders the watchlist only. One left behind on an entry that has since been

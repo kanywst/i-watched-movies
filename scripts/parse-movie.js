@@ -107,6 +107,7 @@ export function parseMovie(fileContent, id) {
       data.recommend_rank,
       !(data.published ?? true) && !data.seen && !data.watching && !data.dropped,
     ),
+    requested: data.requested === true,
     added: data.added ? new Date(data.added).toISOString() : null,
     content,
   };

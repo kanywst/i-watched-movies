@@ -146,6 +146,19 @@ function parseRank(raw) {
   return Number.isInteger(n) && n > 0 ? n : null;
 }
 
+// Whether kt asked for the film to be put on the watchlist, as opposed to it coming out of a
+// recommendation pass. True for yes, false for an explicit no, null when the field was left
+// empty, so mergeMovie can keep the stored mark on every other update (a rank change, a
+// streaming recheck, the film finally being logged as Watched).
+function parseRequested(raw) {
+  if (raw === undefined || raw === null) return null;
+  if (typeof raw === 'boolean') return raw;
+  const s = String(raw).trim().toLowerCase();
+  if (['yes', 'y', 'true', '1'].includes(s)) return true;
+  if (['no', 'n', 'false', '0', 'none', '-'].includes(s)) return false;
+  return null;
+}
+
 function parseDate(raw) {
   if (!raw) return '';
   const m = String(raw).trim().match(/^\d{4}-\d{2}-\d{2}/);
@@ -203,6 +216,7 @@ export function buildMovie(sections, { issueNumber, now = new Date() } = {}) {
     streaming: parseStreaming(sections['Streaming']),
     checked: parseMonth(sections['Availability checked']),
     recommend_rank: parseRank(sections['Recommend rank']),
+    requested: parseRequested(sections['Requested']),
     summary: (sections['Summary'] || '').trim(),
     summary_ja: (sections['Summary (JA)'] || '').trim(),
     impression: (sections['Impression'] || '').trim(),
@@ -284,6 +298,7 @@ export function readExisting(filePath) {
       : parseTags(data.streaming),
     checked: existingMonth(data.checked),
     recommend_rank: parseRank(data.recommend_rank) || null,
+    requested: parseRequested(data.requested) === true,
     summary: (data.summary ?? '').toString().trim(),
     summary_ja: (data.summary_ja ?? '').toString().trim(),
     impression: (data.impression ?? '').toString().trim(),
@@ -332,6 +347,9 @@ export function mergeMovie(existing, incoming) {
     streaming: incoming.streaming.length ? incoming.streaming : existing.streaming,
     checked: incoming.checked || existing.checked,
     recommend_rank: mergeRank(existing, incoming),
+    // Provenance, so it outlives the watchlist: unlike the rank it is not dropped when the
+    // entry moves on. Empty keeps the stored mark, and only an explicit no removes it.
+    requested: incoming.requested ?? Boolean(existing.requested),
     summary: incoming.summary || existing.summary,
     summary_ja: incoming.summary_ja || existing.summary_ja,
     impression: incoming.impression || existing.impression,
@@ -379,6 +397,7 @@ export function formatFile(movie) {
   }
   if (movie.checked) lines.push(`checked: ${quote(movie.checked)}`);
   if (movie.recommend_rank) lines.push(`recommend_rank: ${movie.recommend_rank}`);
+  if (movie.requested) lines.push('requested: true');
   if (movie.cover_image) lines.push(`cover_image: ${quote(movie.cover_image)}`);
   if (movie.release_date) lines.push(`release_date: ${quote(movie.release_date)}`);
   if (movie.watch_date) lines.push(`watch_date: ${quote(movie.watch_date)}`);
