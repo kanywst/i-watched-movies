@@ -10,6 +10,7 @@ streaming:
   - 'Prime Video'
   - 'U-NEXT'
 checked: '2026-11'
+requested: true
 cover_image: 'https://image.tmdb.org/t/p/original/3Obn9IR47fjhbtYtNrO7CBSrZ2w.jpg'
 release_date: '2014-11-15'
 summary: 'A bored high school student is suddenly forced, along with his classmates, to play children''s games with lethal rules, starting with a Daruma doll that kills anyone it sees moving. Takashi Miike adapts the first arc of the manga.'
