@@ -3,6 +3,7 @@ title: 'El robo del siglo'
 title_en: 'The Heist of the Century'
 title_ja: 'ミリオンダラー・スティーラー 史上最大の作戦'
 published: false
+dropped: true
 tags:
   - 'Crime'
   - 'Comedy'
