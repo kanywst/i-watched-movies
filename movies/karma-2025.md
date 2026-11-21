@@ -3,6 +3,7 @@ title: '악연'
 title_en: 'Karma'
 title_ja: '悪縁'
 published: false
+dropped: true
 tags:
   - 'Crime'
   - 'Thriller'
