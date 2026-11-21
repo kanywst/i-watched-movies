@@ -3,6 +3,7 @@ title: '세븐 데이즈'
 title_en: 'Seven Days'
 title_ja: 'セブンデイズ'
 published: false
+dropped: true
 tags:
   - 'Crime'
   - 'Thriller'
@@ -11,7 +12,6 @@ national: 'Korea'
 streaming:
   - 'Prime Video'
 checked: '2026-11'
-recommend_rank: 19
 cover_image: 'https://image.tmdb.org/t/p/original/cZutNm2TDWwFA3r1mRwiZatpMQQ.jpg'
 release_date: '2007-11-14'
 summary: 'A star defense lawyer''s daughter is kidnapped, and the price of getting her back is winning an appeal for a man already convicted of murder, within seven days.'
