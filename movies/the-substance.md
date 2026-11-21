@@ -2,6 +2,7 @@
 title: 'The Substance'
 title_ja: 'サブスタンス'
 published: false
+dropped: true
 tags:
   - 'Horror'
   - 'Sci-fi'
