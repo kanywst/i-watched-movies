@@ -3,6 +3,7 @@ title: '사냥개들'
 title_en: 'Bloodhounds'
 title_ja: 'ブラッドハウンド'
 published: false
+dropped: true
 tags:
   - 'Action'
   - 'Crime'
