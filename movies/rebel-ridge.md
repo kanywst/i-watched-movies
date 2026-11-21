@@ -2,6 +2,7 @@
 title: 'Rebel Ridge'
 title_ja: 'レベル・リッジ'
 published: false
+dropped: true
 tags:
   - 'Action'
   - 'Thriller'
