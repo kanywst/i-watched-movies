@@ -3,6 +3,7 @@ title: '대외비'
 title_en: 'The Devil''s Deal'
 title_ja: '対外秘'
 published: false
+dropped: true
 tags:
   - 'Crime'
   - 'Thriller'
@@ -12,7 +13,6 @@ streaming:
   - 'Prime Video'
   - 'Hulu'
 checked: '2026-11'
-recommend_rank: 27
 cover_image: 'https://image.tmdb.org/t/p/original/sA1QNjgCkGGFxHwbt6924bjZjTl.jpg'
 release_date: '2023-03-01'
 summary: 'Busan, 1992. A politician promised his party''s nomination is dropped by the fixer who secretly runs national politics. He gets hold of the fixer''s top secret files and runs as an independent with gangster money, starting an all-out fight for power.'
