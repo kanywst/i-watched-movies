@@ -3,6 +3,7 @@ title: 'Retfærdighedens ryttere'
 title_en: 'Riders of Justice'
 title_ja: 'ライダーズ・オブ・ジャスティス'
 published: false
+dropped: true
 tags:
   - 'Action'
   - 'Comedy'
@@ -11,7 +12,6 @@ national: 'Denmark'
 streaming:
   - 'Prime Video'
 checked: '2026-11'
-recommend_rank: 4
 cover_image: 'https://image.tmdb.org/t/p/original/sshNnwmQLk720iBQ0dZg3GVGKfK.jpg'
 release_date: '2020-11-19'
 summary: 'A soldier comes home to his teenage daughter after his wife dies in a train crash. When a mathematician who was on the same train tells him the crash was a planned hit by a criminal gang, he sets out for revenge with the man and his odd friends, and things go somewhere unexpected.'
