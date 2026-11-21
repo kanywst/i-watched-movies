@@ -3,6 +3,7 @@ title: 'I onde dager'
 title_en: 'The Trip'
 title_ja: 'ザ・トリップ'
 published: false
+dropped: true
 tags:
   - 'Comedy'
   - 'Horror'
