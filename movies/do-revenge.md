@@ -2,6 +2,7 @@
 title: 'Do Revenge'
 title_ja: 'リベンジ・スワップ'
 published: false
+dropped: true
 tags:
   - 'Comedy'
   - 'Thriller'
