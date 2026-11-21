@@ -2,6 +2,7 @@
 title: 'Sinners'
 title_ja: '罪人たち'
 published: false
+dropped: true
 tags:
   - 'Horror'
   - 'Thriller'
