@@ -2,6 +2,7 @@
 title: '沈黙のパレード'
 title_en: 'Silent Parade'
 published: false
+dropped: true
 tags:
   - 'Mystery'
   - 'Crime'
@@ -13,7 +14,6 @@ streaming:
   - 'U-NEXT'
   - 'Hulu'
 checked: '2026-11'
-recommend_rank: 2
 cover_image: 'https://image.tmdb.org/t/p/original/2cn8NGwXTgnr3kGD2VuDmpw7BiS.jpg'
 release_date: '2022-09-16'
 summary: 'A schoolgirl missing for years is found dead, and the suspect, a man once acquitted of another girl''s murder, walks free again for lack of evidence and returns to her town. Then, on the day of the autumn festival parade, he is killed, and physicist Manabu Yukawa is drawn into the case.'
