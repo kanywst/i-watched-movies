@@ -3,6 +3,7 @@ title: '꾼'
 title_en: 'The Swindlers'
 title_ja: 'スウィンダラーズ'
 published: false
+dropped: true
 tags:
   - 'Crime'
   - 'Thriller'
