@@ -2,6 +2,7 @@
 title: 'Don''t Breathe'
 title_ja: 'ドント・ブリーズ'
 published: false
+dropped: true
 tags:
   - 'Horror'
   - 'Thriller'
@@ -12,7 +13,6 @@ streaming:
   - 'U-NEXT'
   - 'Hulu'
 checked: '2026-11'
-recommend_rank: 44
 cover_image: 'https://image.tmdb.org/t/p/original/dSxHyPZ2nipSfvdft4IhQKjk5eZ.jpg'
 release_date: '2016-08-26'
 summary: 'Three young Detroit burglars who live off robbing houses look for one big score so one of them can get out of an abusive home and move to California.'
