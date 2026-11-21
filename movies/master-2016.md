@@ -3,6 +3,7 @@ title: '마스터'
 title_en: 'Master'
 title_ja: 'MASTER／マスター'
 published: false
+dropped: true
 tags:
   - 'Crime'
   - 'Action'
@@ -12,7 +13,6 @@ streaming:
   - 'Prime Video'
   - 'Hulu'
 checked: '2026-11'
-recommend_rank: 29
 cover_image: 'https://image.tmdb.org/t/p/original/onDrDG7BxvSIcmdWSdz3t92yPb.jpg'
 release_date: '2016-12-21'
 summary: 'A financial crimes detective goes after the charismatic head of a giant investment scam that has bought off the powerful, by turning the boss''s genius hacker against him, until the boss vanishes with the money.'
