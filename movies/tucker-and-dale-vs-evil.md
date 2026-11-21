@@ -2,6 +2,7 @@
 title: 'Tucker and Dale vs. Evil'
 title_ja: 'タッカーとデイル 史上最悪にツイてないヤツら'
 published: false
+seen: true
 tags:
   - 'Horror'
   - 'Comedy'
