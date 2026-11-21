@@ -3,6 +3,7 @@ title: '발신제한'
 title_en: 'Hard Hit'
 title_ja: 'ハード・ヒット 発信制限'
 published: false
+dropped: true
 tags:
   - 'Thriller'
   - 'Action'
@@ -12,7 +13,6 @@ streaming:
   - 'Prime Video'
   - 'Hulu'
 checked: '2026-11'
-recommend_rank: 41
 cover_image: 'https://image.tmdb.org/t/p/original/y2Aimt8isimtigec3e4kB2G9FMR.jpg'
 release_date: '2021-06-23'
 summary: 'Driving his kids to school, a bank manager gets an anonymous call: there is a bomb under his seat, it goes off if anyone gets out, and he has to pay a ransom.'
