@@ -3,6 +3,7 @@ title: '참교육'
 title_en: 'Teach You a Lesson'
 title_ja: '鉄槌教師'
 published: false
+dropped: true
 tags:
   - 'Action'
   - 'Drama'
