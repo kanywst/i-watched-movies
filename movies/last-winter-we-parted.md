@@ -2,6 +2,7 @@
 title: '去年の冬、きみと別れ'
 title_en: 'Last Winter, We Parted'
 published: false
+dropped: true
 tags:
   - 'Mystery'
   - 'Suspense'
@@ -11,7 +12,6 @@ streaming:
   - 'Netflix'
   - 'U-NEXT'
 checked: '2026-11'
-recommend_rank: 20
 cover_image: 'https://image.tmdb.org/t/p/original/hnfyyyL0eBaqfzFJSn9s2P1sRDH.jpg'
 release_date: '2018-03-10'
 summary: 'A journalist about to marry his fiancée chases a story on a photographer who was the main suspect in a fire that killed a blind woman.'
