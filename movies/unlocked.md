@@ -3,6 +3,7 @@ title: '스마트폰을 떨어뜨렸을 뿐인데'
 title_en: 'Unlocked'
 title_ja: 'スマホを落としただけなのに'
 published: false
+dropped: true
 tags:
   - 'Thriller'
   - 'Crime'
@@ -11,7 +12,6 @@ national: 'Korea'
 streaming:
   - 'Netflix'
 checked: '2026-11'
-recommend_rank: 25
 cover_image: 'https://image.tmdb.org/t/p/original/yW43JgoYPnSois2V0bIpFQFuDWl.jpg'
 release_date: '2023-02-17'
 summary: 'An office worker loses her phone on a bus, and the man who finds it installs spyware before returning it, then uses it to watch and take over every part of her life.'
